@@ -10,8 +10,9 @@ import Combine
 
 struct LocalizationFile: Identifiable {
     struct Content: Identifiable {
+        var key: String
         var value: String
-        var id: String {value}
+        var id: String {key}
     }
     var languageCode: String
     var url: String
@@ -21,6 +22,8 @@ struct LocalizationFile: Identifiable {
     var id: String {
         url
     }
+    
+    var keys: [String] {content.map {$0.key}}
 }
 
 class ViewModel: ObservableObject {
@@ -70,7 +73,9 @@ class ViewModel: ObservableObject {
             let path = newPath + "/" + aPath
             print(path)
             let text = try! String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
-            let array = text.components(separatedBy: .newlines).map {LocalizationFile.Content(value: $0)}
+            let array = text.components(separatedBy: .newlines)
+                .map { $0.components(separatedBy: "=").map {$0.trimmingCharacters(in: .whitespaces)}.map {$0.replacingOccurrences(of: "\"", with: "")} }
+                .map {LocalizationFile.Content(key: $0.first ?? "",value: String($0.last?.dropLast() ?? ";"))}
             return LocalizationFile(languageCode: aPath.components(separatedBy: ".lproj").first?.components(separatedBy: "/").last ?? "", url: path, newValue: "", content: array)
         }
     }

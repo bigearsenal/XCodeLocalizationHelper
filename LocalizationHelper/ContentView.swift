@@ -30,8 +30,19 @@ struct ContentView: View {
         )
         
         let filteredContentOfFile: (LocalizationFile) -> [LocalizationFile.Content] = { file in
-            if viewModel.query == nil {return file.content}
-            return file.content.filter {$0.value.lowercased().contains(viewModel.query!.lowercased())}
+            if viewModel.query == nil {return Array(file.content.prefix(30))}
+            return Array(file.content.filter {$0.key.lowercased().contains(viewModel.query!.lowercased()) ||
+                $0.value.lowercased().contains(viewModel.query!.lowercased())
+            }.prefix(30))
+        }
+        
+        var canAdd = true
+        if !enteringKey.isEmpty {
+            for file in viewModel.localizationFiles {
+                if file.keys.contains(enteringKey) {canAdd = false; break}
+            }
+        } else {
+            canAdd = false
         }
         
         let bindingForTextFieldOfFile: ((LocalizationFile) -> Binding<String>) = { file in
@@ -63,9 +74,15 @@ struct ContentView: View {
                             VStack {
                                 Text(file.languageCode)
                                 List(filteredContentOfFile(file)) { text in
-                                    Text(text.value)
-                                        .lineLimit(0)
-                                        .multilineTextAlignment(.leading)
+                                    VStack(alignment: .leading) {
+                                        Text(text.key)
+                                            .lineLimit(0)
+                                            .multilineTextAlignment(.leading)
+                                        Text(text.value)
+                                            .lineLimit(0)
+                                            .multilineTextAlignment(.leading)
+                                    }
+                                    
                                 }
                                 TextField(file.languageCode, text: bindingForTextFieldOfFile(file))
                                     .frame(width: colWidth)
@@ -82,9 +99,11 @@ struct ContentView: View {
                     Button("Translate") {
                         viewModel.translate()
                     }
+                        .disabled(!canAdd)
                     Button("Add") {
                         
                     }
+                        .disabled(!canAdd)
                     Spacer()
                 }
             } else {
