@@ -16,9 +16,7 @@ struct ContentView: View {
     @State private var enteringKey = ""
     @State private var isEnteringKey = false
     @State private var error: Error?
-    @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")" {
-        didSet { UserDefaults.standard.set(pattern, forKey: "Settings.pattern") }
-    }
+    @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
     
     init() {
         defer {openProject()}
@@ -35,6 +33,14 @@ struct ContentView: View {
                     newFiles[i].newValue = ""
                 }
                 viewModel.localizationFiles = newFiles
+            }
+        )
+        
+        let patternBinding = Binding<String>(
+            get: { self.pattern },
+            set: {
+                self.pattern = $0
+                UserDefaults.standard.set(pattern, forKey: "Settings.pattern")
             }
         )
         
@@ -113,7 +119,7 @@ struct ContentView: View {
                 Spacer()
                 HStack {
                     Text("Pattern")
-                    TextField("pattern for copying", text: $pattern)
+                    TextField("pattern for copying", text: patternBinding)
                     Text("Ex: \(exampleText)")
                 }
                 Spacer()
