@@ -8,10 +8,15 @@
 import Foundation
 
 struct LocalizationFile: Identifiable {
+    struct Content: Identifiable {
+        var value: String
+        var id: String {value}
+    }
     var languageCode: String
     var url: String
     var newValue: String
-    var content: [String]
+    var content: [Content]
+    var isMatching: Bool?
     var id: String {
         url
     }
@@ -19,6 +24,7 @@ struct LocalizationFile: Identifiable {
 
 class ViewModel: ObservableObject {
     @Published var localizationFiles = [LocalizationFile]()
+    @Published var query: String?
     
     func openProject(path: String) {
         localizationFiles = localizationFilesAtPath(path: path)
@@ -40,7 +46,7 @@ class ViewModel: ObservableObject {
             let path = newPath + "/" + aPath
             print(path)
             let text = try! String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
-            let array = text.components(separatedBy: .newlines)
+            let array = text.components(separatedBy: .newlines).map {LocalizationFile.Content(value: $0)}
             return LocalizationFile(languageCode: aPath.components(separatedBy: ".lproj").first ?? "", url: path, newValue: "", content: array)
         }
     }

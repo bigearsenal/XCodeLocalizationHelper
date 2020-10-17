@@ -14,13 +14,33 @@ struct ContentView: View {
     }
     @ObservedObject var viewModel = ViewModel()
     @State private var enteringKey = ""
+    @State private var isEnteringKey = false
     
     init() {
         defer {openProject()}
     }
 
     var body: some View {
-        Group {
+        let binding = Binding<String>(
+            get: { self.enteringKey },
+            set: {
+                self.enteringKey = $0
+                var files = self.viewModel.localizationFiles
+                guard let index = files.firstIndex(where: {$0.languageCode == "en"}) else {return}
+                var file = files[index]
+                file.newValue = $0
+                files[index] = file
+                self.viewModel.query = $0
+                self.viewModel.localizationFiles = files
+            }
+        )
+        
+        let filteredContentOfFile: (LocalizationFile) -> [LocalizationFile.Content] = { file in
+            if viewModel.query == nil {return file.content}
+            return file.content.filter {$0.value.lowercased().contains(viewModel.query!.lowercased())}
+        }
+
+        return Group {
             if let url = currentProjectUrl {
                 HStack {
                     Text("Current project: " + url)
@@ -32,8 +52,10 @@ struct ContentView: View {
                         ForEach(viewModel.localizationFiles) { file in
                             VStack {
                                 Text(file.languageCode)
-                                List(0..<file.content.count) { index in
-                                    Text(file.content[index])
+                                List(filteredContentOfFile(file)) { text in
+                                    Text(text.value)
+                                        .lineLimit(0)
+                                        .multilineTextAlignment(.leading)
                                 }
                             }
                             .frame(width: colWidth)
@@ -51,7 +73,7 @@ struct ContentView: View {
                     }
                 }
                 HStack {
-                    TextField("Enter key...", text: $enteringKey)
+                    TextField("Enter key...", text: binding) { self.isEnteringKey = $0 }
                         .frame(width: colWidth)
                     Button("Add") {
                         
