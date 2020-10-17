@@ -16,6 +16,9 @@ struct ContentView: View {
     @State private var enteringKey = ""
     @State private var isEnteringKey = false
     @State private var error: Error?
+    @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")" {
+        didSet { UserDefaults.standard.set(pattern, forKey: "Settings.pattern") }
+    }
     
     init() {
         defer {openProject()}
@@ -57,6 +60,8 @@ struct ContentView: View {
                 if file.newValue.isEmpty {canAdd = false; break}
             }
         }
+        
+        let exampleText = pattern.replacingOccurrences(of: "<key>", with: enteringKey)
         
         let bindingForTextFieldOfFile: ((LocalizationFile) -> Binding<String>) = { file in
             Binding<String>(
@@ -139,14 +144,19 @@ struct ContentView: View {
                     }
                         .disabled(!canAdd)
                     Spacer()
-                    if let error = error {
-                        Text(error.localizedDescription)
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    self.error = nil
-                                }
+                }
+                HStack {
+                    Text("Pattern")
+                    TextField("pattern for copying", text: $pattern)
+                    Text("Ex: \(exampleText)")
+                }
+                if let error = error {
+                    Text(error.localizedDescription)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                self.error = nil
                             }
-                    }
+                        }
                 }
             } else {
                 openProjectButton()
