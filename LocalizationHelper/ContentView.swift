@@ -15,6 +15,7 @@ struct ContentView: View {
     @ObservedObject var viewModel = ViewModel()
     @State private var enteringKey = ""
     @State private var isEnteringKey = false
+    @State private var error: Error?
     
     init() {
         defer {openProject()}
@@ -113,13 +114,38 @@ struct ContentView: View {
                     }
                         .disabled(!isNewKey)
                     Button("Add") {
-                        for file in viewModel.localizationFiles {
+                        for var file in viewModel.localizationFiles {
                             let textToWrite = "\"\(enteringKey)\"=\"\(file.newValue)\";"
-                            print(textToWrite)
+                            guard let data = textToWrite.data(using: .utf8) else {return}
+                            do {
+                                let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.url))
+                                try fileHandler.seekToEnd()
+                                fileHandler.write(data)
+                                try fileHandler.close()
+                                
+                                file.content.append(LocalizationFile.Content(key: enteringKey, value: file.newValue))
+                                file.newValue = ""
+                                var files = viewModel.localizationFiles
+                                if let index = files.firstIndex(where: {$0.id == file.id}) {
+                                    files[index] = file
+                                    viewModel.localizationFiles = files
+                                }
+                                self.enteringKey = ""
+                            } catch {
+                                self.error = error
+                            }
                         }
                     }
                         .disabled(!canAdd)
                     Spacer()
+                    if let error = error {
+                        Text(error.localizedDescription)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    self.error = nil
+                                }
+                            }
+                    }
                 }
             } else {
                 openProjectButton()
