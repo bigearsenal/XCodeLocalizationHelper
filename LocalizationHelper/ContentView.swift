@@ -30,8 +30,8 @@ struct ContentView: View {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(viewModel.localizationFiles) { file in
-                            List {
-                                Text(file.languageCode)
+                            List(0..<file.content.count) { index in
+                                Text(file.content[index])
                             }
                             .frame(width: colWidth)
                         }
