@@ -139,7 +139,12 @@ struct ContentView: View {
                                 self.error = error
                                 return
                             }
+                            
+                            
                         }
+                        let pasteboard = NSPasteboard.general
+                        pasteboard.clearContents()
+                        pasteboard.setString(exampleText, forType: .string)
                         self.enteringKey = ""
                     }
                         .disabled(!canAdd)
