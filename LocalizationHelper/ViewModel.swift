@@ -10,6 +10,7 @@ import Foundation
 struct LocalizationFile: Identifiable {
     var languageCode: String
     var url: String
+    var newValue: String
     var id: String {
         url
     }
@@ -18,10 +19,8 @@ struct LocalizationFile: Identifiable {
 class ViewModel: ObservableObject {
     @Published var localizationFiles = [LocalizationFile]()
     
-    func openProject(path: String, afterDelay interval: TimeInterval = 0) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
-            self.localizationFiles = self.localizationFilesAtPath(path: path)
-        }
+    func openProject(path: String) {
+        localizationFiles = localizationFilesAtPath(path: path)
     }
     
     fileprivate func localizationFilesAtPath(path: String) -> [LocalizationFile] {
@@ -32,6 +31,6 @@ class ViewModel: ObservableObject {
             return []
         }
         let stringsFilePaths = paths.filter {$0.hasSuffix(".strings") && !$0.contains("InfoPlist")}
-        return stringsFilePaths.map {LocalizationFile(languageCode: "", url: $0)} 
+        return stringsFilePaths.map {LocalizationFile(languageCode: $0.components(separatedBy: ".lproj").first ?? "", url: $0, newValue: "")} 
     }
 }

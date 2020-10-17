@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    let colWidth: CGFloat = 300
     @State private var currentProjectUrl = UserDefaults.standard.string(forKey: "Settings.currentProjectUrl") {
         didSet { UserDefaults.standard.set(currentProjectUrl, forKey: "Settings.currentProjectUrl") }
     }
     @ObservedObject var viewModel = ViewModel()
+    @State private var enteringKey = ""
     
     init() {
         defer {openProject()}
@@ -20,7 +22,6 @@ struct ContentView: View {
     var body: some View {
         Group {
             if let url = currentProjectUrl {
-                Spacer()
                 HStack {
                     Text("Current project: " + url)
                     openProjectButton(title: "Other...")
@@ -30,17 +31,32 @@ struct ContentView: View {
                     HStack {
                         ForEach(viewModel.localizationFiles) { file in
                             List {
-                                Text(file.url)
+                                Text(file.languageCode)
                             }
-                            .frame(minWidth: 500, maxWidth: .infinity)
+                            .frame(width: colWidth)
                         }
                     }
                 }
                 Spacer()
+                TextField("Enter key...", text: $enteringKey)
+                    .frame(width: colWidth)
+                Spacer()
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(0..<viewModel.localizationFiles.count) { index in
+                            TextField("", text: $viewModel.localizationFiles[index].newValue)
+                                .frame(width: colWidth)
+                        }
+                    }
+                }
+                Button("Add") {
+                    
+                }
             } else {
                 openProjectButton()
             }
         }
+        .padding(8)
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
     }
     
@@ -75,7 +91,6 @@ struct ContentView: View {
         viewModel.openProject(path: path)
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
