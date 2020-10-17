@@ -41,7 +41,7 @@ class ViewModel: ObservableObject {
             print(path)
             let text = try! String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
             let array = text.components(separatedBy: .newlines)
-            return LocalizationFile(languageCode: path.components(separatedBy: ".lproj").first ?? "", url: path, newValue: "", content: array)
+            return LocalizationFile(languageCode: aPath.components(separatedBy: ".lproj").first ?? "", url: path, newValue: "", content: array)
         }
     }
 }

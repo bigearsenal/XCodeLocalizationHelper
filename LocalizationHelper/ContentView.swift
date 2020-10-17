@@ -30,16 +30,17 @@ struct ContentView: View {
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(viewModel.localizationFiles) { file in
-                            List(0..<file.content.count) { index in
-                                Text(file.content[index])
+                            VStack {
+                                Text(file.languageCode)
+                                List(0..<file.content.count) { index in
+                                    Text(file.content[index])
+                                }
                             }
                             .frame(width: colWidth)
                         }
                     }
                 }
                 Spacer()
-                TextField("Enter key...", text: $enteringKey)
-                    .frame(width: colWidth)
                 Spacer()
                 ScrollView(.horizontal) {
                     HStack {
@@ -49,8 +50,13 @@ struct ContentView: View {
                         }
                     }
                 }
-                Button("Add") {
-                    
+                HStack {
+                    TextField("Enter key...", text: $enteringKey)
+                        .frame(width: colWidth)
+                    Button("Add") {
+                        
+                    }
+                    Spacer()
                 }
             } else {
                 openProjectButton()
