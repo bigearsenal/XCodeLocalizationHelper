@@ -112,13 +112,19 @@ struct ContentView: View {
                 }
                 Spacer()
                 HStack {
+                    Text("Pattern")
+                    TextField("pattern for copying", text: $pattern)
+                    Text("Ex: \(exampleText)")
+                }
+                Spacer()
+                HStack {
                     TextField("Enter key...", text: binding) { self.isEnteringKey = $0 }
                         .frame(width: colWidth)
                     Button("Translate") {
                         viewModel.translate()
                     }
                         .disabled(!isNewKey)
-                    Button("Add") {
+                    Button("Add and copy to clip board") {
                         for var file in viewModel.localizationFiles {
                             let textToWrite = "\"\(enteringKey)\" = \"\(file.newValue)\";\n"
                             guard let data = textToWrite.data(using: .utf8) else {return}
@@ -149,11 +155,6 @@ struct ContentView: View {
                     }
                         .disabled(!canAdd)
                     Spacer()
-                }
-                HStack {
-                    Text("Pattern")
-                    TextField("pattern for copying", text: $pattern)
-                    Text("Ex: \(exampleText)")
                 }
                 if let error = error {
                     Text(error.localizedDescription)
