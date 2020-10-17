@@ -25,19 +25,29 @@ struct ContentView: View {
             get: { self.enteringKey },
             set: {
                 self.enteringKey = $0
-                var files = self.viewModel.localizationFiles
-                guard let index = files.firstIndex(where: {$0.languageCode == "en"}) else {return}
-                var file = files[index]
-                file.newValue = $0
-                files[index] = file
                 self.viewModel.query = $0
-                self.viewModel.localizationFiles = files
             }
         )
         
         let filteredContentOfFile: (LocalizationFile) -> [LocalizationFile.Content] = { file in
             if viewModel.query == nil {return file.content}
             return file.content.filter {$0.value.lowercased().contains(viewModel.query!.lowercased())}
+        }
+        
+        let bindingForTextFieldOfFile: ((LocalizationFile) -> Binding<String>) = { file in
+            Binding<String>(
+                get: {
+                    file.newValue
+                },
+                set: {
+                    var file = file
+                    file.newValue = $0
+                    var files = viewModel.localizationFiles
+                    guard let index = files.firstIndex(where: {$0.id == file.id}) else {return}
+                    files[index] = file
+                    viewModel.localizationFiles = files
+                }
+            )
         }
 
         return Group {
@@ -57,24 +67,21 @@ struct ContentView: View {
                                         .lineLimit(0)
                                         .multilineTextAlignment(.leading)
                                 }
+                                TextField(file.languageCode, text: bindingForTextFieldOfFile(file))
+                                    .frame(width: colWidth)
                             }
                             .frame(width: colWidth)
                         }
                     }
+                    .padding(.bottom, 16)
                 }
                 Spacer()
-                Spacer()
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(0..<viewModel.localizationFiles.count) { index in
-                            TextField("", text: $viewModel.localizationFiles[index].newValue)
-                                .frame(width: colWidth)
-                        }
-                    }
-                }
                 HStack {
                     TextField("Enter key...", text: binding) { self.isEnteringKey = $0 }
                         .frame(width: colWidth)
+                    Button("Translate") {
+                        viewModel.translate()
+                    }
                     Button("Add") {
                         
                     }
