@@ -26,10 +26,12 @@ class ViewModel: ObservableObject {
     
     fileprivate func localizationFilesAtPath(path: String) -> [LocalizationFile] {
         let fileManager = FileManager.default
-        guard let paths = fileManager.enumerator(atPath: path)?.allObjects as? [String] else {
+        
+        guard let lastPath = path.components(separatedBy: "/").last,
+              let paths = fileManager.enumerator(atPath: path + "/" + lastPath)?.allObjects as? [String] else {
             return []
         }
-        let stringsFilePaths = paths.filter {$0.hasSuffix(".strings")}
+        let stringsFilePaths = paths.filter {$0.hasSuffix(".strings") && !$0.contains("InfoPlist")}
         return stringsFilePaths.map {LocalizationFile(languageCode: "", url: $0)} 
     }
 }

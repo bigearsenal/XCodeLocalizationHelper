@@ -20,13 +20,21 @@ struct ContentView: View {
     var body: some View {
         Group {
             if let url = currentProjectUrl {
+                Spacer()
                 HStack {
                     Text("Current project: " + url)
                     openProjectButton(title: "Other...")
                 }
                 Spacer()
-                List(viewModel.localizationFiles) {
-                    Text($0.url)
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(viewModel.localizationFiles) { file in
+                            List {
+                                Text(file.url)
+                            }
+                            .frame(minWidth: 500, maxWidth: .infinity)
+                        }
+                    }
                 }
                 Spacer()
             } else {
