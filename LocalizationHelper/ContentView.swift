@@ -115,7 +115,7 @@ struct ContentView: View {
                         .disabled(!isNewKey)
                     Button("Add") {
                         for var file in viewModel.localizationFiles {
-                            let textToWrite = "\"\(enteringKey)\"=\"\(file.newValue)\";"
+                            let textToWrite = "\"\(enteringKey)\" = \"\(file.newValue)\";\n"
                             guard let data = textToWrite.data(using: .utf8) else {return}
                             do {
                                 let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.url))
@@ -130,11 +130,12 @@ struct ContentView: View {
                                     files[index] = file
                                     viewModel.localizationFiles = files
                                 }
-                                self.enteringKey = ""
                             } catch {
                                 self.error = error
+                                return
                             }
                         }
+                        self.enteringKey = ""
                     }
                         .disabled(!canAdd)
                     Spacer()
