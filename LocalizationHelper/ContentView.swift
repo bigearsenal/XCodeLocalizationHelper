@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var currentProjectUrl: String? = UserDefaults.standard.string(forKey: "Settings.currentProjectUrl") {
+    @State private var currentProjectUrl = UserDefaults.standard.string(forKey: "Settings.currentProjectUrl") {
         didSet { UserDefaults.standard.set(currentProjectUrl, forKey: "Settings.currentProjectUrl") }
+    }
+    @ObservedObject var viewModel = ViewModel()
+    
+    init() {
+        defer {openProject()}
     }
 
     var body: some View {
@@ -17,20 +22,21 @@ struct ContentView: View {
             if let url = currentProjectUrl {
                 HStack {
                     Text("Current project: " + url)
-                    openProject(title: "Other...")
+                    openProjectButton(title: "Other...")
                 }
-                
                 Spacer()
-                Text("Hello, World!")
+                List(viewModel.localizationFiles) {
+                    Text($0.url)
+                }
                 Spacer()
             } else {
-                openProject()
+                openProjectButton()
             }
         }
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
     }
     
-    fileprivate func openProject(title: String = "Open XCode project") -> Button<Text> {
+    fileprivate func openProjectButton(title: String = "Open XCode project") -> Button<Text> {
         return Button(title) {
             let dialog = NSOpenPanel();
             
@@ -46,6 +52,7 @@ struct ContentView: View {
                 
                 if let path = result?.path {
                     self.currentProjectUrl = path
+                    openProject()
                 }
                 
             } else {
@@ -53,6 +60,11 @@ struct ContentView: View {
                 return
             }
         }
+    }
+    
+    fileprivate func openProject() {
+        guard let path = currentProjectUrl else {return}
+        viewModel.openProject(path: path)
     }
 }
 

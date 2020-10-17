@@ -14,6 +14,7 @@
 		BC81A4D9253A9EF300CE8141 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC81A4D7253A9EF300CE8141 /* Main.storyboard */; };
 		BC81A4E5253A9EF300CE8141 /* LocalizationHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A4E4253A9EF300CE8141 /* LocalizationHelperTests.swift */; };
 		BC81A4F0253A9EF300CE8141 /* LocalizationHelperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A4EF253A9EF300CE8141 /* LocalizationHelperUITests.swift */; };
+		BC81A519253ABA3400CE8141 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A518253ABA3400CE8141 /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		BC81A4EB253A9EF300CE8141 /* LocalizationHelperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LocalizationHelperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC81A4EF253A9EF300CE8141 /* LocalizationHelperUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationHelperUITests.swift; sourceTree = "<group>"; };
 		BC81A4F1253A9EF300CE8141 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BC81A518253ABA3400CE8141 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			children = (
 				BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */,
 				BC81A4D0253A9EF100CE8141 /* ContentView.swift */,
+				BC81A518253ABA3400CE8141 /* ViewModel.swift */,
 				BC81A4D2253A9EF300CE8141 /* Assets.xcassets */,
 				BC81A4D7253A9EF300CE8141 /* Main.storyboard */,
 				BC81A4DA253A9EF300CE8141 /* Info.plist */,
@@ -266,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC81A4D1253A9EF100CE8141 /* ContentView.swift in Sources */,
+				BC81A519253ABA3400CE8141 /* ViewModel.swift in Sources */,
 				BC81A4CF253A9EF100CE8141 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
