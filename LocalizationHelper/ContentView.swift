@@ -26,23 +26,35 @@ struct ContentView: View {
             set: {
                 self.enteringKey = $0
                 self.viewModel.query = $0
+                var newFiles = viewModel.localizationFiles
+                for i in 0..<newFiles.count {
+                    newFiles[i].newValue = ""
+                }
+                viewModel.localizationFiles = newFiles
             }
         )
         
         let filteredContentOfFile: (LocalizationFile) -> [LocalizationFile.Content] = { file in
-            if viewModel.query == nil {return Array(file.content.prefix(30))}
+            if viewModel.query == nil {return Array(file.content.prefix(10))}
             return Array(file.content.filter {$0.key.lowercased().contains(viewModel.query!.lowercased()) ||
                 $0.value.lowercased().contains(viewModel.query!.lowercased())
-            }.prefix(30))
+            }.prefix(10))
         }
         
-        var canAdd = true
+        var isNewKey = true
         if !enteringKey.isEmpty {
             for file in viewModel.localizationFiles {
-                if file.keys.contains(enteringKey) {canAdd = false; break}
+                if file.keys.contains(enteringKey) {isNewKey = false; break}
             }
         } else {
-            canAdd = false
+            isNewKey = false
+        }
+        
+        var canAdd = isNewKey
+        if canAdd {
+            for file in viewModel.localizationFiles {
+                if file.newValue.isEmpty {canAdd = false; break}
+            }
         }
         
         let bindingForTextFieldOfFile: ((LocalizationFile) -> Binding<String>) = { file in
@@ -99,9 +111,12 @@ struct ContentView: View {
                     Button("Translate") {
                         viewModel.translate()
                     }
-                        .disabled(!canAdd)
+                        .disabled(!isNewKey)
                     Button("Add") {
-                        
+                        for file in viewModel.localizationFiles {
+                            let textToWrite = "\"\(enteringKey)\"=\"\(file.newValue)\";"
+                            print(textToWrite)
+                        }
                     }
                         .disabled(!canAdd)
                     Spacer()
