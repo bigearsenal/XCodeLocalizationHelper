@@ -17,6 +17,11 @@
 		BC81A519253ABA3400CE8141 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A518253ABA3400CE8141 /* ViewModel.swift */; };
 		BC81A53C253AED6E00CE8141 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BC81A53B253AED6E00CE8141 /* Alamofire */; };
 		BC81A541253AED7B00CE8141 /* GoogleTranslate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A540253AED7B00CE8141 /* GoogleTranslate.swift */; };
+		BC81A54E253BEB8900CE8141 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC81A54D253BEB8900CE8141 /* Cocoa.framework */; };
+		BC81A550253BEB8900CE8141 /* XcodeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC81A54F253BEB8900CE8141 /* XcodeKit.framework */; };
+		BC81A553253BEB8900CE8141 /* SourceEditorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A552253BEB8900CE8141 /* SourceEditorExtension.swift */; };
+		BC81A555253BEB8900CE8141 /* SourceEditorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A554253BEB8900CE8141 /* SourceEditorCommand.swift */; };
+		BC81A55A253BEB8900CE8141 /* extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BC81A54B253BEB8900CE8141 /* extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,7 +39,28 @@
 			remoteGlobalIDString = BC81A4CA253A9EF000CE8141;
 			remoteInfo = LocalizationHelper;
 		};
+		BC81A558253BEB8900CE8141 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BC81A4C3253A9EF000CE8141 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC81A54A253BEB8900CE8141;
+			remoteInfo = extension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BC81A55B253BEB8900CE8141 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BC81A55A253BEB8900CE8141 /* extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BC81A4CB253A9EF100CE8141 /* LocalizationHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -53,6 +79,13 @@
 		BC81A4F1253A9EF300CE8141 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC81A518253ABA3400CE8141 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		BC81A540253AED7B00CE8141 /* GoogleTranslate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleTranslate.swift; sourceTree = "<group>"; };
+		BC81A54B253BEB8900CE8141 /* extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = extension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC81A54D253BEB8900CE8141 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		BC81A54F253BEB8900CE8141 /* XcodeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XcodeKit.framework; path = Library/Frameworks/XcodeKit.framework; sourceTree = DEVELOPER_DIR; };
+		BC81A552253BEB8900CE8141 /* SourceEditorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEditorExtension.swift; sourceTree = "<group>"; };
+		BC81A554253BEB8900CE8141 /* SourceEditorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceEditorCommand.swift; sourceTree = "<group>"; };
+		BC81A556253BEB8900CE8141 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BC81A557253BEB8900CE8141 /* extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = extension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +111,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BC81A548253BEB8900CE8141 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC81A54E253BEB8900CE8141 /* Cocoa.framework in Frameworks */,
+				BC81A550253BEB8900CE8141 /* XcodeKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -87,6 +129,8 @@
 				BC81A4CD253A9EF100CE8141 /* LocalizationHelper */,
 				BC81A4E3253A9EF300CE8141 /* LocalizationHelperTests */,
 				BC81A4EE253A9EF300CE8141 /* LocalizationHelperUITests */,
+				BC81A551253BEB8900CE8141 /* extension */,
+				BC81A54C253BEB8900CE8141 /* Frameworks */,
 				BC81A4CC253A9EF100CE8141 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -97,6 +141,7 @@
 				BC81A4CB253A9EF100CE8141 /* LocalizationHelper.app */,
 				BC81A4E0253A9EF300CE8141 /* LocalizationHelperTests.xctest */,
 				BC81A4EB253A9EF300CE8141 /* LocalizationHelperUITests.xctest */,
+				BC81A54B253BEB8900CE8141 /* extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,6 +188,26 @@
 			path = LocalizationHelperUITests;
 			sourceTree = "<group>";
 		};
+		BC81A54C253BEB8900CE8141 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC81A54D253BEB8900CE8141 /* Cocoa.framework */,
+				BC81A54F253BEB8900CE8141 /* XcodeKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BC81A551253BEB8900CE8141 /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				BC81A552253BEB8900CE8141 /* SourceEditorExtension.swift */,
+				BC81A554253BEB8900CE8141 /* SourceEditorCommand.swift */,
+				BC81A556253BEB8900CE8141 /* Info.plist */,
+				BC81A557253BEB8900CE8141 /* extension.entitlements */,
+			);
+			path = extension;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -153,10 +218,12 @@
 				BC81A4C7253A9EF000CE8141 /* Sources */,
 				BC81A4C8253A9EF000CE8141 /* Frameworks */,
 				BC81A4C9253A9EF000CE8141 /* Resources */,
+				BC81A55B253BEB8900CE8141 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				BC81A559253BEB8900CE8141 /* PBXTargetDependency */,
 			);
 			name = LocalizationHelper;
 			packageProductDependencies = (
@@ -202,6 +269,23 @@
 			productReference = BC81A4EB253A9EF300CE8141 /* LocalizationHelperUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		BC81A54A253BEB8900CE8141 /* extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC81A55E253BEB8900CE8141 /* Build configuration list for PBXNativeTarget "extension" */;
+			buildPhases = (
+				BC81A547253BEB8900CE8141 /* Sources */,
+				BC81A548253BEB8900CE8141 /* Frameworks */,
+				BC81A549253BEB8900CE8141 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = extension;
+			productName = extension;
+			productReference = BC81A54B253BEB8900CE8141 /* extension.appex */;
+			productType = "com.apple.product-type.xcode-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -221,6 +305,9 @@
 					BC81A4EA253A9EF300CE8141 = {
 						CreatedOnToolsVersion = 12.0.1;
 						TestTargetID = BC81A4CA253A9EF000CE8141;
+					};
+					BC81A54A253BEB8900CE8141 = {
+						CreatedOnToolsVersion = 12.0.1;
 					};
 				};
 			};
@@ -243,6 +330,7 @@
 				BC81A4CA253A9EF000CE8141 /* LocalizationHelper */,
 				BC81A4DF253A9EF300CE8141 /* LocalizationHelperTests */,
 				BC81A4EA253A9EF300CE8141 /* LocalizationHelperUITests */,
+				BC81A54A253BEB8900CE8141 /* extension */,
 			);
 		};
 /* End PBXProject section */
@@ -266,6 +354,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		BC81A4E9253A9EF300CE8141 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BC81A549253BEB8900CE8141 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -302,6 +397,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		BC81A547253BEB8900CE8141 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC81A553253BEB8900CE8141 /* SourceEditorExtension.swift in Sources */,
+				BC81A555253BEB8900CE8141 /* SourceEditorCommand.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -314,6 +418,11 @@
 			isa = PBXTargetDependency;
 			target = BC81A4CA253A9EF000CE8141 /* LocalizationHelper */;
 			targetProxy = BC81A4EC253A9EF300CE8141 /* PBXContainerItemProxy */;
+		};
+		BC81A559253BEB8900CE8141 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC81A54A253BEB8900CE8141 /* extension */;
+			targetProxy = BC81A558253BEB8900CE8141 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -447,6 +556,7 @@
 		BC81A4F5253A9EF300CE8141 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LocalizationHelper/LocalizationHelper.entitlements;
@@ -471,6 +581,7 @@
 		BC81A4F6253A9EF300CE8141 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LocalizationHelper/LocalizationHelper.entitlements;
@@ -576,6 +687,48 @@
 			};
 			name = Release;
 		};
+		BC81A55C253BEB8900CE8141 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = extension/extension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = QPW4XRTF2N;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = extension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = info.bigears.LocalizationHelper.extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		BC81A55D253BEB8900CE8141 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = extension/extension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = QPW4XRTF2N;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = extension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = info.bigears.LocalizationHelper.extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -611,6 +764,15 @@
 			buildConfigurations = (
 				BC81A4FB253A9EF300CE8141 /* Debug */,
 				BC81A4FC253A9EF300CE8141 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC81A55E253BEB8900CE8141 /* Build configuration list for PBXNativeTarget "extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC81A55C253BEB8900CE8141 /* Debug */,
+				BC81A55D253BEB8900CE8141 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
