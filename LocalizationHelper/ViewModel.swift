@@ -59,18 +59,18 @@ class ViewModel: ObservableObject {
     
     fileprivate func localizationFilesAtPath(path: String) -> [LocalizationFile] {
         let fileManager = FileManager.default
+        var path = path
         
-        guard let lastPath = path.components(separatedBy: "/").last else {
-            return []
-        }
-        let newPath = path + "/" + lastPath
-        guard let paths = fileManager.enumerator(atPath: newPath)?.allObjects as? [String] else {
+        // get project's path
+        path = path.components(separatedBy: "/").dropLast(2).joined(separator: "/")
+        
+        guard let paths = fileManager.enumerator(atPath: path)?.allObjects as? [String] else {
             return []
         }
         let stringsFilePaths = paths.filter {$0.hasSuffix("Localizable.strings")}
         
         return stringsFilePaths.compactMap { aPath in
-            let path = newPath + "/" + aPath
+            let path = path + "/" + aPath
             print(path)
             let text = try! String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
             let array = text.components(separatedBy: .newlines)
