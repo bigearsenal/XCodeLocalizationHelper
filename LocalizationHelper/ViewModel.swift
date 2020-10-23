@@ -67,7 +67,7 @@ class ViewModel: ObservableObject {
         guard let paths = fileManager.enumerator(atPath: newPath)?.allObjects as? [String] else {
             return []
         }
-        let stringsFilePaths = paths.filter {$0.hasSuffix(".strings") && !$0.contains("InfoPlist")}
+        let stringsFilePaths = paths.filter {$0.hasSuffix("Localizable.strings")}
         
         return stringsFilePaths.compactMap { aPath in
             let path = newPath + "/" + aPath
