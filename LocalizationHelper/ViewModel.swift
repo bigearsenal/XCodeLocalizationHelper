@@ -87,7 +87,7 @@ class ViewModel: ObservableObject {
         let pipe = Pipe()
         
         task.standardOutput = pipe
-        task.arguments = ["-c", "\(projectFolder)/../Pods/swiftgen/bin/swiftgen"]
+        task.arguments = ["-c", "\(projectFolder)/../Pods/swiftgen/bin/swiftgen config run --config \(projectFolder)/../swiftgen.yml"]
         task.launchPath = "/bin/zsh"
         task.launch()
         
