@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var enteringKey = ""
     @State private var isEnteringKey = false
     @State private var error: Error?
+    @State private var isSwiftgenEnabled = UserDefaults.standard.bool(forKey: "Settings.isSwiftgenEnabled")
     @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
     @State private var showingAlert = false
     init() {
@@ -118,11 +119,22 @@ struct ContentView: View {
                 }
                 Spacer()
                 HStack {
-                    Text("Pattern")
-                    TextField("pattern for copying", text: patternBinding)
-                    Text("Ex: \(exampleText)")
+                    Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
+                        UserDefaults.standard.set(state, forKey: "Settings.isSwiftgenEnabled")
+                    })) {
+                        Text("Swiftgen")
+                    }
+                    Spacer()
                 }
                 Spacer()
+                if !isSwiftgenEnabled {
+                    HStack {
+                        Text("Pattern")
+                        TextField("pattern for copying", text: patternBinding)
+                        Text("Ex: \(exampleText)")
+                    }
+                    Spacer()
+                }
                 HStack {
                     TextField("Enter key...", text: binding) { self.isEnteringKey = $0 }
                         .frame(width: colWidth)
@@ -130,13 +142,13 @@ struct ContentView: View {
                         viewModel.translate()
                     }
                         .disabled(!isNewKey)
-                    Button("Add and copy to clip board") {
+                    Button("Add and \(isSwiftgenEnabled ? "run swiftgen": "copy to clipboard")") {
                         for var file in viewModel.localizationFiles {
                             let textToWrite = "\"\(enteringKey)\" = \"\(file.newValue)\";\n"
                             guard let data = textToWrite.data(using: .utf8) else {return}
                             do {
                                 let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.url))
-                                try fileHandler.seekToEnd()
+                                fileHandler.seekToEndOfFile()
                                 fileHandler.write(data)
                                 try fileHandler.close()
                                 
@@ -151,13 +163,16 @@ struct ContentView: View {
                                 self.error = error
                                 return
                             }
-                            
-                            
                         }
-                        let pasteboard = NSPasteboard.general
-                        pasteboard.clearContents()
-                        pasteboard.setString(exampleText, forType: .string)
-                        self.enteringKey = ""
+                        
+                        if isSwiftgenEnabled {
+                            print(self.viewModel.runSwiftgen())
+                        } else {
+                            let pasteboard = NSPasteboard.general
+                            pasteboard.clearContents()
+                            pasteboard.setString(exampleText, forType: .string)
+                            self.enteringKey = ""
+                        }
                     }
                         .disabled(!canAdd)
                     Spacer()

@@ -28,9 +28,11 @@ struct LocalizationFile: Identifiable {
 
 class ViewModel: ObservableObject {
     @Published var localizationFiles = [LocalizationFile]()
+    @Published var projectFolder = ""
     @Published var query: String?
     
     func openProject(path: String) {
+        projectFolder = path.components(separatedBy: "/").dropLast(2).joined(separator: "/")
         localizationFiles = localizationFilesAtPath(path: path)
     }
     
@@ -78,5 +80,20 @@ class ViewModel: ObservableObject {
                 .map {LocalizationFile.Content(key: $0.first ?? "",value: String($0.last?.dropLast() ?? ";"))}
             return LocalizationFile(languageCode: aPath.components(separatedBy: ".lproj").first?.components(separatedBy: "/").last ?? "", url: path, newValue: "", content: array)
         }
+    }
+    
+    func runSwiftgen() -> String {
+        let task = Process()
+        let pipe = Pipe()
+        
+        task.standardOutput = pipe
+        task.arguments = ["-c", "\(projectFolder)/../Pods/swiftgen/bin/swiftgen"]
+        task.launchPath = "/bin/zsh"
+        task.launch()
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)!
+        
+        return output
     }
 }
