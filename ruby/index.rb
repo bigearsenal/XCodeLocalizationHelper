@@ -1,5 +1,6 @@
 require 'xcodeproj'
 require 'pathname'
+require 'fileutils'
 
 # verify arguments
 if ARGV.length != 2
@@ -23,12 +24,11 @@ if !known_regions.include?(location_code)
 	known_regions.push(location_code)
 end
 
-# launch screen
+# create .lproj folder
 if !Dir.exists?(lproj_folder)
-	puts lproj_folder
+	FileUtils.mkdir_p lproj_folder
+	puts "Created folder: " + lproj_folder
 end
-
-puts "Created folder: " + lproj_folder
 
 # get target
 target = project.targets.first
