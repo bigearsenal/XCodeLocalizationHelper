@@ -17,6 +17,7 @@
 		BC81A519253ABA3400CE8141 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A518253ABA3400CE8141 /* ViewModel.swift */; };
 		BC81A53C253AED6E00CE8141 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BC81A53B253AED6E00CE8141 /* Alamofire */; };
 		BC81A541253AED7B00CE8141 /* GoogleTranslate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A540253AED7B00CE8141 /* GoogleTranslate.swift */; };
+		BC9EC1402598305C005A2DE6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9EC13F2598305C005A2DE6 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		BC81A4F1253A9EF300CE8141 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC81A518253ABA3400CE8141 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		BC81A540253AED7B00CE8141 /* GoogleTranslate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleTranslate.swift; sourceTree = "<group>"; };
+		BC9EC13F2598305C005A2DE6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 			children = (
 				BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */,
 				BC81A4D0253A9EF100CE8141 /* ContentView.swift */,
+				BC9EC13F2598305C005A2DE6 /* Extensions.swift */,
 				BC81A518253ABA3400CE8141 /* ViewModel.swift */,
 				BC81A4D2253A9EF300CE8141 /* Assets.xcassets */,
 				BC81A4D7253A9EF300CE8141 /* Main.storyboard */,
@@ -279,6 +282,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC9EC1402598305C005A2DE6 /* Extensions.swift in Sources */,
 				BC81A4D1253A9EF100CE8141 /* ContentView.swift in Sources */,
 				BC81A519253ABA3400CE8141 /* ViewModel.swift in Sources */,
 				BC81A4CF253A9EF100CE8141 /* AppDelegate.swift in Sources */,

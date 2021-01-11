@@ -9,17 +9,18 @@ import SwiftUI
 
 struct ContentView: View {
     let colWidth: CGFloat = 300
-    @State private var currentProjectUrl = UserDefaults.standard.string(forKey: "Settings.currentProjectUrl") {
-        didSet { UserDefaults.standard.set(currentProjectUrl, forKey: "Settings.currentProjectUrl") }
+    @State private var currentStringsFileUrl = UserDefaults.standard.string(forKey: "Settings.currentStringsFileUrl") {
+        didSet { UserDefaults.standard.set(currentStringsFileUrl, forKey: "Settings.currentStringsFileUrl") }
     }
     @ObservedObject var viewModel = ViewModel()
     @State private var enteringKey = ""
     @State private var isEnteringKey = false
     @State private var error: Error?
+    @State private var isSwiftgenEnabled = UserDefaults.standard.bool(forKey: "Settings.isSwiftgenEnabled")
     @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
-    
+    @State private var showingAlert = false
     init() {
-        defer {openProject()}
+        defer {openStringFile()}
     }
 
     var body: some View {
@@ -86,7 +87,7 @@ struct ContentView: View {
         }
 
         return Group {
-            if let url = currentProjectUrl {
+            if let url = currentStringsFileUrl {
                 HStack {
                     Text("Current project: " + url)
                     openProjectButton(title: "Other...")
@@ -118,11 +119,22 @@ struct ContentView: View {
                 }
                 Spacer()
                 HStack {
-                    Text("Pattern")
-                    TextField("pattern for copying", text: patternBinding)
-                    Text("Ex: \(exampleText)")
+                    Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
+                        UserDefaults.standard.set(state, forKey: "Settings.isSwiftgenEnabled")
+                    })) {
+                        Text("Swiftgen")
+                    }
+                    Spacer()
                 }
                 Spacer()
+                if !isSwiftgenEnabled {
+                    HStack {
+                        Text("Pattern")
+                        TextField("pattern for copying", text: patternBinding)
+                        Text("Ex: \(exampleText)")
+                    }
+                    Spacer()
+                }
                 HStack {
                     TextField("Enter key...", text: binding) { self.isEnteringKey = $0 }
                         .frame(width: colWidth)
@@ -130,13 +142,13 @@ struct ContentView: View {
                         viewModel.translate()
                     }
                         .disabled(!isNewKey)
-                    Button("Add and copy to clip board") {
+                    Button("Add and \(isSwiftgenEnabled ? "run swiftgen": "copy to clipboard")") {
                         for var file in viewModel.localizationFiles {
                             let textToWrite = "\"\(enteringKey)\" = \"\(file.newValue)\";\n"
                             guard let data = textToWrite.data(using: .utf8) else {return}
                             do {
                                 let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.url))
-                                try fileHandler.seekToEnd()
+                                fileHandler.seekToEndOfFile()
                                 fileHandler.write(data)
                                 try fileHandler.close()
                                 
@@ -151,13 +163,16 @@ struct ContentView: View {
                                 self.error = error
                                 return
                             }
-                            
-                            
                         }
-                        let pasteboard = NSPasteboard.general
-                        pasteboard.clearContents()
-                        pasteboard.setString(exampleText, forType: .string)
-                        self.enteringKey = ""
+                        
+                        if isSwiftgenEnabled {
+                            print(self.viewModel.runSwiftgen())
+                        } else {
+                            let pasteboard = NSPasteboard.general
+                            pasteboard.clearContents()
+                            pasteboard.setString(exampleText, forType: .string)
+                            self.enteringKey = ""
+                        }
                     }
                         .disabled(!canAdd)
                     Spacer()
@@ -174,27 +189,36 @@ struct ContentView: View {
                 openProjectButton()
             }
         }
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text("Invalid file name"), message: Text("Must choose a Localizable.strings file"))
+        }
         .padding(8)
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
     }
     
-    fileprivate func openProjectButton(title: String = "Open XCode project") -> Button<Text> {
+    fileprivate func openProjectButton(title: String = "Open a Localizable.strings file") -> Button<Text> {
         return Button(title) {
-            let dialog = NSOpenPanel();
+            let dialog = NSOpenPanel()
             
-            dialog.title                   = "Choose an xCode project's directory"
+            dialog.title                   = "Choose an Localizable.strings file"
             dialog.showsResizeIndicator    = true
             dialog.showsHiddenFiles        = false
             dialog.allowsMultipleSelection = false
-            dialog.canChooseDirectories    = true
-            dialog.canChooseFiles          = false
+            dialog.canChooseDirectories    = false
+            dialog.canChooseFiles          = true
+            dialog.allowedFileTypes = ["strings"]
             
-            if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
+            if (dialog.runModal() ==  .OK) {
                 let result = dialog.url // Pathname of the file
                 
                 if let path = result?.path {
-                    self.currentProjectUrl = path
-                    openProject()
+                    if path.components(separatedBy: "/").last == "Localizable.strings" {
+                        self.currentStringsFileUrl = path
+                        openStringFile()
+                    } else {
+                        
+                        return
+                    }
                 }
                 
             } else {
@@ -204,8 +228,8 @@ struct ContentView: View {
         }
     }
     
-    fileprivate func openProject() {
-        guard let path = currentProjectUrl else {return}
+    fileprivate func openStringFile() {
+        guard let path = currentStringsFileUrl else {return}
         viewModel.openProject(path: path)
     }
 }
