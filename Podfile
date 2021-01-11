@@ -1,9 +1,9 @@
 workspace 'LocalizationHelper'
-target 'LocalizationHelperDemo' do
+target 'Demo-iOS' do
     platform :ios, '12.0'
     use_frameworks!
     pod 'BEPureLayout', :git => "https://github.com/bigearsenal/BEPureLayout.git" 
-    project 'LocalizationHelperDemo/LocalizationHelperDemo'
+    project 'Demo-iOS/Demo-iOS'
 end
 
 target 'LocalizationHelper' do
