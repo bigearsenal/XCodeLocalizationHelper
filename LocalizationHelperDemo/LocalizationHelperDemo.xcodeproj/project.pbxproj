@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63ABF42A5F1544ADDB8477BD /* Pods_LocalizationHelperDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FB9932DFB11022B0C2AFDF /* Pods_LocalizationHelperDemo.framework */; };
 		BCD5365F25ABF9B3002166E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD5365E25ABF9B3002166E1 /* AppDelegate.swift */; };
 		BCD5366125ABF9B3002166E1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD5366025ABF9B3002166E1 /* SceneDelegate.swift */; };
 		BCD5366325ABF9B3002166E1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCD5366225ABF9B3002166E1 /* ViewController.swift */; };
@@ -16,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A2FB9932DFB11022B0C2AFDF /* Pods_LocalizationHelperDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LocalizationHelperDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5C447DCEB09E194C74A3844 /* Pods-LocalizationHelperDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocalizationHelperDemo.release.xcconfig"; path = "Target Support Files/Pods-LocalizationHelperDemo/Pods-LocalizationHelperDemo.release.xcconfig"; sourceTree = "<group>"; };
 		BCD5365B25ABF9B3002166E1 /* LocalizationHelperDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationHelperDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCD5365E25ABF9B3002166E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BCD5366025ABF9B3002166E1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +27,7 @@
 		BCD5366725ABF9B5002166E1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BCD5366A25ABF9B5002166E1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BCD5366C25ABF9B5002166E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E2A1B4EC0548FE43B40918F6 /* Pods-LocalizationHelperDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocalizationHelperDemo.debug.xcconfig"; path = "Target Support Files/Pods-LocalizationHelperDemo/Pods-LocalizationHelperDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +35,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63ABF42A5F1544ADDB8477BD /* Pods_LocalizationHelperDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E3748A917A37163D7736D33 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E2A1B4EC0548FE43B40918F6 /* Pods-LocalizationHelperDemo.debug.xcconfig */,
+				A5C447DCEB09E194C74A3844 /* Pods-LocalizationHelperDemo.release.xcconfig */,
+			);
+			name = Pods;
+			path = ../Pods;
+			sourceTree = "<group>";
+		};
 		BCD5365225ABF9B3002166E1 = {
 			isa = PBXGroup;
 			children = (
 				BCD5365D25ABF9B3002166E1 /* LocalizationHelperDemo */,
 				BCD5365C25ABF9B3002166E1 /* Products */,
+				4E3748A917A37163D7736D33 /* Pods */,
+				E55836052F77EB59C65458D3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +84,14 @@
 			path = LocalizationHelperDemo;
 			sourceTree = "<group>";
 		};
+		E55836052F77EB59C65458D3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A2FB9932DFB11022B0C2AFDF /* Pods_LocalizationHelperDemo.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -74,9 +99,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BCD5366F25ABF9B5002166E1 /* Build configuration list for PBXNativeTarget "LocalizationHelperDemo" */;
 			buildPhases = (
+				AF0949BB3312441011E29378 /* [CP] Check Pods Manifest.lock */,
 				BCD5365725ABF9B3002166E1 /* Sources */,
 				BCD5365825ABF9B3002166E1 /* Frameworks */,
 				BCD5365925ABF9B3002166E1 /* Resources */,
+				C83CBE7F76A5386B7A8C1632 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -131,6 +158,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		AF0949BB3312441011E29378 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LocalizationHelperDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C83CBE7F76A5386B7A8C1632 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LocalizationHelperDemo/Pods-LocalizationHelperDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LocalizationHelperDemo/Pods-LocalizationHelperDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LocalizationHelperDemo/Pods-LocalizationHelperDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BCD5365725ABF9B3002166E1 /* Sources */ = {
@@ -283,6 +352,7 @@
 		};
 		BCD5367025ABF9B5002166E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2A1B4EC0548FE43B40918F6 /* Pods-LocalizationHelperDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -302,6 +372,7 @@
 		};
 		BCD5367125ABF9B5002166E1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5C447DCEB09E194C74A3844 /* Pods-LocalizationHelperDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

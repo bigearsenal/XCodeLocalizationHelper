@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,9 +15,9 @@
 		BC81A4E5253A9EF300CE8141 /* LocalizationHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A4E4253A9EF300CE8141 /* LocalizationHelperTests.swift */; };
 		BC81A4F0253A9EF300CE8141 /* LocalizationHelperUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A4EF253A9EF300CE8141 /* LocalizationHelperUITests.swift */; };
 		BC81A519253ABA3400CE8141 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A518253ABA3400CE8141 /* ViewModel.swift */; };
-		BC81A53C253AED6E00CE8141 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BC81A53B253AED6E00CE8141 /* Alamofire */; };
 		BC81A541253AED7B00CE8141 /* GoogleTranslate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A540253AED7B00CE8141 /* GoogleTranslate.swift */; };
 		BC9EC1402598305C005A2DE6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC9EC13F2598305C005A2DE6 /* Extensions.swift */; };
+		C73B03D159901EE2B7F35563 /* Pods_LocalizationHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A441DC1B0AE8F155209914D8 /* Pods_LocalizationHelper.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +38,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4FC4690AA22B7AD6AC2DA2D0 /* Pods-LocalizationHelper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocalizationHelper.debug.xcconfig"; path = "Target Support Files/Pods-LocalizationHelper/Pods-LocalizationHelper.debug.xcconfig"; sourceTree = "<group>"; };
+		7E64F40D408A99BA0D9A3C71 /* Pods-LocalizationHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocalizationHelper.release.xcconfig"; path = "Target Support Files/Pods-LocalizationHelper/Pods-LocalizationHelper.release.xcconfig"; sourceTree = "<group>"; };
+		A441DC1B0AE8F155209914D8 /* Pods_LocalizationHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LocalizationHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC81A4CB253A9EF100CE8141 /* LocalizationHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC81A4D0253A9EF100CE8141 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,7 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BC81A53C253AED6E00CE8141 /* Alamofire in Frameworks */,
+				C73B03D159901EE2B7F35563 /* Pods_LocalizationHelper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +86,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		33B47AE25C9364C112FC087F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				4FC4690AA22B7AD6AC2DA2D0 /* Pods-LocalizationHelper.debug.xcconfig */,
+				7E64F40D408A99BA0D9A3C71 /* Pods-LocalizationHelper.release.xcconfig */,
+			);
+			name = Pods;
+			path = ../Pods;
+			sourceTree = "<group>";
+		};
 		BC81A4C2253A9EF000CE8141 = {
 			isa = PBXGroup;
 			children = (
@@ -90,6 +103,8 @@
 				BC81A4E3253A9EF300CE8141 /* LocalizationHelperTests */,
 				BC81A4EE253A9EF300CE8141 /* LocalizationHelperUITests */,
 				BC81A4CC253A9EF100CE8141 /* Products */,
+				33B47AE25C9364C112FC087F /* Pods */,
+				FA70197ED9422B40B330D7F7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -146,6 +161,14 @@
 			path = LocalizationHelperUITests;
 			sourceTree = "<group>";
 		};
+		FA70197ED9422B40B330D7F7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A441DC1B0AE8F155209914D8 /* Pods_LocalizationHelper.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -153,18 +176,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BC81A4F4253A9EF300CE8141 /* Build configuration list for PBXNativeTarget "LocalizationHelper" */;
 			buildPhases = (
+				DCBB24529E41EAE2C9F4A9DE /* [CP] Check Pods Manifest.lock */,
 				BC81A4C7253A9EF000CE8141 /* Sources */,
 				BC81A4C8253A9EF000CE8141 /* Frameworks */,
 				BC81A4C9253A9EF000CE8141 /* Resources */,
+				5F0ABC066F57061C302D1958 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = LocalizationHelper;
-			packageProductDependencies = (
-				BC81A53B253AED6E00CE8141 /* Alamofire */,
-			);
 			productName = LocalizationHelper;
 			productReference = BC81A4CB253A9EF100CE8141 /* LocalizationHelper.app */;
 			productType = "com.apple.product-type.application";
@@ -236,9 +258,6 @@
 				Base,
 			);
 			mainGroup = BC81A4C2253A9EF000CE8141;
-			packageReferences = (
-				BC81A53A253AED6E00CE8141 /* XCRemoteSwiftPackageReference "Alamofire" */,
-			);
 			productRefGroup = BC81A4CC253A9EF100CE8141 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -276,6 +295,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5F0ABC066F57061C302D1958 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LocalizationHelper/Pods-LocalizationHelper-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-LocalizationHelper/Pods-LocalizationHelper-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LocalizationHelper/Pods-LocalizationHelper-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DCBB24529E41EAE2C9F4A9DE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LocalizationHelper-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BC81A4C7253A9EF000CE8141 /* Sources */ = {
@@ -450,6 +511,7 @@
 		};
 		BC81A4F5253A9EF300CE8141 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4FC4690AA22B7AD6AC2DA2D0 /* Pods-LocalizationHelper.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -474,6 +536,7 @@
 		};
 		BC81A4F6253A9EF300CE8141 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E64F40D408A99BA0D9A3C71 /* Pods-LocalizationHelper.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -620,25 +683,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		BC81A53A253AED6E00CE8141 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.2.2;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		BC81A53B253AED6E00CE8141 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BC81A53A253AED6E00CE8141 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BC81A4C3253A9EF000CE8141 /* Project object */;
 }
