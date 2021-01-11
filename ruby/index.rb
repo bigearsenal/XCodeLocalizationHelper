@@ -1,4 +1,5 @@
 require 'xcodeproj'
+require 'pathname'
 
 # verify arguments
 if ARGV.length != 2
@@ -6,18 +7,28 @@ if ARGV.length != 2
 	exit
 end
 
-# get arguments
-project_path = ARGV[0]
-location_code = ARGV[1]
-
 # open project
-project = Xcodeproj::Project.open(project_path)
+project = Xcodeproj::Project.open(ARGV[0])
+
+# get arguments
+location_code = ARGV[1]
+root_object = project.root_object
+project_dir = Pathname(ARGV[0]).dirname.to_s
+project_name = root_object.name
+lproj_folder = project_dir + "/" + project_name + "/" + location_code + ".lproj"
 
 # add region
-known_regions = project.root_object.known_regions
+known_regions = root_object.known_regions
 if !known_regions.include?(location_code)
 	known_regions.push(location_code)
 end
+
+# launch screen
+if !Dir.exists?(lproj_folder)
+	puts lproj_folder
+end
+
+puts "Created folder: " + lproj_folder
 
 # get target
 target = project.targets.first
