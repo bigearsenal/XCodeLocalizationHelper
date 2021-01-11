@@ -1,24 +1,32 @@
 PODS:
   - Alamofire (5.4.1)
-  - BEPureLayout (0.1.6):
+  - BEPureLayout (0.2.1):
     - PureLayout
   - PureLayout (3.1.6)
 
 DEPENDENCIES:
   - Alamofire
-  - BEPureLayout
+  - BEPureLayout (from `https://github.com/bigearsenal/BEPureLayout.git`)
 
 SPEC REPOS:
   trunk:
     - Alamofire
-    - BEPureLayout
     - PureLayout
+
+EXTERNAL SOURCES:
+  BEPureLayout:
+    :git: https://github.com/bigearsenal/BEPureLayout.git
+
+CHECKOUT OPTIONS:
+  BEPureLayout:
+    :commit: 73b3c49fa18340606378ed3c1bb350ecab0337cd
+    :git: https://github.com/bigearsenal/BEPureLayout.git
 
 SPEC CHECKSUMS:
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
-  BEPureLayout: 8bbbac5315d6a2b82142ed272b0baa4b6961577b
+  BEPureLayout: 5421e716fb120f196677d9c875cd1fb305af2cea
   PureLayout: bd3c4ec3a3819ad387c99ebb72c6b129c3ed4d2d
 
-PODFILE CHECKSUM: 2f77814c5ed41a7d15eaef5ecc100ca8757398c0
+PODFILE CHECKSUM: 131a0749624c24e659ff91c2790067a7e65afeb7
 
 COCOAPODS: 1.10.0

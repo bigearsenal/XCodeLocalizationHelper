@@ -2,7 +2,7 @@ workspace 'LocalizationHelper'
 target 'LocalizationHelperDemo' do
     platform :ios, '12.0'
     use_frameworks!
-    pod 'BEPureLayout' 
+    pod 'BEPureLayout', :git => "https://github.com/bigearsenal/BEPureLayout.git" 
     project 'LocalizationHelperDemo/LocalizationHelperDemo'
 end
 
