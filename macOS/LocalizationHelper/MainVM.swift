@@ -102,7 +102,7 @@ class MainVM: ObservableObject {
             rootObject?.knownRegions.append(code)
         }
         
-        // add localizable.strings' group
+        // add localizable.strings' group if not exists
         var gr = mainGroup?.group(named: LOCALIZABLE_STRINGS)
         if gr == nil {
             gr = try mainGroup?.addVariantGroup(named: LOCALIZABLE_STRINGS).first
@@ -112,9 +112,16 @@ class MainVM: ObservableObject {
             _ = try fileBuildPhases?.add(file: gr!)
         }
         
-        // create folder
+        // create localization folder and files
         if let path = try addLocalizableFile(code: code) {
             try gr?.addFile(at: path, sourceRoot: mainGroupPath.parent())
+        }
+        
+        // set flag
+        let key = "CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED"
+
+        for conf in project!.pbxproj.buildConfigurations where conf.buildSettings[key] != nil {
+            conf.buildSettings[key] = "YES"
         }
         
         try saveProject()
