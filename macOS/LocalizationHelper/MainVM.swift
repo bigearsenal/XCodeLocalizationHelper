@@ -41,6 +41,10 @@ class MainVM: ObservableObject {
         }
     }
     
+    deinit {
+        closeProject()
+    }
+    
     // MARK: - Project manager
     func openProject(path: String) {
         if path.hasSuffix(projectExtension) {
@@ -66,6 +70,14 @@ class MainVM: ObservableObject {
     func saveProject() throws {
         guard let path = projectPath else {return}
         try project?.write(path: Path(path))
+    }
+    
+    func addRegion(_ region: String) throws {
+        if rootObject?.knownRegions.contains(region) == true {
+            return
+        }
+        rootObject?.knownRegions.append(region)
+        try saveProject()
     }
     
 //    func translate() {
