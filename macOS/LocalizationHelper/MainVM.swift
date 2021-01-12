@@ -101,7 +101,7 @@ class MainVM: ObservableObject {
         }
         
         // add localizable.strings' group if not exists
-        var gr = mainGroup?.group(named: LOCALIZABLE_STRINGS)
+        var gr = mainGroup?.group(named: LOCALIZABLE_STRINGS) ?? mainGroup?.group(named: "Resources")?.group(named: LOCALIZABLE_STRINGS)
         if gr == nil {
             gr = try mainGroup?.addVariantGroup(named: LOCALIZABLE_STRINGS).first
             
