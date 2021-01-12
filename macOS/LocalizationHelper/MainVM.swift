@@ -1,5 +1,5 @@
 //
-//  ViewModel.swift
+//  MainVM.swift
 //  LocalizationHelper
 //
 //  Created by Chung Tran on 10/17/20.
@@ -26,7 +26,7 @@ struct LocalizationFile: Identifiable {
     var keys: [String] {content.map {$0.key}}
 }
 
-class ViewModel: ObservableObject {
+class MainVM: ObservableObject {
     @Published var localizationFiles = [LocalizationFile]()
     @Published var projectFolder = ""
     @Published var query: String?

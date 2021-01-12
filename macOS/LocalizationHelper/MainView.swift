@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  LocalizationHelper
 //
 //  Created by Chung Tran on 10/17/20.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct MainView: View {
     // MARK: - Constants
     let colWidth: CGFloat = 300
     
@@ -15,7 +15,7 @@ struct ContentView: View {
     @State private var currentStringsFileUrl = UserDefaults.standard.string(forKey: "Settings.currentStringsFileUrl") {
         didSet { UserDefaults.standard.set(currentStringsFileUrl, forKey: "Settings.currentStringsFileUrl") }
     }
-    @ObservedObject var viewModel = ViewModel()
+    @ObservedObject var viewModel = MainVM()
     @State private var enteringKey = ""
     @State private var isEnteringKey = false
     @State private var error: Error?
@@ -242,6 +242,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        MainView()
     }
 }
