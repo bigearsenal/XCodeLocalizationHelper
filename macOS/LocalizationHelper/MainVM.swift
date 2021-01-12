@@ -106,6 +106,10 @@ class MainVM: ObservableObject {
         var gr = mainGroup?.group(named: LOCALIZABLE_STRINGS)
         if gr == nil {
             gr = try mainGroup?.addVariantGroup(named: LOCALIZABLE_STRINGS).first
+            
+            // add group to target
+            let fileBuildPhases = target?.buildPhases.first(where: {$0 is PBXSourcesBuildPhase})
+            _ = try fileBuildPhases?.add(file: gr!)
         }
         
         // create folder
