@@ -2,20 +2,21 @@ require 'xcodeproj'
 require 'pathname'
 require 'fileutils'
 
+LOCALIZABLE_STRINGS = "Localizable.strings"
+
 # utilities
 def add_locale(project_dir, project_name, code, localizable_group)
 	lproj_folder = project_dir + "/" + project_name + "/" + code + ".lproj"
-	localizable_file = "Localizable.strings"
 	# create .lproj folder
-	if !Dir.exists?(lproj_folder + "/" + localizable_file)
+	if !File.exists?(lproj_folder + "/" + LOCALIZABLE_STRINGS)
 		if !Dir.exists?(lproj_folder)
 			FileUtils.mkdir_p lproj_folder
-			puts "Created folder: " + lproj_folder
 		end
 		# create file
-		FileUtils.cp("./" + localizable_file, lproj_folder + "/" + localizable_file)
-		string_file = File.join(code + ".lproj", localizable_file)
+		FileUtils.cp("./" + LOCALIZABLE_STRINGS, lproj_folder + "/" + LOCALIZABLE_STRINGS)
+		string_file = File.join(code + ".lproj", LOCALIZABLE_STRINGS)
 		localizable_group.new_reference(string_file)
+		puts "Add localization for: " + code
 	end
 end
 
@@ -47,11 +48,16 @@ if !known_regions.include?(location_code)
 end
 
 # add locale
-localizable_group = project.main_group[project_name].new_variant_group("Localizable.strings")
+localizable_group = project.main_group[project_name].children.find {|e| e.name == LOCALIZABLE_STRINGS }
+if localizable_group.nil?
+	localizable_group = project.main_group[project_name].new_variant_group("Localizable.strings")
+	puts "Created Localizable.strings"
+	localizable_group.path = ""
+	target.add_file_references([localizable_group])
+end
+
 add_locale(project_dir, project_name, "en", localizable_group)
 add_locale(project_dir, project_name, location_code, localizable_group)
-localizable_group.path = ""
-target.add_file_references([localizable_group])
 
 # set flag
 target.build_configurations.each do |config|
