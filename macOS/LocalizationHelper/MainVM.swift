@@ -120,8 +120,8 @@ class MainVM: ObservableObject {
         // set flag
         let key = "CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED"
 
-        for conf in project!.pbxproj.buildConfigurations where conf.buildSettings[key] != nil {
-            conf.buildSettings[key] = "YES"
+        target?.buildConfigurationList?.buildConfigurations.forEach {
+            $0.append(setting: key, value: "YES")
         }
         
         try saveProject()
