@@ -62,11 +62,9 @@ class MainVM: ObservableObject {
                 error = nil
                 projectPath = path
                 project = proj
+                
                 // add required localization "en"
                 try checkAndAddLocalization(code: "en")
-                
-                
-                try checkAndAddLocalization(code: "vi")
             } catch {
                 self.error = error
                 closeProject()
@@ -121,7 +119,7 @@ class MainVM: ObservableObject {
         let key = "CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED"
 
         target?.buildConfigurationList?.buildConfigurations.forEach {
-            $0.append(setting: key, value: "YES")
+            $0.buildSettings[key] = "YES"
         }
         
         try saveProject()
