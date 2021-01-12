@@ -3,7 +3,7 @@ require 'pathname'
 require 'fileutils'
 
 # utilities
-def add_locale(project_dir, project_name, code)
+def add_locale(project_dir, project_name, code, localizable_group)
 	lproj_folder = project_dir + "/" + project_name + "/" + code + ".lproj"
 	localizable_file = "Localizable.strings"
 	# create .lproj folder
@@ -14,6 +14,8 @@ def add_locale(project_dir, project_name, code)
 		end
 		# create file
 		FileUtils.cp("./" + localizable_file, lproj_folder + "/" + localizable_file)
+		string_file = File.join(code + ".lproj", localizable_file)
+		localizable_group.new_reference(string_file)
 	end
 end
 
@@ -32,6 +34,7 @@ location_code = ARGV[1]
 root_object = project.root_object
 project_dir = Pathname(ARGV[0]).dirname.to_s
 project_name = root_object.name
+target = project.targets.first
 
 
 # add region
@@ -44,11 +47,9 @@ if !known_regions.include?(location_code)
 end
 
 # add locale
-add_locale(project_dir, project_name, "en")
-add_locale(project_dir, project_name, location_code)
-
-# get target
-target = project.targets.first
+localizable_group = project.main_group[project_name].new_variant_group("Localizable.strings")
+add_locale(project_dir, project_name, "en", localizable_group)
+add_locale(project_dir, project_name, location_code, localizable_group)
 
 # set flag
 target.build_configurations.each do |config|
