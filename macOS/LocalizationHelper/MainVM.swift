@@ -13,6 +13,7 @@ import PathKit
 class MainVM: ObservableObject {
     // MARK: - Constants
     private let projectPathKey = "KEYS.PROJECT_PATH"
+    private let LOCALIZABLE_STRINGS = "Localizable.strings"
     let projectExtension = ".xcodeproj"
     
     // MARK: - Subjects
@@ -25,6 +26,12 @@ class MainVM: ObservableObject {
     }
     var rootObject: PBXProject? {
         project?.pbxproj.rootObject
+    }
+    var projectName: String? {
+        rootObject?.name
+    }
+    var target: PBXTarget? {
+        rootObject?.targets.first
     }
     
     // MARK: - Private
@@ -49,6 +56,11 @@ class MainVM: ObservableObject {
                 error = nil
                 projectPath = path
                 project = proj
+                // add required localization "en"
+                try checkAndAddLocalization(code: "en")
+                
+                
+                try checkAndAddLocalization(code: "vi")
             } catch {
                 self.error = error
                 closeProject()
@@ -74,6 +86,56 @@ class MainVM: ObservableObject {
         }
         rootObject?.knownRegions.append(region)
         try saveProject()
+    }
+    
+    func checkAndAddLocalization(code: String) throws {
+//        print( )
+        guard let pathString = projectPath,
+              let projectName = projectName
+        else {return}
+        // add known regions
+        if !rootObject!.knownRegions.contains(code) {
+            rootObject?.knownRegions.append(code)
+        }
+        
+        // add localizable.strings' group
+        var gr = mainGroup?.group(named: LOCALIZABLE_STRINGS)
+        if gr == nil {
+            gr = try mainGroup?.addVariantGroup(named: LOCALIZABLE_STRINGS).first
+        }
+        
+        // create folder
+        if let path = try addLocalizableFile(code: code) {
+            try gr?.addFile(at: path, sourceRoot: Path("\(code).lproj/\(LOCALIZABLE_STRINGS)"))
+        }
+        
+        try saveProject()
+    }
+    
+    private func addLocalizableFile(code: String) throws -> Path? {
+        guard let pathString = projectPath,
+              let projectName = projectName
+        else {return nil}
+        
+        let folder = Path(pathString).parent() + projectName + "\(code).lproj"
+        let file = folder + LOCALIZABLE_STRINGS
+        if !file.exists {
+            if !folder.exists {
+                try folder.mkdir()
+            }
+            try file.write(
+                """
+                /*
+                  Localizable.strings
+
+                  Created with LocalizationHelper.
+                  
+                */
+                """
+            )
+            return file
+        }
+        return nil
     }
     
 //    func translate() {
