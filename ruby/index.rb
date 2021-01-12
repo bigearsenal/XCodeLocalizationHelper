@@ -50,6 +50,8 @@ end
 localizable_group = project.main_group[project_name].new_variant_group("Localizable.strings")
 add_locale(project_dir, project_name, "en", localizable_group)
 add_locale(project_dir, project_name, location_code, localizable_group)
+localizable_group.path = ""
+target.add_file_references([localizable_group])
 
 # set flag
 target.build_configurations.each do |config|
