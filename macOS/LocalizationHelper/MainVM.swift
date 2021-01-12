@@ -24,6 +24,12 @@ class MainVM: ObservableObject {
     var mainGroup: PBXGroup? {
         rootObject?.mainGroup.children.first as? PBXGroup
     }
+    var mainGroupPath: Path? {
+        guard let pathString = projectPath,
+              let projectName = projectName
+        else {return nil}
+        return Path(pathString).parent() + projectName
+    }
     var rootObject: PBXProject? {
         project?.pbxproj.rootObject
     }
@@ -89,9 +95,7 @@ class MainVM: ObservableObject {
     }
     
     func checkAndAddLocalization(code: String) throws {
-//        print( )
-        guard let pathString = projectPath,
-              let projectName = projectName
+        guard let mainGroupPath = mainGroupPath
         else {return}
         // add known regions
         if !rootObject!.knownRegions.contains(code) {
@@ -106,7 +110,7 @@ class MainVM: ObservableObject {
         
         // create folder
         if let path = try addLocalizableFile(code: code) {
-            try gr?.addFile(at: path, sourceRoot: Path("\(code).lproj/\(LOCALIZABLE_STRINGS)"))
+            try gr?.addFile(at: path, sourceRoot: mainGroupPath.parent())
         }
         
         try saveProject()
