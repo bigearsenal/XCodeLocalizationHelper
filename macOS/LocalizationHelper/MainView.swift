@@ -87,14 +87,14 @@ struct MainView: View {
 //        }
         
         var title = "LocalizationHelper"
-        if let project = viewModel.project {
-            title += ": " + project.name
+        if let projectName = viewModel.rootObject?.name {
+            title += ": " + projectName
         }
         setTitle(title: title)
 
         return Group {
-            if let project = viewModel.project {
-                
+            if viewModel.project != nil {
+                openProjectButton(title: "Open another...")
                 Spacer()
             } else {
                 openProjectButton()

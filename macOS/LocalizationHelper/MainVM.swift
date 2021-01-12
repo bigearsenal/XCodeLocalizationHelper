@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import XcodeProj
+import PathKit
 
 class MainVM: ObservableObject {
     // MARK: - Constants
@@ -15,8 +16,16 @@ class MainVM: ObservableObject {
     let projectExtension = ".xcodeproj"
     
     // MARK: - Subjects
-    @Published var project: PBXProject?
+    @Published var project: XcodeProj?
     @Published var error: Error?
+    
+    // MARK: - Variables
+    var mainGroup: PBXGroup? {
+        rootObject?.mainGroup.children.first as? PBXGroup
+    }
+    var rootObject: PBXProject? {
+        project?.pbxproj.rootObject
+    }
     
     // MARK: - Private
     private var projectPath: String? {
@@ -39,7 +48,7 @@ class MainVM: ObservableObject {
                 let proj = try XcodeProj(pathString: path)
                 error = nil
                 projectPath = path
-                project = proj.pbxproj.rootObject
+                project = proj
             } catch {
                 self.error = error
                 closeProject()
@@ -52,6 +61,11 @@ class MainVM: ObservableObject {
     func closeProject() {
         projectPath = nil
         project = nil
+    }
+    
+    func saveProject() throws {
+        guard let path = projectPath else {return}
+        try project?.write(path: Path(path))
     }
     
 //    func translate() {
