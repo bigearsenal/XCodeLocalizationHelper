@@ -96,6 +96,36 @@
 			path = ../Pods;
 			sourceTree = "<group>";
 		};
+		BC50D54925AD8750006247EC /* Resourses */ = {
+			isa = PBXGroup;
+			children = (
+				BC81A4D2253A9EF300CE8141 /* Assets.xcassets */,
+				BC81A4D7253A9EF300CE8141 /* Main.storyboard */,
+				BC81A4DA253A9EF300CE8141 /* Info.plist */,
+				BC81A4DB253A9EF300CE8141 /* LocalizationHelper.entitlements */,
+				BC81A4D4253A9EF300CE8141 /* Preview Content */,
+			);
+			name = Resourses;
+			sourceTree = "<group>";
+		};
+		BC50D54A25AD8757006247EC /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				BC81A4D0253A9EF100CE8141 /* ContentView.swift */,
+				BC81A518253ABA3400CE8141 /* ViewModel.swift */,
+			);
+			name = Scenes;
+			sourceTree = "<group>";
+		};
+		BC50D54B25AD8764006247EC /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				BC9EC13F2598305C005A2DE6 /* Extensions.swift */,
+				BC81A540253AED7B00CE8141 /* GoogleTranslate.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		BC81A4C2253A9EF000CE8141 = {
 			isa = PBXGroup;
 			children = (
@@ -122,15 +152,9 @@
 			isa = PBXGroup;
 			children = (
 				BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */,
-				BC81A4D0253A9EF100CE8141 /* ContentView.swift */,
-				BC9EC13F2598305C005A2DE6 /* Extensions.swift */,
-				BC81A518253ABA3400CE8141 /* ViewModel.swift */,
-				BC81A4D2253A9EF300CE8141 /* Assets.xcassets */,
-				BC81A4D7253A9EF300CE8141 /* Main.storyboard */,
-				BC81A4DA253A9EF300CE8141 /* Info.plist */,
-				BC81A4DB253A9EF300CE8141 /* LocalizationHelper.entitlements */,
-				BC81A4D4253A9EF300CE8141 /* Preview Content */,
-				BC81A540253AED7B00CE8141 /* GoogleTranslate.swift */,
+				BC50D54A25AD8757006247EC /* Scenes */,
+				BC50D54B25AD8764006247EC /* Helpers */,
+				BC50D54925AD8750006247EC /* Resourses */,
 			);
 			path = LocalizationHelper;
 			sourceTree = "<group>";
@@ -516,7 +540,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LocalizationHelper/LocalizationHelper.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"LocalizationHelper/Preview Content\"";
@@ -542,7 +566,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = LocalizationHelper/LocalizationHelper.entitlements;
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"LocalizationHelper/Preview Content\"";

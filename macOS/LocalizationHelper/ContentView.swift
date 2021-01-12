@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    // MARK: - Constants
     let colWidth: CGFloat = 300
+    
+    // MARK: - Settings
     @State private var currentStringsFileUrl = UserDefaults.standard.string(forKey: "Settings.currentStringsFileUrl") {
         didSet { UserDefaults.standard.set(currentStringsFileUrl, forKey: "Settings.currentStringsFileUrl") }
     }
@@ -19,10 +22,13 @@ struct ContentView: View {
     @State private var isSwiftgenEnabled = UserDefaults.standard.bool(forKey: "Settings.isSwiftgenEnabled")
     @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
     @State private var showingAlert = false
+    
+    // MARK: - Initializer
     init() {
         defer {openStringFile()}
     }
 
+    // MARK: - Methods
     var body: some View {
         let binding = Binding<String>(
             get: { self.enteringKey },
