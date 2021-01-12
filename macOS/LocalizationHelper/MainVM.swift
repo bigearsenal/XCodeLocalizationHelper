@@ -41,10 +41,6 @@ class MainVM: ObservableObject {
         }
     }
     
-    deinit {
-        closeProject()
-    }
-    
     // MARK: - Project manager
     func openProject(path: String) {
         if path.hasSuffix(projectExtension) {
