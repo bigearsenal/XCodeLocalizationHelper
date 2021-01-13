@@ -88,7 +88,7 @@ struct MainView: View {
         
         var title = "LocalizationHelper"
         if let projectName = viewModel.projectName {
-            title += ": " + projectName
+            title = projectName
         }
         setTitle(title: title)
 

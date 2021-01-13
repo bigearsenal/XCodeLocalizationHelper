@@ -5,20 +5,15 @@
 //  Created by Chung Tran on 12/01/2021.
 //
 
+import PathKit
+
 struct LocalizationFile: Identifiable {
-    struct Content: Identifiable {
-        var key: String
-        var value: String
-        var id: String {key}
-    }
     var languageCode: String
-    var url: String
-    var newValue: String
-    var content: [Content]
+    var path: Path
+    var content: [String: String]
     var isMatching: Bool?
-    var id: String {
-        url
-    }
+    var id: String { path.string }
     
-    var keys: [String] {content.map {$0.key}}
+    // for writing
+    var newValue: String
 }

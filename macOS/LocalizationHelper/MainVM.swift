@@ -19,6 +19,7 @@ class MainVM: ObservableObject {
     // MARK: - Subjects
     @Published var project: XcodeProj?
     @Published var error: Error?
+    @Published var localizationFiles = [LocalizationFile]()
     
     // MARK: - Variables
     var mainGroup: PBXGroup? {
@@ -62,6 +63,12 @@ class MainVM: ObservableObject {
                 error = nil
                 projectPath = Path(path)
                 project = proj
+                
+                // if localization available
+                let enStringsFile = mainGroupPath! + "en.lproj" + LOCALIZABLE_STRINGS
+                if enStringsFile.isFile {
+                    try openLocalizableFiles()
+                }
             } catch {
                 self.error = error
                 closeProject()
@@ -82,6 +89,38 @@ class MainVM: ObservableObject {
     }
     
     // MARK: - Localization manager
+    func openLocalizableFiles() throws {
+        guard let path = mainGroupPath else {return}
+        let stringFiles = path.glob("*.lproj/Localizable.strings")
+        localizationFiles = try stringFiles.compactMap { file -> LocalizationFile in
+            let text = try file.read(.utf8)
+            let array = text
+                .components(separatedBy: .newlines)
+                .map {
+                    $0.components(separatedBy: "=")
+                        .map {$0.trimmingCharacters(in: .whitespaces)}
+                        .map {$0.replacingOccurrences(of: "\"", with: "")}
+                }
+                .compactMap { pair -> (String, String)? in
+                    if let key = pair.first, let value = pair.last {
+                        return (key, value)
+                    }
+                    return nil
+                }
+                .reduce([String: String]()) { (result, pair) in
+                    var result = result
+                    result[pair.0] = pair.1
+                    return result
+                }
+            return LocalizationFile(
+                languageCode: file.parent().lastComponent.replacingOccurrences(of: ".lproj", with: ""),
+                path: file,
+                content: array,
+                newValue: ""
+            )
+        }
+    }
+    
     func addLocalizationIfNotExists(code: String) throws {
         guard let mainGroupPath = mainGroupPath
         else {return}
