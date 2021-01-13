@@ -58,6 +58,9 @@ class MainVM: ObservableObject {
     
     // MARK: - Project manager
     func openProject(path: String) {
+        // reset
+        localizationFiles = []
+        
         if path.hasSuffix(projectExtension) {
             do {
                 let proj = try XcodeProj(pathString: path)

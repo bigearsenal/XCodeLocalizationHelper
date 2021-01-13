@@ -40,17 +40,13 @@ struct MainView: View {
         }
 
         let exampleText = pattern.replacingOccurrences(of: "<key>", with: query)
-        
-        var title = "LocalizationHelper"
-        if let projectName = viewModel.projectName {
-            title = projectName
-        }
-        setTitle(title: title)
 
         return Group {
             if viewModel.project != nil {
-                openProjectButton(title: "Open another...")
-                Spacer()
+                HStack {
+                    Text(viewModel.projectName ?? "")
+                    openProjectButton(title: "Open another...")
+                }
                 ScrollView(.horizontal) {
                     HStack {
                         ForEach(viewModel.localizationFiles) { file in
@@ -84,14 +80,12 @@ struct MainView: View {
                     }
                     Spacer()
                 }
-                Spacer()
                 if !isSwiftgenEnabled {
                     HStack {
                         Text("Pattern")
                         TextField("pattern for copying", text: patternBinding())
                         Text("Ex: \(exampleText)")
                     }
-                    Spacer()
                 }
                 HStack {
                     TextField("Enter key...", text: binding()) { self.isEnteringKey = $0
@@ -111,7 +105,6 @@ struct MainView: View {
                             pasteboard.clearContents()
                             pasteboard.setString(exampleText, forType: .string)
                         }
-                        self.query = ""
                     }
                         .disabled(!canAdd)
                     
@@ -200,17 +193,6 @@ struct MainView: View {
                 // User clicked on "Cancel"
                 return
             }
-        }
-    }
-    
-//    fileprivate func openProject() {
-//        guard let path = projectPath else {return}
-//        viewModel.openProject(path: path)
-//    }
-    
-    private func setTitle(title: String) {
-        if let ad = NSApplication.shared.delegate as? AppDelegate{
-            ad.window.title = title
         }
     }
 }
