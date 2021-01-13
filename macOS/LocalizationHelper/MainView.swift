@@ -145,14 +145,21 @@ struct MainView: View {
                     }
                         .disabled(!canAdd)
                     
-                    if let error = viewModel.error {
-                        Text(error.localizedDescription)
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    self.viewModel.error = nil
-                                }
-                            }
+                    Spacer()
+                    
+                    Button("Quit") {
+                        NSApplication.shared.terminate(self)
                     }
+                }
+                
+                if let error = viewModel.error {
+                    Divider()
+                    Text(error.localizedDescription)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                self.viewModel.error = nil
+                            }
+                        }
                 }
             } else {
                 openProjectButton()
