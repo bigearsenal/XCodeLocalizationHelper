@@ -21,7 +21,7 @@ struct MainView: View {
     @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
     @State private var isEnteringKey = false
     @State private var isChoosingCodeToLocalize = false
-    @State private var newLanguageCode = ""
+    @State private var languageCodes = [ISOLanguageCode]()
 
     // MARK: - Methods
     var body: some View {
@@ -55,24 +55,49 @@ struct MainView: View {
                 if viewModel.localizationFiles.count == 0 {
                     Spacer()
                     if isChoosingCodeToLocalize {
-                        Text("Enter Apple's standard language code")
-                        TextField("Language code", text: $newLanguageCode)
-                            .frame(width: 200)
+                        Text("Choose languages:")
+                        List{
+                            ForEach(0..<languageCodes.count){ index in
+                                HStack {
+                                    Button(action: {
+                                        languageCodes[index].isSelected.toggle()
+                                    }, label: {
+                                        HStack {
+                                            if languageCodes[index].isSelected {
+                                                Text("✓")
+                                                    .animation(.easeIn)
+                                            } else {
+                                                Text(" ")
+                                                    .animation(.easeOut)
+                                            }
+                                            Text("[\(languageCodes[index].code)] " + languageCodes[index].name)
+                                        }
+                                    })
+                                    .buttonStyle(BorderlessButtonStyle())
+                                }
+                            }
+                        }
+                            .frame(width: 300)
                     } else {
                         Text("This project has not been localized yet.\nDo you want to localize it?")
                             .multilineTextAlignment(.center)
                     }
                     
                     Button("Localize") {
-                        if !isChoosingCodeToLocalize {isChoosingCodeToLocalize = true}
+                        if !isChoosingCodeToLocalize {
+                            isChoosingCodeToLocalize = true
+                            languageCodes = ISOLanguageCode.all
+                        }
                         else {
                             try? viewModel.addLocalizationIfNotExists(code: "en")
-                            try? viewModel.addLocalizationIfNotExists(code: newLanguageCode)
+                            languageCodes.filter({$0.isSelected}).forEach {
+                                try? viewModel.addLocalizationIfNotExists(code: $0.code)
+                            }
                             
                             try? viewModel.openLocalizableFiles()
                         }
                     }
-                        .disabled(isChoosingCodeToLocalize && newLanguageCode.isEmpty)
+                    .disabled(isChoosingCodeToLocalize && languageCodes.filter({$0.isSelected}).isEmpty)
                     Spacer()
                 } else {
                     ScrollView(.horizontal) {

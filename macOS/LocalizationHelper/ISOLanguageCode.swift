@@ -10,7 +10,7 @@ import Foundation
 struct ISOLanguageCode {
     var code: String
     var name: String
-    var selected = false
+    var isSelected = false
     static var all: [ISOLanguageCode] {
         [
             ISOLanguageCode(code: "af", name: "Afrikaans"),
