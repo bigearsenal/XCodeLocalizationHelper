@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		BC09790E25AF330800DB02E9 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC09790D25AF330800DB02E9 /* StatusBarController.swift */; };
 		BC09791525AF5FCD00DB02E9 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC09791425AF5FCD00DB02E9 /* EventMonitor.swift */; };
+		BC09793A25AF860400DB02E9 /* ISOLanguageCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC09793925AF860400DB02E9 /* ISOLanguageCode.swift */; };
 		BC81A4CF253A9EF100CE8141 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */; };
 		BC81A4D1253A9EF100CE8141 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A4D0253A9EF100CE8141 /* MainView.swift */; };
 		BC81A4D3253A9EF300CE8141 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC81A4D2253A9EF300CE8141 /* Assets.xcassets */; };
@@ -46,6 +47,7 @@
 		A441DC1B0AE8F155209914D8 /* Pods_LocalizationHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LocalizationHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC09790D25AF330800DB02E9 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		BC09791425AF5FCD00DB02E9 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
+		BC09793925AF860400DB02E9 /* ISOLanguageCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISOLanguageCode.swift; sourceTree = "<group>"; };
 		BC81A4CB253A9EF100CE8141 /* LocalizationHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC81A4D0253A9EF100CE8141 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				BCA9931125AD8E8C005BD8FB /* LocalizableFile.swift */,
+				BC09793925AF860400DB02E9 /* ISOLanguageCode.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -399,6 +402,7 @@
 				BC81A519253ABA3400CE8141 /* MainVM.swift in Sources */,
 				BC81A4CF253A9EF100CE8141 /* AppDelegate.swift in Sources */,
 				BC81A541253AED7B00CE8141 /* GoogleTranslate.swift in Sources */,
+				BC09793A25AF860400DB02E9 /* ISOLanguageCode.swift in Sources */,
 				BC09791525AF5FCD00DB02E9 /* EventMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
