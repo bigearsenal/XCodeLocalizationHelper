@@ -21,6 +21,7 @@ struct MainView: View {
     
     // MARK: - State
     @State private var showingAlert = false
+    @State private var query = ""
 
     // MARK: - Methods
     var body: some View {
@@ -45,12 +46,6 @@ struct MainView: View {
 //            }
 //        )
 //
-//        let filteredContentOfFile: (LocalizationFile) -> [LocalizationFile.Content] = { file in
-//            if viewModel.query == nil {return Array(file.content.prefix(10))}
-//            return Array(file.content.filter {$0.key.lowercased().contains(viewModel.query!.lowercased()) ||
-//                $0.value.lowercased().contains(viewModel.query!.lowercased())
-//            }.prefix(10))
-//        }
 //
 //        var isNewKey = true
 //        if !enteringKey.isEmpty {
@@ -69,22 +64,6 @@ struct MainView: View {
 //        }
 //
 //        let exampleText = pattern.replacingOccurrences(of: "<key>", with: enteringKey)
-//
-//        let bindingForTextFieldOfFile: ((LocalizationFile) -> Binding<String>) = { file in
-//            Binding<String>(
-//                get: {
-//                    file.newValue
-//                },
-//                set: {
-//                    var file = file
-//                    file.newValue = $0
-//                    var files = viewModel.localizationFiles
-//                    guard let index = files.firstIndex(where: {$0.id == file.id}) else {return}
-//                    files[index] = file
-//                    viewModel.localizationFiles = files
-//                }
-//            )
-//        }
         
         var title = "LocalizationHelper"
         if let projectName = viewModel.projectName {
@@ -96,37 +75,38 @@ struct MainView: View {
             if viewModel.project != nil {
                 openProjectButton(title: "Open another...")
                 Spacer()
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(viewModel.localizationFiles) { file in
+                            VStack {
+                                Text(file.languageCode)
+                                List(file.filteredContent(query: query)) { text in
+                                    VStack(alignment: .leading) {
+                                        Text(text.key)
+                                            .lineLimit(0)
+                                            .multilineTextAlignment(.leading)
+                                        Text(text.value)
+                                            .lineLimit(0)
+                                            .multilineTextAlignment(.leading)
+                                    }
+
+                                }
+                                TextField(file.languageCode, text: bindingForTextField(file: file))
+                                    .frame(width: colWidth)
+                            }
+                            .frame(width: colWidth)
+                        }
+                    }
+                    .padding(.bottom, 16)
+                }
+                Spacer()
             } else {
                 openProjectButton()
             }
             
 //            if let url = viewModel {
 //
-//                ScrollView(.horizontal) {
-//                    HStack {
-//                        ForEach(viewModel.localizationFiles) { file in
-//                            VStack {
-//                                Text(file.languageCode)
-//                                List(filteredContentOfFile(file)) { text in
-//                                    VStack(alignment: .leading) {
-//                                        Text(text.key)
-//                                            .lineLimit(0)
-//                                            .multilineTextAlignment(.leading)
-//                                        Text(text.value)
-//                                            .lineLimit(0)
-//                                            .multilineTextAlignment(.leading)
-//                                    }
 //
-//                                }
-//                                TextField(file.languageCode, text: bindingForTextFieldOfFile(file))
-//                                    .frame(width: colWidth)
-//                            }
-//                            .frame(width: colWidth)
-//                        }
-//                    }
-//                    .padding(.bottom, 16)
-//                }
-//                Spacer()
 //                HStack {
 //                    Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
 //                        UserDefaults.standard.set(state, forKey: "Settings.isSwiftgenEnabled")
@@ -200,6 +180,23 @@ struct MainView: View {
         }
         .padding(8)
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
+    }
+    
+    private func bindingForTextField(file: LocalizationFile) -> Binding<String>
+    {
+        Binding<String>(
+            get: {
+                file.newValue
+            },
+            set: {
+                var file = file
+                file.newValue = $0
+                var files = viewModel.localizationFiles
+                guard let index = files.firstIndex(where: {$0.id == file.id}) else {return}
+                files[index] = file
+                viewModel.localizationFiles = files
+            }
+        )
     }
     
     fileprivate func openProjectButton(title: String = "Open a .xcodeproj file") -> Button<Text> {

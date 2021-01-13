@@ -20,6 +20,7 @@ class MainVM: ObservableObject {
     @Published var project: XcodeProj?
     @Published var error: Error?
     @Published var localizationFiles = [LocalizationFile]()
+    @Published var query = ""
     
     // MARK: - Variables
     var mainGroup: PBXGroup? {
@@ -99,18 +100,18 @@ class MainVM: ObservableObject {
                 .map {
                     $0.components(separatedBy: "=")
                         .map {$0.trimmingCharacters(in: .whitespaces)}
-                        .map {$0.replacingOccurrences(of: "\"", with: "")}
+                        .map {String($0.dropFirst().dropLast())}
                 }
-                .compactMap { pair -> (String, String)? in
-                    if let key = pair.first, let value = pair.last {
-                        return (key, value)
+                .compactMap { pair -> LocalizationFile.Content? in
+                    if pair.count != 2 {return nil}
+                    if let key = pair.first,
+                       !key.isEmpty,
+                       let value = pair.last,
+                       !value.isEmpty
+                    {
+                        return .init(key: key, value: value)
                     }
                     return nil
-                }
-                .reduce([String: String]()) { (result, pair) in
-                    var result = result
-                    result[pair.0] = pair.1
-                    return result
                 }
             return LocalizationFile(
                 languageCode: file.parent().lastComponent.replacingOccurrences(of: ".lproj", with: ""),
@@ -179,6 +180,9 @@ class MainVM: ObservableObject {
         }
         return nil
     }
+    
+    // MARK: - Helper
+    
     
     // MARK: - Translation
 //    func translate() {
