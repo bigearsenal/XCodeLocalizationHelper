@@ -25,10 +25,10 @@ class MainVM: ObservableObject {
         rootObject?.mainGroup.children.first as? PBXGroup
     }
     var mainGroupPath: Path? {
-        guard let pathString = projectPath,
+        guard let path = projectPath,
               let projectName = projectName
         else {return nil}
-        return Path(pathString).parent() + projectName
+        return path.parent() + projectName
     }
     var rootObject: PBXProject? {
         project?.pbxproj.rootObject
@@ -41,9 +41,9 @@ class MainVM: ObservableObject {
     }
     
     // MARK: - Private
-    private var projectPath: String? {
+    private var projectPath: Path? {
         didSet {
-            UserDefaults.standard.set(projectPath, forKey: projectPathKey)
+            UserDefaults.standard.set(projectPath?.string, forKey: projectPathKey)
         }
     }
     
@@ -60,11 +60,8 @@ class MainVM: ObservableObject {
             do {
                 let proj = try XcodeProj(pathString: path)
                 error = nil
-                projectPath = path
+                projectPath = Path(path)
                 project = proj
-                
-                // add required localization "en"
-                try checkAndAddLocalization(code: "en")
             } catch {
                 self.error = error
                 closeProject()
@@ -81,18 +78,11 @@ class MainVM: ObservableObject {
     
     func saveProject() throws {
         guard let path = projectPath else {return}
-        try project?.write(path: Path(path))
+        try project?.write(path: path)
     }
     
-    func addRegion(_ region: String) throws {
-        if rootObject?.knownRegions.contains(region) == true {
-            return
-        }
-        rootObject?.knownRegions.append(region)
-        try saveProject()
-    }
-    
-    func checkAndAddLocalization(code: String) throws {
+    // MARK: - Localization manager
+    func addLocalizationIfNotExists(code: String) throws {
         guard let mainGroupPath = mainGroupPath
         else {return}
         // add known regions
@@ -126,11 +116,9 @@ class MainVM: ObservableObject {
     }
     
     private func addLocalizableFile(code: String) throws -> Path? {
-        guard let pathString = projectPath,
-              let projectName = projectName
-        else {return nil}
+        guard let path = mainGroupPath else {return nil}
         
-        let folder = Path(pathString).parent() + projectName + "\(code).lproj"
+        let folder = path + "\(code).lproj"
         let file = folder + LOCALIZABLE_STRINGS
         if !file.exists {
             if !folder.exists {
@@ -153,6 +141,7 @@ class MainVM: ObservableObject {
         return nil
     }
     
+    // MARK: - Translation
 //    func translate() {
 //        localizationFiles.forEach {file in
 //            guard let query = query else {return}
