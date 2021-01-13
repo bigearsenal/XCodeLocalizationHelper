@@ -20,6 +20,8 @@ struct MainView: View {
     @State private var isSwiftgenEnabled = UserDefaults.standard.bool(forKey: "Settings.isSwiftgenEnabled")
     @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
     @State private var isEnteringKey = false
+    @State private var isChoosingCodeToLocalize = false
+    @State private var newLanguageCode = ""
 
     // MARK: - Methods
     var body: some View {
@@ -47,32 +49,58 @@ struct MainView: View {
                     Text(viewModel.projectName ?? "")
                     openProjectButton(title: "Open another...")
                 }
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(viewModel.localizationFiles) { file in
-                            VStack {
-                                Text(file.languageCode)
-                                ForEach(file.filteredContent(query: query)) { text in
-                                    VStack(alignment: .leading) {
-                                        Text(text.key)
-                                            .lineLimit(0)
-                                            .multilineTextAlignment(.leading)
-                                        Text(text.value)
-                                            .lineLimit(0)
-                                            .multilineTextAlignment(.leading)
-                                    }
-                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                                    .padding(.bottom, 8)
-                                }
-                                Spacer()
-                                TextField(file.languageCode, text: bindingForTextField(file: file))
-                                    .frame(width: colWidth)
-                            }
-                            .frame(width: colWidth)
+                
+                if viewModel.localizationFiles.count == 0 {
+                    Spacer()
+                    if isChoosingCodeToLocalize {
+                        Text("Enter Apple's standard language code")
+                        TextField("Language code", text: $newLanguageCode)
+                            .frame(width: 200)
+                    } else {
+                        Text("This project has not been localized yet.\nDo you want to localize it?")
+                            .multilineTextAlignment(.center)
+                    }
+                    
+                    Button("Localize") {
+                        if !isChoosingCodeToLocalize {isChoosingCodeToLocalize = true}
+                        else {
+                            try? viewModel.addLocalizationIfNotExists(code: "en")
+                            try? viewModel.addLocalizationIfNotExists(code: newLanguageCode)
+                            
+                            try? viewModel.openLocalizableFiles()
                         }
                     }
-                    .padding(.bottom, 16)
+                        .disabled(isChoosingCodeToLocalize && newLanguageCode.isEmpty)
+                    Spacer()
+                } else {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(viewModel.localizationFiles) { file in
+                                VStack {
+                                    Text(file.languageCode)
+                                    ForEach(file.filteredContent(query: query)) { text in
+                                        VStack(alignment: .leading) {
+                                            Text(text.key)
+                                                .lineLimit(0)
+                                                .multilineTextAlignment(.leading)
+                                            Text(text.value)
+                                                .lineLimit(0)
+                                                .multilineTextAlignment(.leading)
+                                        }
+                                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                        .padding(.bottom, 8)
+                                    }
+                                    Spacer()
+                                    TextField(file.languageCode, text: bindingForTextField(file: file))
+                                        .frame(width: colWidth)
+                                }
+                                .frame(width: colWidth)
+                            }
+                        }
+                        .padding(.bottom, 16)
+                    }
                 }
+                
                 HStack {
                     Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
                         UserDefaults.standard.set(state, forKey: "Settings.isSwiftgenEnabled")
