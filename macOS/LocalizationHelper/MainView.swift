@@ -52,7 +52,7 @@ struct MainView: View {
                         ForEach(viewModel.localizationFiles) { file in
                             VStack {
                                 Text(file.languageCode)
-                                List(file.filteredContent(query: query)) { text in
+                                ForEach(file.filteredContent(query: query)) { text in
                                     VStack(alignment: .leading) {
                                         Text(text.key)
                                             .lineLimit(0)
@@ -61,8 +61,10 @@ struct MainView: View {
                                             .lineLimit(0)
                                             .multilineTextAlignment(.leading)
                                     }
-
+                                    .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                    .padding(.bottom, 8)
                                 }
+                                Spacer()
                                 TextField(file.languageCode, text: bindingForTextField(file: file))
                                     .frame(width: colWidth)
                             }
@@ -71,7 +73,6 @@ struct MainView: View {
                     }
                     .padding(.bottom, 16)
                 }
-                Spacer()
                 HStack {
                     Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
                         UserDefaults.standard.set(state, forKey: "Settings.isSwiftgenEnabled")

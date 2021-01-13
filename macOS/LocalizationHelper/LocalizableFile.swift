@@ -25,7 +25,7 @@ struct LocalizationFile: Identifiable {
     
     func filteredContent(query: String) -> [Content] {
         if query.isEmpty {
-            return Array(content.prefix(10))
+            return Array(content.prefix(5))
         }
         
         return Array(
@@ -34,7 +34,7 @@ struct LocalizationFile: Identifiable {
                     $0.key.lowercased().contains(query.lowercased()) ||
                         $0.value.lowercased().contains(query.lowercased())
                 }
-                .prefix(10)
+                .prefix(5)
         )
     }
 }
