@@ -50,6 +50,8 @@ struct MainView: View {
                     openProjectButton(title: "Open another...")
                 }
                 
+                Divider()
+                
                 if viewModel.localizationFiles.count == 0 {
                     Spacer()
                     if isChoosingCodeToLocalize {
@@ -95,11 +97,14 @@ struct MainView: View {
                                         .frame(width: colWidth)
                                 }
                                 .frame(width: colWidth)
+                                Divider()
                             }
                         }
                         .padding(.bottom, 16)
                     }
                 }
+                
+                Divider()
                 
                 HStack {
                     Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
@@ -109,12 +114,15 @@ struct MainView: View {
                     }
                     Spacer()
                 }
+                
+                Divider()
                 if !isSwiftgenEnabled {
                     HStack {
                         Text("Pattern")
                         TextField("pattern for copying", text: patternBinding())
                         Text("Ex: \(exampleText)")
                     }
+                    Divider()
                 }
                 HStack {
                     TextField("Enter key...", text: binding()) { self.isEnteringKey = $0

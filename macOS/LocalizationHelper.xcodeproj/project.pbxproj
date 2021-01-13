@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC09790E25AF330800DB02E9 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC09790D25AF330800DB02E9 /* StatusBarController.swift */; };
 		BC81A4CF253A9EF100CE8141 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */; };
 		BC81A4D1253A9EF100CE8141 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC81A4D0253A9EF100CE8141 /* MainView.swift */; };
 		BC81A4D3253A9EF300CE8141 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC81A4D2253A9EF300CE8141 /* Assets.xcassets */; };
@@ -42,6 +43,7 @@
 		4FC4690AA22B7AD6AC2DA2D0 /* Pods-LocalizationHelper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocalizationHelper.debug.xcconfig"; path = "Target Support Files/Pods-LocalizationHelper/Pods-LocalizationHelper.debug.xcconfig"; sourceTree = "<group>"; };
 		7E64F40D408A99BA0D9A3C71 /* Pods-LocalizationHelper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LocalizationHelper.release.xcconfig"; path = "Target Support Files/Pods-LocalizationHelper/Pods-LocalizationHelper.release.xcconfig"; sourceTree = "<group>"; };
 		A441DC1B0AE8F155209914D8 /* Pods_LocalizationHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LocalizationHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC09790D25AF330800DB02E9 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		BC81A4CB253A9EF100CE8141 /* LocalizationHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalizationHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC81A4D0253A9EF100CE8141 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				BC81A4CE253A9EF100CE8141 /* AppDelegate.swift */,
+				BC09790D25AF330800DB02E9 /* StatusBarController.swift */,
 				BCA9931025AD8E7E005BD8FB /* Models */,
 				BC50D54A25AD8757006247EC /* Scenes */,
 				BC50D54B25AD8764006247EC /* Helpers */,
@@ -387,6 +390,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BCA9931225AD8E8C005BD8FB /* LocalizableFile.swift in Sources */,
+				BC09790E25AF330800DB02E9 /* StatusBarController.swift in Sources */,
 				BC9EC1402598305C005A2DE6 /* Extensions.swift in Sources */,
 				BC81A4D1253A9EF100CE8141 /* MainView.swift in Sources */,
 				BC81A519253ABA3400CE8141 /* MainVM.swift in Sources */,
