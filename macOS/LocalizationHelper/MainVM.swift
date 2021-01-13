@@ -182,31 +182,54 @@ class MainVM: ObservableObject {
     }
     
     // MARK: - Helper
+    func addNewPhrase() {
+        for var file in localizationFiles {
+            let textToWrite = "\"\(query)\" = \"\(file.newValue)\";\n"
+            guard let data = textToWrite.data(using: .utf8) else {return}
+            do {
+                let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.path.string))
+                fileHandler.seekToEndOfFile()
+                fileHandler.write(data)
+                try fileHandler.close()
+
+                file.content.append(LocalizationFile.Content(key: query, value: file.newValue))
+                file.newValue = ""
+                var files = localizationFiles
+                if let index = files.firstIndex(where: {$0.id == file.id}) {
+                    files[index] = file
+                    localizationFiles = files
+                }
+            } catch {
+                self.error = error
+                return
+            }
+        }
+    }
     
     
     // MARK: - Translation
-//    func translate() {
-//        localizationFiles.forEach {file in
-//            guard let query = query else {return}
-//            let langCode = file.languageCode
-//            
-//            let completion: ((String) -> Void) = { text in
-//                var files = self.localizationFiles
-//                guard let index = files.firstIndex(where: {$0.languageCode == langCode}) else {return}
-//                var file = files[index]
-//                file.newValue = text
-//                files[index] = file
-//                self.localizationFiles = files
-//            }
-//            
-//            GoogleTranslate.translate(text: query, toLang: langCode) { (error, result) in
-//                DispatchQueue.main.async {
-//                    if error != nil || result == nil {return}
-//                    completion(result!)
-//                }
-//            }
-//        }
-//    }
+    func translate() {
+        localizationFiles.forEach {file in
+            guard !query.isEmpty else {return}
+            let langCode = file.languageCode
+            
+            let completion: ((String) -> Void) = { text in
+                var files = self.localizationFiles
+                guard let index = files.firstIndex(where: {$0.languageCode == langCode}) else {return}
+                var file = files[index]
+                file.newValue = text
+                files[index] = file
+                self.localizationFiles = files
+            }
+            
+            GoogleTranslate.translate(text: query, toLang: langCode) { (error, result) in
+                DispatchQueue.main.async {
+                    if error != nil || result == nil {return}
+                    completion(result!)
+                }
+            }
+        }
+    }
 //    
 //    fileprivate func localizationFilesAtPath(path: String) -> [LocalizationFile] {
 //        let fileManager = FileManager.default
@@ -231,18 +254,18 @@ class MainVM: ObservableObject {
 //        }
 //    }
 //    
-//    func runSwiftgen() -> String {
-//        let task = Process()
-//        let pipe = Pipe()
-//        
-//        task.standardOutput = pipe
-//        task.arguments = ["-c", "\(projectFolder)/../Pods/swiftgen/bin/swiftgen config run --config \(projectFolder)/../swiftgen.yml"]
-//        task.launchPath = "/bin/zsh"
-//        task.launch()
-//        
-//        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-//        let output = String(data: data, encoding: .utf8)!
-//        
-//        return output
-//    }
+    func runSwiftgen() -> String {
+        let task = Process()
+        let pipe = Pipe()
+        
+        task.standardOutput = pipe
+        task.arguments = ["-c", "\(projectPath!.parent().string)/Pods/swiftgen/bin/swiftgen config run --config \(projectPath!.parent().string)/swiftgen.yml"]
+        task.launchPath = "/bin/zsh"
+        task.launch()
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)!
+        
+        return output
+    }
 }

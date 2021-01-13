@@ -13,57 +13,33 @@ struct MainView: View {
     
     // MARK: - Subject
     @ObservedObject var viewModel = MainVM()
-//    @State private var enteringKey = ""
-//    @State private var isEnteringKey = false
-//    @State private var error: Error?
-//    @State private var isSwiftgenEnabled = UserDefaults.standard.bool(forKey: "Settings.isSwiftgenEnabled")
-//    @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
     
     // MARK: - State
     @State private var showingAlert = false
     @State private var query = ""
+    @State private var isSwiftgenEnabled = UserDefaults.standard.bool(forKey: "Settings.isSwiftgenEnabled")
+    @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
+    @State private var isEnteringKey = false
 
     // MARK: - Methods
     var body: some View {
-//        let binding = Binding<String>(
-//            get: { self.enteringKey },
-//            set: {
-//                self.enteringKey = $0
-//                self.viewModel.query = $0
-//                var newFiles = viewModel.localizationFiles
-//                for i in 0..<newFiles.count {
-//                    newFiles[i].newValue = ""
-//                }
-//                viewModel.localizationFiles = newFiles
-//            }
-//        )
-//
-//        let patternBinding = Binding<String>(
-//            get: { self.pattern },
-//            set: {
-//                self.pattern = $0
-//                UserDefaults.standard.set(pattern, forKey: "Settings.pattern")
-//            }
-//        )
-//
-//
-//        var isNewKey = true
-//        if !enteringKey.isEmpty {
-//            for file in viewModel.localizationFiles {
-//                if file.keys.contains(enteringKey) {isNewKey = false; break}
-//            }
-//        } else {
-//            isNewKey = false
-//        }
-//
-//        var canAdd = isNewKey
-//        if canAdd {
-//            for file in viewModel.localizationFiles {
-//                if file.newValue.isEmpty {canAdd = false; break}
-//            }
-//        }
-//
-//        let exampleText = pattern.replacingOccurrences(of: "<key>", with: enteringKey)
+        var isNewKey = true
+        if !query.isEmpty {
+            for file in viewModel.localizationFiles {
+                if file.content.map({$0.key}).contains(query) {isNewKey = false; break}
+            }
+        } else {
+            isNewKey = false
+        }
+
+        var canAdd = isNewKey
+        if canAdd {
+            for file in viewModel.localizationFiles {
+                if file.newValue.isEmpty {canAdd = false; break}
+            }
+        }
+
+        let exampleText = pattern.replacingOccurrences(of: "<key>", with: query)
         
         var title = "LocalizationHelper"
         if let projectName = viewModel.projectName {
@@ -100,86 +76,88 @@ struct MainView: View {
                     .padding(.bottom, 16)
                 }
                 Spacer()
+                HStack {
+                    Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
+                        UserDefaults.standard.set(state, forKey: "Settings.isSwiftgenEnabled")
+                    })) {
+                        Text("Swiftgen")
+                    }
+                    Spacer()
+                }
+                Spacer()
+                if !isSwiftgenEnabled {
+                    HStack {
+                        Text("Pattern")
+                        TextField("pattern for copying", text: patternBinding())
+                        Text("Ex: \(exampleText)")
+                    }
+                    Spacer()
+                }
+                HStack {
+                    TextField("Enter key...", text: binding()) { self.isEnteringKey = $0
+                    }
+                        .frame(width: colWidth)
+                    Button("Translate") {
+                        viewModel.translate()
+                    }
+                        .disabled(!isNewKey)
+                    
+                    Button("Add and \(isSwiftgenEnabled ? "run swiftgen": "copy to clipboard")") {
+                        viewModel.addNewPhrase()
+                        if isSwiftgenEnabled {
+                            print(self.viewModel.runSwiftgen())
+                        } else {
+                            let pasteboard = NSPasteboard.general
+                            pasteboard.clearContents()
+                            pasteboard.setString(exampleText, forType: .string)
+                        }
+                        self.query = ""
+                    }
+                        .disabled(!canAdd)
+                    
+                    if let error = viewModel.error {
+                        Text(error.localizedDescription)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    self.viewModel.error = nil
+                                }
+                            }
+                    }
+                }
             } else {
                 openProjectButton()
             }
-            
-//            if let url = viewModel {
-//
-//
-//                HStack {
-//                    Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
-//                        UserDefaults.standard.set(state, forKey: "Settings.isSwiftgenEnabled")
-//                    })) {
-//                        Text("Swiftgen")
-//                    }
-//                    Spacer()
-//                }
-//                Spacer()
-//                if !isSwiftgenEnabled {
-//                    HStack {
-//                        Text("Pattern")
-//                        TextField("pattern for copying", text: patternBinding)
-//                        Text("Ex: \(exampleText)")
-//                    }
-//                    Spacer()
-//                }
-//                HStack {
-//                    TextField("Enter key...", text: binding) { self.isEnteringKey = $0 }
-//                        .frame(width: colWidth)
-//                    Button("Translate") {
-//                        viewModel.translate()
-//                    }
-//                        .disabled(!isNewKey)
-//                    Button("Add and \(isSwiftgenEnabled ? "run swiftgen": "copy to clipboard")") {
-//                        for var file in viewModel.localizationFiles {
-//                            let textToWrite = "\"\(enteringKey)\" = \"\(file.newValue)\";\n"
-//                            guard let data = textToWrite.data(using: .utf8) else {return}
-//                            do {
-//                                let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.url))
-//                                fileHandler.seekToEndOfFile()
-//                                fileHandler.write(data)
-//                                try fileHandler.close()
-//
-//                                file.content.append(LocalizationFile.Content(key: enteringKey, value: file.newValue))
-//                                file.newValue = ""
-//                                var files = viewModel.localizationFiles
-//                                if let index = files.firstIndex(where: {$0.id == file.id}) {
-//                                    files[index] = file
-//                                    viewModel.localizationFiles = files
-//                                }
-//                            } catch {
-//                                self.error = error
-//                                return
-//                            }
-//                        }
-//
-//                        if isSwiftgenEnabled {
-//                            print(self.viewModel.runSwiftgen())
-//                        } else {
-//                            let pasteboard = NSPasteboard.general
-//                            pasteboard.clearContents()
-//                            pasteboard.setString(exampleText, forType: .string)
-//                            self.enteringKey = ""
-//                        }
-//                    }
-//                        .disabled(!canAdd)
-//                    Spacer()
-//                }
-//                if let error = error {
-//                    Text(error.localizedDescription)
-//                        .onAppear {
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                                self.error = nil
-//                            }
-//                        }
-//                }
         }
         .alert(isPresented: $showingAlert) {
             Alert(title: Text("Invalid file name"), message: Text("Must choose a Localizable.strings file"))
         }
         .padding(8)
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
+    }
+    
+    private func binding() -> Binding<String> {
+        Binding<String>(
+            get: { self.query },
+            set: {
+                self.query = $0
+                self.viewModel.query = $0
+                var newFiles = viewModel.localizationFiles
+                for i in 0..<newFiles.count {
+                    newFiles[i].newValue = ""
+                }
+                viewModel.localizationFiles = newFiles
+            }
+        )
+    }
+    
+    private func patternBinding() -> Binding<String> {
+        Binding<String>(
+            get: { self.pattern },
+            set: {
+                self.pattern = $0
+                UserDefaults.standard.set(pattern, forKey: "Settings.pattern")
+            }
+        )
     }
     
     private func bindingForTextField(file: LocalizationFile) -> Binding<String>
