@@ -216,27 +216,33 @@ struct MainView: View {
     
     fileprivate func openProjectButton(title: String = "Open a .xcodeproj file") -> Button<Text> {
         return Button(title) {
-            let dialog = NSOpenPanel()
+            (NSApplication.shared.delegate as! AppDelegate).statusBar?.hidePopover()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                let dialog = NSOpenPanel()
+                
 
-            dialog.title                   = "Choose a .xcodeproj file"
-            dialog.showsResizeIndicator    = true
-            dialog.showsHiddenFiles        = false
-            dialog.allowsMultipleSelection = false
-            dialog.canChooseDirectories    = false
-            dialog.canChooseFiles          = true
-            dialog.allowedFileTypes = ["xcodeproj"]
+                dialog.title                   = "Choose a .xcodeproj file"
+                dialog.showsResizeIndicator    = true
+                dialog.showsHiddenFiles        = false
+                dialog.allowsMultipleSelection = false
+                dialog.canChooseDirectories    = false
+                dialog.canChooseFiles          = true
+                dialog.allowedFileTypes = ["xcodeproj"]
 
-            if (dialog.runModal() ==  .OK) {
-                let result = dialog.url // Pathname of the file
+                if (dialog.runModal() ==  .OK) {
+                    let result = dialog.url // Pathname of the file
 
-                if let path = result?.path {
-                    viewModel.openProject(path: path)
+                    if let path = result?.path {
+                        viewModel.openProject(path: path)
+                    }
+                    (NSApplication.shared.delegate as! AppDelegate).statusBar?.showPopover()
+                } else {
+                    // User clicked on "Cancel"
+                    return
                 }
-
-            } else {
-                // User clicked on "Cancel"
-                return
             }
+            
         }
     }
 }

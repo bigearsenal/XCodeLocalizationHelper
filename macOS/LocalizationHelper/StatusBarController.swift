@@ -40,14 +40,14 @@ class StatusBarController {
         }
     }
     
-    func showPopover(_ sender: AnyObject) {
+    func showPopover(_ sender: AnyObject? = nil) {
         if let statusBarButton = statusItem.button {
             popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton, preferredEdge: NSRectEdge.maxY)
             eventMonitor?.start()
         }
     }
     
-    func hidePopover(_ sender: AnyObject) {
+    func hidePopover(_ sender: AnyObject? = nil) {
         popover.performClose(sender)
         eventMonitor?.stop()
     }
