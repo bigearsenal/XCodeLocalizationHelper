@@ -11,119 +11,96 @@ struct MainView: View {
     // MARK: - Constants
     let colWidth: CGFloat = 300
     
-    // MARK: - Settings
-    @State private var currentStringsFileUrl = UserDefaults.standard.string(forKey: "Settings.currentStringsFileUrl") {
-        didSet { UserDefaults.standard.set(currentStringsFileUrl, forKey: "Settings.currentStringsFileUrl") }
-    }
+    // MARK: - Subject
     @ObservedObject var viewModel = MainVM()
-    @State private var enteringKey = ""
-    @State private var isEnteringKey = false
-    @State private var error: Error?
+    
+    // MARK: - State
+    @State private var showingAlert = false
+    @State private var query = ""
     @State private var isSwiftgenEnabled = UserDefaults.standard.bool(forKey: "Settings.isSwiftgenEnabled")
     @State private var pattern = UserDefaults.standard.string(forKey: "Settings.pattern") ?? "NSLocalizedString(\"<key>\", comment: \"\")"
-    @State private var showingAlert = false
-    
-    // MARK: - Initializer
-    init() {
-        defer {openStringFile()}
-    }
+    @State private var isEnteringKey = false
+    @State private var isChoosingCodeToLocalize = false
+    @State private var newLanguageCode = ""
 
     // MARK: - Methods
     var body: some View {
-        let binding = Binding<String>(
-            get: { self.enteringKey },
-            set: {
-                self.enteringKey = $0
-                self.viewModel.query = $0
-                var newFiles = viewModel.localizationFiles
-                for i in 0..<newFiles.count {
-                    newFiles[i].newValue = ""
-                }
-                viewModel.localizationFiles = newFiles
-            }
-        )
-        
-        let patternBinding = Binding<String>(
-            get: { self.pattern },
-            set: {
-                self.pattern = $0
-                UserDefaults.standard.set(pattern, forKey: "Settings.pattern")
-            }
-        )
-        
-        let filteredContentOfFile: (LocalizationFile) -> [LocalizationFile.Content] = { file in
-            if viewModel.query == nil {return Array(file.content.prefix(10))}
-            return Array(file.content.filter {$0.key.lowercased().contains(viewModel.query!.lowercased()) ||
-                $0.value.lowercased().contains(viewModel.query!.lowercased())
-            }.prefix(10))
-        }
-        
         var isNewKey = true
-        if !enteringKey.isEmpty {
+        if !query.isEmpty {
             for file in viewModel.localizationFiles {
-                if file.keys.contains(enteringKey) {isNewKey = false; break}
+                if file.content.map({$0.key}).contains(query) {isNewKey = false; break}
             }
         } else {
             isNewKey = false
         }
-        
+
         var canAdd = isNewKey
         if canAdd {
             for file in viewModel.localizationFiles {
                 if file.newValue.isEmpty {canAdd = false; break}
             }
         }
-        
-        let exampleText = pattern.replacingOccurrences(of: "<key>", with: enteringKey)
-        
-        let bindingForTextFieldOfFile: ((LocalizationFile) -> Binding<String>) = { file in
-            Binding<String>(
-                get: {
-                    file.newValue
-                },
-                set: {
-                    var file = file
-                    file.newValue = $0
-                    var files = viewModel.localizationFiles
-                    guard let index = files.firstIndex(where: {$0.id == file.id}) else {return}
-                    files[index] = file
-                    viewModel.localizationFiles = files
-                }
-            )
-        }
+
+        let exampleText = pattern.replacingOccurrences(of: "<key>", with: query)
 
         return Group {
-            if let url = currentStringsFileUrl {
+            if viewModel.project != nil {
                 HStack {
-                    Text("Current project: " + url)
-                    openProjectButton(title: "Other...")
+                    Text(viewModel.projectName ?? "")
+                    openProjectButton(title: "Open another...")
                 }
-                Spacer()
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(viewModel.localizationFiles) { file in
-                            VStack {
-                                Text(file.languageCode)
-                                List(filteredContentOfFile(file)) { text in
-                                    VStack(alignment: .leading) {
-                                        Text(text.key)
-                                            .lineLimit(0)
-                                            .multilineTextAlignment(.leading)
-                                        Text(text.value)
-                                            .lineLimit(0)
-                                            .multilineTextAlignment(.leading)
-                                    }
-                                    
-                                }
-                                TextField(file.languageCode, text: bindingForTextFieldOfFile(file))
-                                    .frame(width: colWidth)
-                            }
-                            .frame(width: colWidth)
+                
+                if viewModel.localizationFiles.count == 0 {
+                    Spacer()
+                    if isChoosingCodeToLocalize {
+                        Text("Enter Apple's standard language code")
+                        TextField("Language code", text: $newLanguageCode)
+                            .frame(width: 200)
+                    } else {
+                        Text("This project has not been localized yet.\nDo you want to localize it?")
+                            .multilineTextAlignment(.center)
+                    }
+                    
+                    Button("Localize") {
+                        if !isChoosingCodeToLocalize {isChoosingCodeToLocalize = true}
+                        else {
+                            try? viewModel.addLocalizationIfNotExists(code: "en")
+                            try? viewModel.addLocalizationIfNotExists(code: newLanguageCode)
+                            
+                            try? viewModel.openLocalizableFiles()
                         }
                     }
-                    .padding(.bottom, 16)
+                        .disabled(isChoosingCodeToLocalize && newLanguageCode.isEmpty)
+                    Spacer()
+                } else {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(viewModel.localizationFiles) { file in
+                                VStack {
+                                    Text(file.languageCode)
+                                    ForEach(file.filteredContent(query: query)) { text in
+                                        VStack(alignment: .leading) {
+                                            Text(text.key)
+                                                .lineLimit(0)
+                                                .multilineTextAlignment(.leading)
+                                            Text(text.value)
+                                                .lineLimit(0)
+                                                .multilineTextAlignment(.leading)
+                                        }
+                                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+                                        .padding(.bottom, 8)
+                                    }
+                                    Spacer()
+                                    TextField(file.languageCode, text: bindingForTextField(file: file))
+                                        .frame(width: colWidth)
+                                }
+                                .frame(width: colWidth)
+                            }
+                        }
+                        .padding(.bottom, 16)
+                    }
                 }
-                Spacer()
+                
                 HStack {
                     Toggle(isOn: $isSwiftgenEnabled.didSet(execute: { state in
                         UserDefaults.standard.set(state, forKey: "Settings.isSwiftgenEnabled")
@@ -132,64 +109,42 @@ struct MainView: View {
                     }
                     Spacer()
                 }
-                Spacer()
                 if !isSwiftgenEnabled {
                     HStack {
                         Text("Pattern")
-                        TextField("pattern for copying", text: patternBinding)
+                        TextField("pattern for copying", text: patternBinding())
                         Text("Ex: \(exampleText)")
                     }
-                    Spacer()
                 }
                 HStack {
-                    TextField("Enter key...", text: binding) { self.isEnteringKey = $0 }
+                    TextField("Enter key...", text: binding()) { self.isEnteringKey = $0
+                    }
                         .frame(width: colWidth)
                     Button("Translate") {
                         viewModel.translate()
                     }
                         .disabled(!isNewKey)
+                    
                     Button("Add and \(isSwiftgenEnabled ? "run swiftgen": "copy to clipboard")") {
-                        for var file in viewModel.localizationFiles {
-                            let textToWrite = "\"\(enteringKey)\" = \"\(file.newValue)\";\n"
-                            guard let data = textToWrite.data(using: .utf8) else {return}
-                            do {
-                                let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.url))
-                                fileHandler.seekToEndOfFile()
-                                fileHandler.write(data)
-                                try fileHandler.close()
-                                
-                                file.content.append(LocalizationFile.Content(key: enteringKey, value: file.newValue))
-                                file.newValue = ""
-                                var files = viewModel.localizationFiles
-                                if let index = files.firstIndex(where: {$0.id == file.id}) {
-                                    files[index] = file
-                                    viewModel.localizationFiles = files
-                                }
-                            } catch {
-                                self.error = error
-                                return
-                            }
-                        }
-                        
+                        viewModel.addNewPhrase()
                         if isSwiftgenEnabled {
                             print(self.viewModel.runSwiftgen())
                         } else {
                             let pasteboard = NSPasteboard.general
                             pasteboard.clearContents()
                             pasteboard.setString(exampleText, forType: .string)
-                            self.enteringKey = ""
                         }
                     }
                         .disabled(!canAdd)
-                    Spacer()
-                }
-                if let error = error {
-                    Text(error.localizedDescription)
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                self.error = nil
+                    
+                    if let error = viewModel.error {
+                        Text(error.localizedDescription)
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    self.viewModel.error = nil
+                                }
                             }
-                        }
+                    }
                 }
             } else {
                 openProjectButton()
@@ -202,41 +157,72 @@ struct MainView: View {
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
     }
     
-    fileprivate func openProjectButton(title: String = "Open a Localizable.strings file") -> Button<Text> {
+    private func binding() -> Binding<String> {
+        Binding<String>(
+            get: { self.query },
+            set: {
+                self.query = $0
+                self.viewModel.query = $0
+                var newFiles = viewModel.localizationFiles
+                for i in 0..<newFiles.count {
+                    newFiles[i].newValue = ""
+                }
+                viewModel.localizationFiles = newFiles
+            }
+        )
+    }
+    
+    private func patternBinding() -> Binding<String> {
+        Binding<String>(
+            get: { self.pattern },
+            set: {
+                self.pattern = $0
+                UserDefaults.standard.set(pattern, forKey: "Settings.pattern")
+            }
+        )
+    }
+    
+    private func bindingForTextField(file: LocalizationFile) -> Binding<String>
+    {
+        Binding<String>(
+            get: {
+                file.newValue
+            },
+            set: {
+                var file = file
+                file.newValue = $0
+                var files = viewModel.localizationFiles
+                guard let index = files.firstIndex(where: {$0.id == file.id}) else {return}
+                files[index] = file
+                viewModel.localizationFiles = files
+            }
+        )
+    }
+    
+    fileprivate func openProjectButton(title: String = "Open a .xcodeproj file") -> Button<Text> {
         return Button(title) {
             let dialog = NSOpenPanel()
-            
-            dialog.title                   = "Choose an Localizable.strings file"
+
+            dialog.title                   = "Choose a .xcodeproj file"
             dialog.showsResizeIndicator    = true
             dialog.showsHiddenFiles        = false
             dialog.allowsMultipleSelection = false
             dialog.canChooseDirectories    = false
             dialog.canChooseFiles          = true
-            dialog.allowedFileTypes = ["strings"]
-            
+            dialog.allowedFileTypes = ["xcodeproj"]
+
             if (dialog.runModal() ==  .OK) {
                 let result = dialog.url // Pathname of the file
-                
+
                 if let path = result?.path {
-                    if path.components(separatedBy: "/").last == "Localizable.strings" {
-                        self.currentStringsFileUrl = path
-                        openStringFile()
-                    } else {
-                        
-                        return
-                    }
+                    viewModel.openProject(path: path)
                 }
-                
+
             } else {
                 // User clicked on "Cancel"
                 return
             }
         }
-    }
-    
-    fileprivate func openStringFile() {
-        guard let path = currentStringsFileUrl else {return}
-        viewModel.openProject(path: path)
     }
 }
 
