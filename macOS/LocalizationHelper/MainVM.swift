@@ -233,30 +233,7 @@ class MainVM: ObservableObject {
             }
         }
     }
-//    
-//    fileprivate func localizationFilesAtPath(path: String) -> [LocalizationFile] {
-//        let fileManager = FileManager.default
-//        var path = path
-//        
-//        // get project's path
-//        path = path.components(separatedBy: "/").dropLast(2).joined(separator: "/")
-//        
-//        guard let paths = fileManager.enumerator(atPath: path)?.allObjects as? [String] else {
-//            return []
-//        }
-//        let stringsFilePaths = paths.filter {$0.hasSuffix("Localizable.strings")}
-//        
-//        return stringsFilePaths.compactMap { aPath in
-//            let path = path + "/" + aPath
-//            print(path)
-//            let text = try! String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
-//            let array = text.components(separatedBy: .newlines)
-//                .map { $0.components(separatedBy: "=").map {$0.trimmingCharacters(in: .whitespaces)}.map {$0.replacingOccurrences(of: "\"", with: "")} }
-//                .map {LocalizationFile.Content(key: $0.first ?? "",value: String($0.last?.dropLast() ?? ";"))}
-//            return LocalizationFile(languageCode: aPath.components(separatedBy: ".lproj").first?.components(separatedBy: "/").last ?? "", url: path, newValue: "", content: array)
-//        }
-//    }
-//    
+    
     func runSwiftgen() -> String {
         let task = Process()
         let pipe = Pipe()
