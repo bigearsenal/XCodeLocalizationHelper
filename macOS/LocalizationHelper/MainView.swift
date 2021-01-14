@@ -45,11 +45,7 @@ struct MainView: View {
 
         return Group {
             if viewModel.project != nil {
-                HStack {
-                    Text(viewModel.projectName ?? "")
-                    openProjectButton(title: "Open another...")
-                }
-                
+                Text(viewModel.projectName ?? "")
                 Divider()
                 
                 if viewModel.localizationFiles.count == 0 {
@@ -104,7 +100,7 @@ struct MainView: View {
                         HStack {
                             ForEach(viewModel.localizationFiles) { file in
                                 VStack {
-                                    Text(file.languageCode)
+                                    Text(ISOLanguageCode.all.first(where: {file.languageCode == $0.code})?.name ?? file.languageCode)
                                     ForEach(file.filteredContent(query: query)) { text in
                                         VStack(alignment: .leading) {
                                             Text(text.key)
@@ -171,20 +167,28 @@ struct MainView: View {
                         .disabled(!canAdd)
                     
                     Spacer()
-                    
-                    Button("Quit") {
-                        NSApplication.shared.terminate(self)
-                    }
                 }
-                
                 if let error = viewModel.error {
-                    Divider()
                     Text(error.localizedDescription)
                         .onAppear {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 self.viewModel.error = nil
                             }
                         }
+                    Divider()
+                }
+                HStack {
+                    Text("Author: Chung Tran (bigearsenal)")
+                    Link(url: "https://www.linkedin.com/in/chung-tr%E1%BA%A7n-39b46569/", description: "LinkedIn")
+                    Link(url: "https://github.com/bigearsenal/XCodeLocalizationHelper", description: "Repository")
+                    Spacer()
+                    Link(url: "https://www.buymeacoffee.com/bigearsenal", description: "☕ Buy me a coffee")
+                    Spacer()
+                    
+                    openProjectButton(title: "Open another...")
+                    Button("Quit") {
+                        NSApplication.shared.terminate(self)
+                    }
                 }
             } else {
                 openProjectButton()
