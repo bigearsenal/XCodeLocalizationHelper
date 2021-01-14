@@ -28,7 +28,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/bigearsenal/XCodeLocalizationHelper">
-    <img src="macOS/LocalizationHelper/Assets.xcassets/AppIcon.appiconset/128.png" alt="Logo" width="80" height="80">
+    <img src="macOS/LocalizationHelper/Assets.xcassets/AppIcon.appiconset/256.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">XCodeLocalizationHelper</h3>
@@ -90,7 +90,7 @@ Then XCodeLocalizationHelper (or LocalizationHelper) comes as a rescue.
 
 Here's why:
 * LocalizationHelper helps you set up your project for localization if it has not been supported yet.
-* You can create new key, value for each Localizable.strings files in a blink of an eye with the helps of GoogleTranslate open API (steel works from your company's translators :smile:).
+* You can create and translate new keys for each Localizable.strings files in a blink of an eye with GoogleTranslate open API (steel works from your company's translators :smile:).
 * You can edit the translation before adding to the project.
 * You can immediately get the code you need in clipboard or using swiftgen for generating API after adding any key to your strings files using LocalizationHelper.
 * See [demo](https://youtu.be/i39IbtfR6Hc).
@@ -117,25 +117,25 @@ Mount the .dmg file, copy it to your `~/Applications` folder, open it and you're
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-At the first time when you open the project, you will see the `Open a .xcodeproj file` button. Click it and choose navigate choose your `.xcodeproj` file.
+At the first time when you open the project, you will see the `Open a .xcodeproj file` button. Click it and open your `.xcodeproj` file.
 
-If your project have not supported localization yet, then there will be a button `Localize` that helps you register your app for localization, add `knownRegions`, add `.lproj` folders and `Localizable.strings` files for these languages you choose.
+If your project has not supported localization yet, then there will be a `Localize` button that helps you register your app for localization, add `knownRegions`, add `.lproj` folders and `Localizable.strings` files for these languages you choose.
 
 ![Choose language to localize in LocalizationHelper](images/choose-languages.png)
 
-After succesfully setting up your project for localization, you will see the main screen of application that helps you to add new keys and there translations to the relative strings file.
+After succesfully setting up your project for localization, you will see the main screen of application that helps you to add new keys and their translations to the relative `.strings` files.
 
-You can now add some key and translate your key by clicking `Translate` button.
+You can now add some keys and translate them by clicking `Translate` button.
 
 ![Add and translate key in LocalizationHelper](images/translate-key.png)
 
-Choose `swiftgen` option if you are using swiftgen for creating strings API (the swiftgen.yml must be located at `$PROJECT_ROOT/swiftgen.yml` and `pod swiftgen` must be installed in your `Pods/`), or leave it unselected and choose the pattern you want when copying to clipboard.
+Choose `swiftgen` option if you are using swiftgen for creating strings API (the `swiftgen.yml` must be located at `$PROJECT_ROOT/swiftgen.yml` and `pod swiftgen` must be installed in your `Pods/`), or leave it unselected and choose the pattern you want when copying to clipboard.
 
 ![Add and copy to clipboard in LocalizationHelper](images/add-and-copy-to-clipboard.png)
 
 And the string with pattern you entered will be copied to clipboard. For example: `NSLocalizedString("Submit", comment: "")`.
 
-And that's it, you now can copy directly this test to your swift files!
+And that's it, you now can paste directly this text to your swift files!
 
 _For more examples, See [demo](https://youtu.be/i39IbtfR6Hc)_
 
