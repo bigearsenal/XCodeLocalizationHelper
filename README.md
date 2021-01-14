@@ -59,13 +59,13 @@
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
-    <li>
+    <!--<li> 
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#prerequisites">Prerequisites</a></li> -->
         <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
+      <!-- </ul>
+    </li> -->
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -90,9 +90,9 @@ Then XCodeLocalizationHelper (or LocalizationHelper) comes as a rescue.
 
 Here's why:
 * LocalizationHelper helps you set up your project for localization if it has not been supported yet.
-* You can create new key, value for each Localizable.strings files in a blink of an eye with the helps of GoogleTranslate opens API (steel works from your company's translators :smile:).
+* You can create new key, value for each Localizable.strings files in a blink of an eye with the helps of GoogleTranslate open API (steel works from your company's translators :smile:).
 * You can edit the translation before adding to the project.
-* You can immediately got the code you need in clipboard or using swiftgen for generating API after adding any key to your strings files using LocalizationHelper
+* You can immediately get the code you need in clipboard or using swiftgen for generating API after adding any key to your strings files using LocalizationHelper.
 * See [demo](https://youtu.be/i39IbtfR6Hc).
 
 So if you like this project, I kindly ask you to [buy me a coffee](https://www.buymeacoffee.com/bigearsenal). Your support would be highly appreciated.
@@ -101,47 +101,27 @@ A list of commonly used resources that I find helpful are listed in the acknowle
 
 ### Built With
 
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
-* [Laravel](https://laravel.com)
+* [SwiftUI](https://developer.apple.com/xcode/swiftui/)
+* [XcodeProj](https://github.com/tuist/XcodeProj)
+* [GoogleTranslate](https://translate.google.com/)
 
 
 
 <!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```JS
-   const API_KEY = 'ENTER YOUR API';
-   ```
+Getting started by downloading the installer of [the latest version of the app](https://github.com/bigearsenal/XCodeLocalizationHelper/raw/features/README/release/LocalizationHelper.dmg).
 
-
+Mount the .dmg file, copy it to your `~/Applications` folder, open it and you're ready to go.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+
+At the first time when you open the project, you will see the `Open a .xcodeproj file` button. Click it and choose navigate choose your `.xcodeproj` file.
+
+If your project have not supported localization yet, then there will be a button `Localize` that helps you register your app for localization, add `knownRegions`, add `.lproj` folders for the languages you choose.
+
+![Choose language to localize in LocalizationHelper](images/choose-languages.png)
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
