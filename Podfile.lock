@@ -1,17 +1,26 @@
 PODS:
+  - AEXML (4.6.0)
   - Alamofire (5.4.1)
   - BEPureLayout (0.2.1):
     - PureLayout
+  - PathKit (1.0.0)
   - PureLayout (3.1.6)
+  - xcodeproj (7.18.0):
+    - AEXML (~> 4.6.0)
+    - PathKit (~> 1.0.0)
 
 DEPENDENCIES:
   - Alamofire
   - BEPureLayout (from `https://github.com/bigearsenal/BEPureLayout.git`)
+  - xcodeproj
 
 SPEC REPOS:
   trunk:
+    - AEXML
     - Alamofire
+    - PathKit
     - PureLayout
+    - xcodeproj
 
 EXTERNAL SOURCES:
   BEPureLayout:
@@ -23,10 +32,13 @@ CHECKOUT OPTIONS:
     :git: https://github.com/bigearsenal/BEPureLayout.git
 
 SPEC CHECKSUMS:
+  AEXML: 2fbb73d8724797ed2cde888731e176fa4d44dd83
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
   BEPureLayout: 5421e716fb120f196677d9c875cd1fb305af2cea
+  PathKit: 364e0de7fb5adb142aecab4e112187e5548fc4b6
   PureLayout: bd3c4ec3a3819ad387c99ebb72c6b129c3ed4d2d
+  xcodeproj: 760cfd754df4cfac71ec86b1cbdd6075f9fd3102
 
-PODFILE CHECKSUM: 8cab38e658d545ae17c47e8fe6ca99a18a38ae05
+PODFILE CHECKSUM: af6b82204e30c73d52a93da724973e66ff64ca70
 
 COCOAPODS: 1.10.0

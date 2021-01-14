@@ -10,5 +10,6 @@ target 'LocalizationHelper' do
     platform :macos, '10.15'
     use_frameworks!
     pod 'Alamofire'
+    pod 'xcodeproj'
     project 'macOS/LocalizationHelper'
 end
