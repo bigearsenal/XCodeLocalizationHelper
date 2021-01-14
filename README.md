@@ -71,7 +71,7 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
+    <!-- <li><a href="#acknowledgements">Acknowledgements</a></li> -->
   </ol>
 </details>
 
@@ -97,7 +97,7 @@ Here's why:
 
 So if you like this project, I kindly ask you to [buy me a coffee](https://www.buymeacoffee.com/bigearsenal). Your support would be highly appreciated.
 
-A list of commonly used resources that I find helpful are listed in the acknowledgements.
+<!-- A list of commonly used resources that I find helpful are listed in the acknowledgements. -->
 
 ### Built With
 
@@ -119,20 +119,34 @@ Mount the .dmg file, copy it to your `~/Applications` folder, open it and you're
 
 At the first time when you open the project, you will see the `Open a .xcodeproj file` button. Click it and choose navigate choose your `.xcodeproj` file.
 
-If your project have not supported localization yet, then there will be a button `Localize` that helps you register your app for localization, add `knownRegions`, add `.lproj` folders for the languages you choose.
+If your project have not supported localization yet, then there will be a button `Localize` that helps you register your app for localization, add `knownRegions`, add `.lproj` folders and `Localizable.strings` files for these languages you choose.
 
 ![Choose language to localize in LocalizationHelper](images/choose-languages.png)
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+After succesfully setting up your project for localization, you will see the main screen of application that helps you to add new keys and there translations to the relative strings file.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+You can now add some key and translate your key by clicking `Translate` button.
 
+![Add and translate key in LocalizationHelper](images/translate-key.png)
 
+Choose `swiftgen` option if you are using swiftgen for creating strings API (the swiftgen.yml must be located at `$PROJECT_ROOT/swiftgen.yml` and `pod swiftgen` must be installed in your `Pods/`), or leave it unselected and choose the pattern you want when copying to clipboard.
+
+![Add and copy to clipboard in LocalizationHelper](images/add-and-copy-to-clipboard.png)
+
+And the string with pattern you entered will be copied to clipboard. For example: `NSLocalizedString("Submit", comment: "")`.
+
+And that's it, you now can copy directly this test to your swift files!
+
+_For more examples, See [demo](https://youtu.be/i39IbtfR6Hc)_
 
 <!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a list of proposed features (and known issues).
+* Support `stringsdict`.
+* Support edit existing key / value.
+* Support adding, deleting new languages alongside existing languages.
+
+See the [open issues](https://github.com/bigearsenal/XCodeLocalizationHelper/issues) for a list of proposed features (and known issues).
 
 
 
@@ -159,14 +173,14 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Chung Tran - [twitter](https://twitter.com/bigearsenal) - bigearsenal@gmail.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/bigearsenal/XCodeLocalizationHelper](https://github.com/bigearsenal/XCodeLocalizationHelper)
 
 
 
 <!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
+<!-- ## Acknowledgements
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
 * [Img Shields](https://shields.io)
 * [Choose an Open Source License](https://choosealicense.com)
@@ -177,7 +191,7 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/yo
 * [Smooth Scroll](https://github.com/cferdinandi/smooth-scroll)
 * [Sticky Kit](http://leafo.net/sticky-kit)
 * [JVectorMap](http://jvectormap.com)
-* [Font Awesome](https://fontawesome.com)
+* [Font Awesome](https://fontawesome.com) -->
 
 
 
