@@ -28,7 +28,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/bigearsenal/XCodeLocalizationHelper">
-    <img src="Apps/macOS/Resources/macOS.xcassets/AppIcon.appiconset/256.png" alt="Logo" width="80" height="80">
+    <img src="Apps/Resources/macOS.xcassets/AppIcon.appiconset/256.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">XCodeLocalizationHelper</h3>
