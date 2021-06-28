@@ -27,8 +27,8 @@ private func createAppTarget(
     bundleId: String,
     spm: [String] = []
 ) -> [Target] {
-    let name = projectName + "_" + platform.rawValue
-    let platformDir = "Apps/" + platform.rawValue
+    let name = projectName
+    let platformDir = "Apps"
     
     return [
         Target(
@@ -43,7 +43,7 @@ private func createAppTarget(
             resources: [
                 "\(platformDir)/Resources/**"
             ],
-            dependencies: [.target(name: kitName + "_" + platform.rawValue)]
+            dependencies: [.target(name: kitName)]
                 + spm.map {TargetDependency.package(product: $0) }
         ),
         Target(
@@ -63,8 +63,8 @@ private func createAppTarget(
 
 /// Helper function to create a framework target and an associated unit test target
 private func makeKitFrameworkTargets(platform: Platform, spm: [String] = []) -> [Target] {
-    let kitBundleId = bundleIdMacOS + "Kit" + "-" + platform.rawValue
-    let name = kitName + "_" + platform.rawValue
+    let kitBundleId = bundleIdMacOS + "Kit"
+    let name = kitName
     
     let sources = Target(
         name: name,

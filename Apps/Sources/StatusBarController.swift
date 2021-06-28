@@ -6,7 +6,7 @@
 //
 
 import AppKit
-import LocalizationHelperKit_macos
+import LocalizationHelperKit
 
 class StatusBarController {
     private var statusBar: NSStatusBar

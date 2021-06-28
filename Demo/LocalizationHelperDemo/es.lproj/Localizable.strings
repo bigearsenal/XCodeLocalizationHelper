@@ -1,0 +1,10 @@
+/*
+  Localizable.strings
+
+  Created with LocalizationHelper.
+  
+*/
+
+"test" = "prueba";
+"hello" = "Hola";
+"good" = "bien";

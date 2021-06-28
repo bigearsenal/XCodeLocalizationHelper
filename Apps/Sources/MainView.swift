@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import LocalizationHelperKit_macos
+import LocalizationHelperKit
 
 struct MainView: View {
     // MARK: - Constants
