@@ -11,13 +11,20 @@ import XcodeProj
 
 /// The struct that contains all shared data inside application
 struct AppState: Equatable {
-    let currentProject: Project?
+    var project: ProjectData?
+}
+
+extension AppState {
+    struct ProjectData: Equatable {
+        var pxbproj: XcodeProj
+        var target: PBXTarget
+    }
 }
 
 #if DEBUG
 extension AppState {
     static var preview: AppState {
-        AppState(currentProject: nil)
+        AppState()
     }
 }
 #endif
