@@ -29,6 +29,14 @@ class PBXGroupTests: XCTestCase {
         XCTAssertNotEqual(group, nil)
     }
     
+    func testGetGroupRecursively3() throws {
+        let project = try getXcodeProj(fileName: "GetGroupRecursively3.xcodeproj")
+        
+        let group = project.pbxproj.rootObject?.mainGroup
+            .group(named: LOCALIZABLE_STRINGS, recursively: true)
+        XCTAssertNotEqual(group, nil)
+    }
+    
     // MARK: - Helper
     private func getXcodeProj(fileName: String) throws -> XcodeProj {
         try XcodeProj(pathString: homeUrl + "/" + fileName)

@@ -20,12 +20,10 @@ extension PBXGroup {
             return group
         }
         
-        // Recursively find
-        if let children = children as? [PBXGroup] {
-            for child in children {
-                if let group = child.group(named: name, recursively: true) {
-                    return group
-                }
+        // recursively find group
+        for child in children where child is PBXGroup {
+            if let group = (child as? PBXGroup)?.group(named: name, recursively: true) {
+                return group
             }
         }
         
