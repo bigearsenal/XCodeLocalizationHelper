@@ -17,8 +17,42 @@ protocol ProjectInteractorType {
 }
 
 struct ProjectInteractor: ProjectInteractorType {
+    // MARK: - UserDefaults
+    private let projectPathKey = "KEYS.PROJECT_PATH"
+    private let targetKey = "KEYS.TARGET"
+    
+    private var projectPath: String? {
+        get {
+            UserDefaults.standard.string(forKey: projectPathKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: projectPathKey)
+        }
+    }
+    private var targetName: String? {
+        get {
+            UserDefaults.standard.string(forKey: targetKey)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: targetKey)
+        }
+    }
+    
+    
+    // MARK: - Properties
     let appState: Store<AppState>
     
+    // MARK: - Initializers
+    init() {
+        appState = .init(.init(project: nil))
+        
+        // open current saved project
+        if let path = projectPath, let targetName = targetName {
+            try? openProject(path: path, targetName: targetName)
+        }
+    }
+    
+    // MARK: - Methods
     func openProject(path: String, targetName: String) throws {
         let path = Path(path)
         let project = try XcodeProj(path: path)
