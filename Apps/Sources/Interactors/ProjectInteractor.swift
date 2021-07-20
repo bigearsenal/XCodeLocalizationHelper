@@ -12,7 +12,7 @@ import PathKit
 
 protocol ProjectInteractorType {
     func openCurrentProject() throws
-    func openProject(path: String, targetName: String) throws
+    func openProject(path: String, targetName: String, ciType: CIType) throws
     func localizeProject(languageCode: String) throws
     func closeProject()
 }
@@ -50,32 +50,66 @@ struct ProjectInteractor: ProjectInteractorType {
         if let path = projectRepository.getProjectPath(),
            let targetName = projectRepository.getTargetName()
         {
-            try openProject(path: path, targetName: targetName)
+            try openProject(path: path, targetName: targetName, ciType: projectRepository.getCIType())
         }
     }
     
-    func openProject(path: String, targetName: String) throws {
+    func openProject(path: String, targetName: String, ciType: CIType) throws {
         let project = try XcodeProj(pathString: path)
         guard let target = project.pbxproj.targets(named: targetName).first else {
             throw Error.targetNotFound
         }
         projectRepository.saveProjectPath(path)
         projectRepository.saveTargetName(targetName)
+        projectRepository.saveCIType(ciType)
         appState.send(
             .init(
                 project: .init(
                     pxbproj: project,
                     target: target,
-                    path: Path(path)
+                    path: Path(path),
+                    ciType: ciType
                 )
             )
         )
     }
     
     func localizeProject(languageCode: String) throws {
+        guard let project = appState.value.project
+        else {
+            throw Error.projectNotFound
+        }
+        
+        // with tuist (just find file in Resources)
+        if project.ciType == .tuist {
+            try localizeProjectWithTuist(languageCode: languageCode)
+        }
+        // without tuist (modify project directly)
+        else {
+            try localizeProjectWithoutTuist(languageCode: languageCode)
+        }
+        
+        // save project
+        try saveProject()
+    }
+    
+    func closeProject() {
+        projectRepository.saveProjectPath(nil)
+        projectRepository.saveTargetName(nil)
+        appState.send(.init(project: nil))
+    }
+    
+    // MARK: - Helpers
+    private func localizeProjectWithTuist(languageCode: String) throws {
+        fatalError("Implementing")
+    }
+    
+    private func localizeProjectWithoutTuist(languageCode: String) throws {
         guard let project = appState.value.project,
               let rootObject = project.rootObject
-        else {throw Error.projectNotFound}
+        else {
+            throw Error.projectNotFound
+        }
         
         // add knownRegions if not exists
         if !rootObject.knownRegions.contains(languageCode) {
@@ -126,18 +160,8 @@ struct ProjectInteractor: ProjectInteractorType {
         project.target.buildConfigurationList?.buildConfigurations.forEach {
             $0.buildSettings[key] = "YES"
         }
-        
-        // save project
-        try saveProject()
     }
     
-    func closeProject() {
-        projectRepository.saveProjectPath(nil)
-        projectRepository.saveTargetName(nil)
-        appState.send(.init(project: nil))
-    }
-    
-    // MARK: - Helpers
     private func saveProject() throws {
         guard let project = appState.value.project?.pxbproj,
             let path = appState.value.project?.path else {return}
@@ -150,7 +174,7 @@ struct StubProjectInteractor: ProjectInteractorType {
         
     }
     
-    func openProject(path: String, targetName: String) throws {
+    func openProject(path: String, targetName: String, ciType: CIType) throws {
         
     }
     

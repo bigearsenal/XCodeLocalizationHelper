@@ -12,12 +12,15 @@ protocol ProjectRepositoryType {
     func saveProjectPath(_ projectPath: String?)
     func getTargetName() -> String?
     func saveTargetName(_ targetName: String?)
+    func getCIType() -> CIType
+    func saveCIType(_ ciType: CIType)
 }
 
 struct ProjectRepositoryUserDefaults: ProjectRepositoryType {
     // MARK: - Keys
     private let projectPathKey = "KEYS.PROJECT_PATH"
     private let targetKey = "KEYS.TARGET"
+    private let ciTypeKey = "KEYS.CITYPE"
     
     // MARK: - Methods
     func saveProjectPath(_ projectPath: String?) {
@@ -34,5 +37,15 @@ struct ProjectRepositoryUserDefaults: ProjectRepositoryType {
     
     func getTargetName() -> String? {
         UserDefaults.standard.string(forKey: targetKey)
+    }
+    
+    func getCIType() -> CIType {
+        guard let raw = UserDefaults.standard.string(forKey: projectPathKey)
+        else {return .none}
+        return .init(rawValue: raw) ?? .none
+    }
+    
+    func saveCIType(_ ciType: CIType) {
+        UserDefaults.standard.set(ciType.rawValue, forKey: ciTypeKey)
     }
 }
