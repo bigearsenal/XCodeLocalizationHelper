@@ -19,6 +19,10 @@ class ProjectInteractorTests: XCTestCase {
         try testLocalizeFile(fileName: "Test1", languageCode: "zh")
     }
     
+    func testLocalizeFile2() throws {
+        try testLocalizeFile(fileName: "Test2", languageCode: "ru")
+    }
+    
     // MARK: - Helpers
     private func testLocalizeFile(fileName: String, languageCode: String) throws {
         let interactor = try ProjectInteractor(
