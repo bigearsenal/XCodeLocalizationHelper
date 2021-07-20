@@ -12,11 +12,13 @@ struct FakeProjectRepository: ProjectRepositoryType {
     private let fileName: String
     private let targetName: String
     private let projectPath: String
+    private let ciType: CIType
     
-    init(fileName: String, targetName: String) {
+    init(fileName: String, targetName: String, ciType: CIType = .none) {
         self.fileName = fileName
         self.projectPath = homeUrl + "/" + fileName + "/" + fileName + ".xcodeproj"
         self.targetName = targetName
+        self.ciType = ciType
     }
     
     func getProjectPath() -> String? {
@@ -30,4 +32,10 @@ struct FakeProjectRepository: ProjectRepositoryType {
     }
     
     func saveTargetName(_ targetName: String?) {}
+    
+    func getCIType() -> CIType {
+        ciType
+    }
+    
+    func saveCIType(_ ciType: CIType) {}
 }
