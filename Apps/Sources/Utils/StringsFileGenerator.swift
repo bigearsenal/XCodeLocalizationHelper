@@ -9,5 +9,5 @@ import Foundation
 import PathKit
 
 protocol StringsFileGeneratorType {
-    func generateStringsFile(at path: Path, languageCode: String) throws -> Path
+    func generateStringsFile(at path: Path, languageCode: String) throws
 }

@@ -24,6 +24,10 @@ extension AppState {
         var rootObject: PBXProject? {
             pxbproj.pbxproj.rootObject
         }
+        
+        var projectFolderPath: Path {
+            path.parent()
+        }
     }
 }
 

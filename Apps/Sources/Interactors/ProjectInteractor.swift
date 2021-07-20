@@ -87,12 +87,19 @@ struct ProjectInteractor: ProjectInteractorType {
         // get localizableStringsGroup's path
         guard let localizableStringsGroup = localizableStringsGroup
         else {return}
+        let localizableStringsGroupPath: Path
+        if let string = localizableStringsGroup.children.first?.path {
+            localizableStringsGroupPath = .init(string).parent().parent()
+        } else {
+            localizableStringsGroupPath = Path()
+        }
+        
+//        po group?.fullPath(sourceRoot: .init("/Users/bigears/Documents/macos/XCodeLocalizationHelper/Apps/Tests/Extensions/PBXGroupTests"))
         
         // add <languageCode>.lproj/Localizable.strings to project at localizableStringsGroupPath
-//        let newStringsFilePath = try stringsFileGenerator.generateStringsFile(at: Path(localizableStringsGroupPath), languageCode: languageCode)
-//        
-//        try localizableStringsGroup.addFile(at: newStringsFilePath, sourceRoot: mainGroupPath.parent())
+        try stringsFileGenerator.generateStringsFile(at: localizableStringsGroupPath, languageCode: languageCode)
         
+        try localizableStringsGroup.addFile(at: localizableStringsGroupPath + "\(languageCode).lproj" + LOCALIZABLE_STRINGS, sourceRoot: project.projectFolderPath)
         
         // set flag CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
         let key = "CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED"
