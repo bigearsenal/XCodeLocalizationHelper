@@ -12,7 +12,7 @@ class ProjectInteractorTests: XCTestCase {
     func testLocalizeFile() throws {
         let interactor = try ProjectInteractor(
             projectRepository: FakeProjectRepository(fileName: "Test1", targetName: "Test1"),
-            stringsFileGenerator: FakeFileGenerator()
+            stringsFileGenerator: StringsFileGenerator()
         )
         
         try interactor.openCurrentProject()

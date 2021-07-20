@@ -15,7 +15,7 @@ struct FakeProjectRepository: ProjectRepositoryType {
     
     init(fileName: String, targetName: String) {
         self.fileName = fileName
-        self.projectPath = homeUrl + fileName + ".xcodeproj"
+        self.projectPath = homeUrl + "/" + fileName + "/" + fileName + ".xcodeproj"
         self.targetName = targetName
     }
     
