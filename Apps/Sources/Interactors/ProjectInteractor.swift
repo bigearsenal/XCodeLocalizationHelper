@@ -18,6 +18,9 @@ protocol ProjectInteractorType {
 
 struct ProjectInteractor: ProjectInteractorType {
     private let LOCALIZABLE_STRINGS = "Localizable.strings"
+    // MARK: - Dependencies
+    private let stringsFileGenerator: StringsFileGeneratorType
+    
     // MARK: - UserDefaults
     private let projectPathKey = "KEYS.PROJECT_PATH"
     private let targetKey = "KEYS.TARGET"
@@ -44,7 +47,8 @@ struct ProjectInteractor: ProjectInteractorType {
     let appState: Store<AppState>
     
     // MARK: - Initializers
-    init() {
+    init(stringsFileGenerator: StringsFileGeneratorType) {
+        self.stringsFileGenerator = stringsFileGenerator
         appState = .init(.init(project: nil))
         
         // open current saved project
@@ -81,18 +85,28 @@ struct ProjectInteractor: ProjectInteractorType {
         rootObject.knownRegions.append(languageCode)
         
         // find Localizable.strings group
-        let localizableStringsGroup = rootObject.mainGroup
+        var localizableStringsGroup = rootObject.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)
         
         // Localizable.strings group is not exists
         if localizableStringsGroup == nil
         {
             // create Localizable.strings group
+            localizableStringsGroup = try rootObject.mainGroup.addVariantGroup(named: LOCALIZABLE_STRINGS).first
             
-            // add Localizable.strings group to project
+            // add Localizable.strings group to target
+            let fileBuildPhases = project.target.buildPhases.first(where: {$0 is PBXSourcesBuildPhase})
+            _ = try fileBuildPhases?.add(file: localizableStringsGroup!)
         }
         
-        // add <languageCode>.lproj/Localizable.strings to project
+        // get localizableStringsGroup's path
+        guard let localizableStringsGroup = localizableStringsGroup
+        else {return}
+        
+        // add <languageCode>.lproj/Localizable.strings to project at localizableStringsGroupPath
+//        let newStringsFilePath = try stringsFileGenerator.generateStringsFile(at: Path(localizableStringsGroupPath), languageCode: languageCode)
+//        
+//        try localizableStringsGroup.addFile(at: newStringsFilePath, sourceRoot: mainGroupPath.parent())
         
         
         // set flag CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
