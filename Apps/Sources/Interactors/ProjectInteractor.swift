@@ -20,7 +20,7 @@ struct ProjectInteractor: ProjectInteractorType {
     private let LOCALIZABLE_STRINGS = "Localizable.strings"
     
     // MARK: - Dependencies
-    private let stringsFileGenerator: StringsFileGeneratorType
+    private let stringsFileGenerator: FileGeneratorType
     private let projectRepository: ProjectRepositoryType
     
     // MARK: - Properties
@@ -29,7 +29,7 @@ struct ProjectInteractor: ProjectInteractorType {
     // MARK: - Initializers
     init(
         projectRepository: ProjectRepositoryType,
-        stringsFileGenerator: StringsFileGeneratorType
+        stringsFileGenerator: FileGeneratorType
     ) {
         self.stringsFileGenerator = stringsFileGenerator
         self.projectRepository = projectRepository
@@ -94,10 +94,11 @@ struct ProjectInteractor: ProjectInteractorType {
             localizableStringsGroupPath = Path()
         }
         
-//        po group?.fullPath(sourceRoot: .init("/Users/bigears/Documents/macos/XCodeLocalizationHelper/Apps/Tests/Extensions/PBXGroupTests"))
+        guard let localizableStringsGroupFullPath = try localizableStringsGroup.fullPath(sourceRoot: project.projectFolderPath)
+        else {return}
         
         // add <languageCode>.lproj/Localizable.strings to project at localizableStringsGroupPath
-        try stringsFileGenerator.generateStringsFile(at: localizableStringsGroupPath, languageCode: languageCode)
+        try stringsFileGenerator.generateFile(at: localizableStringsGroupFullPath + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS, languageCode: languageCode)
         
         try localizableStringsGroup.addFile(at: localizableStringsGroupPath + "\(languageCode).lproj" + LOCALIZABLE_STRINGS, sourceRoot: project.projectFolderPath)
         

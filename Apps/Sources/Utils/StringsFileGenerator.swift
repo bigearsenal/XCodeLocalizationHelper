@@ -8,6 +8,30 @@
 import Foundation
 import PathKit
 
-protocol StringsFileGeneratorType {
-    func generateStringsFile(at path: Path, languageCode: String) throws
+protocol FileGeneratorType {
+    func generateFile(at path: Path, fileName: String, languageCode: String) throws
+}
+
+struct StringsFileGenerator: FileGeneratorType {
+    func generateFile(at path: Path, fileName: String, languageCode: String) throws {
+        let folder = path
+        let file = folder + fileName
+        if !file.exists {
+            if !folder.exists {
+                try folder.mkdir()
+            }
+            try file.write(
+                """
+                /*
+                  Localizable.strings
+
+                  Created with LocalizationHelper.
+                  
+                */
+                
+                
+                """
+            )
+        }
+    }
 }
