@@ -7,11 +7,14 @@
 
 import Foundation
 
-public struct ISOLanguageCode {
-    public var code: String
-    public var name: String
-    public var isSelected = false
-    public static var all: [ISOLanguageCode] {
+struct ISOLanguageCode {
+    var code: String
+    var name: String
+    var isSelected = false
+}
+
+extension ISOLanguageCode {
+    static var all: [ISOLanguageCode] {
         [
             ISOLanguageCode(code: "af", name: "Afrikaans"),
             ISOLanguageCode(code: "af-ZA", name: "Afrikaans (South Africa)"),

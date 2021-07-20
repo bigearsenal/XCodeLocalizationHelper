@@ -33,6 +33,7 @@ struct ProjectInteractor: ProjectInteractorType {
               let rootObject = project.pbxproj.rootObject,
               !rootObject.knownRegions.contains(languageCode)
         else {return}
+        
     }
     
     func closeProject() {

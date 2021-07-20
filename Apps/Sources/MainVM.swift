@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import XcodeProj
 import PathKit
+import LocalizationHelperKit
 
 public class MainVM: ObservableObject {
     // MARK: - Constants

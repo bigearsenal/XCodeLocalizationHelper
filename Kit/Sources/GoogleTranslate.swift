@@ -9,12 +9,12 @@
 import Foundation
 import Alamofire
 
-struct GoogleTranslate {
-    enum TranslateError: Error {
+public struct GoogleTranslate {
+    public enum TranslateError: Error {
         case unknown
     }
     
-    static func translate(text: String, fromLang: String = "auto", toLang: String = "vi", completion: @escaping (Error?, String?) -> Void) {
+    public static func translate(text: String, fromLang: String = "auto", toLang: String = "vi", completion: @escaping (Error?, String?) -> Void) {
         // Remember adding the oe=utf-8 and ie=utf-8
         let url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=\(fromLang)&tl=\(toLang)&dt=t&ie=UTF-8&oe=UTF-8&q=\(text.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!)"
         print(url)
