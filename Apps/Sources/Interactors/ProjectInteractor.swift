@@ -17,6 +17,7 @@ protocol ProjectInteractorType {
 }
 
 struct ProjectInteractor: ProjectInteractorType {
+    private let LOCALIZABLE_STRINGS = "Localizable.strings"
     // MARK: - UserDefaults
     private let projectPathKey = "KEYS.PROJECT_PATH"
     private let targetKey = "KEYS.TARGET"
@@ -79,7 +80,19 @@ struct ProjectInteractor: ProjectInteractorType {
         // add knownRegions
         rootObject.knownRegions.append(languageCode)
         
-        // add localizable.strings group
+        // find Localizable.strings group
+        let localizableStringsGroup = rootObject.mainGroup
+            .group(named: LOCALIZABLE_STRINGS, recursively: true)
+        
+        // Localizable.strings group is not exists
+        if localizableStringsGroup == nil
+        {
+            // create Localizable.strings group
+            
+            // add Localizable.strings group to project
+        }
+        
+        // add <languageCode>.lproj/Localizable.strings to project
         
         
         // set flag CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
