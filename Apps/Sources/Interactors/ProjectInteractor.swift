@@ -12,7 +12,7 @@ import PathKit
 
 protocol ProjectInteractorType {
     func openProject(path: String, targetName: String) throws
-    func localizeProject(languageCode: String)
+    func localizeProject(languageCode: String) throws
     func closeProject()
 }
 
@@ -59,19 +59,48 @@ struct ProjectInteractor: ProjectInteractorType {
         guard let target = project.pbxproj.targets(named: targetName).first else {
             return
         }
-        appState.send(.init(project: .init(pxbproj: project, target: target)))
+        appState.send(
+            .init(
+                project: .init(
+                    pxbproj: project,
+                    target: target,
+                    path: path
+                )
+            )
+        )
     }
     
-    func localizeProject(languageCode: String) {
-        guard let project = appState.value.project?.pxbproj,
-              let rootObject = project.pbxproj.rootObject,
+    func localizeProject(languageCode: String) throws {
+        guard let project = appState.value.project,
+              let rootObject = project.pxbproj.pbxproj.rootObject,
               !rootObject.knownRegions.contains(languageCode)
         else {return}
         
+        // add knownRegions
+        rootObject.knownRegions.append(languageCode)
+        
+        // add localizable.strings group
+        
+        
+        // set flag CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
+        let key = "CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED"
+        project.target.buildConfigurationList?.buildConfigurations.forEach {
+            $0.buildSettings[key] = "YES"
+        }
+        
+        // save project
+        try saveProject()
     }
     
     func closeProject() {
         appState.send(.init(project: nil))
+    }
+    
+    // MARK: - Helpers
+    private func saveProject() throws {
+        guard let project = appState.value.project?.pxbproj,
+            let path = appState.value.project?.path else {return}
+        try project.write(path: path)
     }
 }
 

@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import XcodeProj
+import PathKit
 
 /// The struct that contains all shared data inside application
 struct AppState: Equatable {
@@ -18,6 +19,7 @@ extension AppState {
     struct ProjectData: Equatable {
         var pxbproj: XcodeProj
         var target: PBXTarget
+        var path: Path
     }
 }
 
