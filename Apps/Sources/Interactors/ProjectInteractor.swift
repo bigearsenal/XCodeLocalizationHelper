@@ -73,12 +73,13 @@ struct ProjectInteractor: ProjectInteractorType {
     
     func localizeProject(languageCode: String) throws {
         guard let project = appState.value.project,
-              let rootObject = project.rootObject,
-              !rootObject.knownRegions.contains(languageCode)
+              let rootObject = project.rootObject
         else {throw Error.projectNotFound}
         
-        // add knownRegions
-        rootObject.knownRegions.append(languageCode)
+        // add knownRegions if not exists
+        if !rootObject.knownRegions.contains(languageCode) {
+            rootObject.knownRegions.append(languageCode)
+        }
         
         // find Localizable.strings group
         var localizableStringsGroup = rootObject.mainGroup
