@@ -9,7 +9,7 @@ import Foundation
 import XcodeProj
 
 extension PBXGroup {
-    func group(named name: String, recursively: Bool) -> PBXGroup? {
+    public func group(named name: String, recursively: Bool) -> PBXGroup? {
         // Non-recursively
         if !recursively {
             return group(named: name)
