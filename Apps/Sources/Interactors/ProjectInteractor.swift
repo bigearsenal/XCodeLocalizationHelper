@@ -11,6 +11,7 @@ import XcodeProj
 import PathKit
 
 protocol ProjectInteractorType {
+    func openCurrentProject() throws
     func openProject(path: String, targetName: String) throws
     func localizeProject(languageCode: String) throws
     func closeProject()
@@ -18,6 +19,13 @@ protocol ProjectInteractorType {
 
 struct ProjectInteractor: ProjectInteractorType {
     private let LOCALIZABLE_STRINGS = "Localizable.strings"
+    // MARK: - Nested type
+    enum Error: Swift.Error {
+        case projectNotFound
+        case targetNotFound
+        case localizableStringsGroupNotFound
+        case localizableStringsGroupFullPathNotFound
+    }
     
     // MARK: - Dependencies
     private let stringsFileGenerator: FileGeneratorType
@@ -30,22 +38,25 @@ struct ProjectInteractor: ProjectInteractorType {
     init(
         projectRepository: ProjectRepositoryType,
         stringsFileGenerator: FileGeneratorType
-    ) {
+    ) throws {
         self.stringsFileGenerator = stringsFileGenerator
         self.projectRepository = projectRepository
         appState = .init(.init(project: nil))
-        
-        // open current saved project
-        if let path = projectRepository.getProjectPath(), let targetName = projectRepository.getTargetName() {
-            try? openProject(path: path, targetName: targetName)
-        }
     }
     
     // MARK: - Methods
+    func openCurrentProject() throws {
+        if let path = projectRepository.getProjectPath(),
+           let targetName = projectRepository.getTargetName()
+        {
+            try openProject(path: path, targetName: targetName)
+        }
+    }
+    
     func openProject(path: String, targetName: String) throws {
         let project = try XcodeProj(pathString: path)
         guard let target = project.pbxproj.targets(named: targetName).first else {
-            return
+            throw Error.targetNotFound
         }
         projectRepository.saveProjectPath(path)
         projectRepository.saveTargetName(targetName)
@@ -64,7 +75,7 @@ struct ProjectInteractor: ProjectInteractorType {
         guard let project = appState.value.project,
               let rootObject = project.rootObject,
               !rootObject.knownRegions.contains(languageCode)
-        else {return}
+        else {throw Error.projectNotFound}
         
         // add knownRegions
         rootObject.knownRegions.append(languageCode)
@@ -86,7 +97,9 @@ struct ProjectInteractor: ProjectInteractorType {
         
         // get localizableStringsGroup's path
         guard let localizableStringsGroup = localizableStringsGroup
-        else {return}
+        else {
+            throw Error.localizableStringsGroupNotFound
+        }
         let localizableStringsGroupPath: Path
         if let string = localizableStringsGroup.children.first?.path {
             localizableStringsGroupPath = .init(string).parent().parent()
@@ -95,7 +108,9 @@ struct ProjectInteractor: ProjectInteractorType {
         }
         
         guard let localizableStringsGroupFullPath = try localizableStringsGroup.fullPath(sourceRoot: project.projectFolderPath)
-        else {return}
+        else {
+            throw Error.localizableStringsGroupFullPathNotFound
+        }
         
         // add <languageCode>.lproj/Localizable.strings to project at localizableStringsGroupPath
         try stringsFileGenerator.generateFile(at: localizableStringsGroupFullPath + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS, languageCode: languageCode)
@@ -127,6 +142,10 @@ struct ProjectInteractor: ProjectInteractorType {
 }
 
 struct StubProjectInteractor: ProjectInteractorType {
+    func openCurrentProject() throws {
+        
+    }
+    
     func openProject(path: String, targetName: String) throws {
         
     }

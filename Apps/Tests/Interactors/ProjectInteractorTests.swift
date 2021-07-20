@@ -9,13 +9,13 @@ import XCTest
 @testable import LocalizationHelper
 
 class ProjectInteractorTests: XCTestCase {
-    var interactor: ProjectInteractor?
-    
     func testLocalizeFile() throws {
-        let project = try getXcodeProj(fileName: "Test1.xcodeproj")
+        let interactor = try ProjectInteractor(
+            projectRepository: FakeProjectRepository(fileName: "Test1", targetName: "Test1"),
+            stringsFileGenerator: FakeFileGenerator()
+        )
         
-        let group = project.pbxproj.rootObject?.mainGroup
-            .group(named: LOCALIZABLE_STRINGS, recursively: true)
-        XCTAssertNotNil(group)
+        try interactor.openCurrentProject()
+        try interactor.localizeProject(languageCode: "zh")
     }
 }
