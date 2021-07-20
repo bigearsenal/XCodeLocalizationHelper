@@ -25,6 +25,7 @@ struct ProjectInteractor: ProjectInteractorType {
         case targetNotFound
         case localizableStringsGroupNotFound
         case localizableStringsGroupFullPathNotFound
+        case couldNotCreateLocalizableStringsGroup
     }
     
     // MARK: - Dependencies
@@ -89,11 +90,18 @@ struct ProjectInteractor: ProjectInteractorType {
         if localizableStringsGroup == nil
         {
             // create Localizable.strings group
-            localizableStringsGroup = try rootObject.mainGroup.addVariantGroup(named: LOCALIZABLE_STRINGS).first
+            let group = rootObject.mainGroup.children.first(where: {$0.path == project.target.name}) as? PBXGroup
+            
+            localizableStringsGroup = try group?.addVariantGroup(named: LOCALIZABLE_STRINGS).first
+            
+            guard let localizableStringsGroup = localizableStringsGroup
+            else {
+                throw Error.couldNotCreateLocalizableStringsGroup
+            }
             
             // add Localizable.strings group to target
             let fileBuildPhases = project.target.buildPhases.first(where: {$0 is PBXSourcesBuildPhase})
-            _ = try fileBuildPhases?.add(file: localizableStringsGroup!)
+            _ = try fileBuildPhases?.add(file: localizableStringsGroup)
         }
         
         // get localizableStringsGroup's path
