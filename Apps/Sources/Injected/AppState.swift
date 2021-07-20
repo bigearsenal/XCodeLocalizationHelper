@@ -20,6 +20,10 @@ extension AppState {
         var pxbproj: XcodeProj
         var target: PBXTarget
         var path: Path
+        
+        var rootObject: PBXProject? {
+            pxbproj.pbxproj.rootObject
+        }
     }
 }
 

@@ -72,7 +72,7 @@ struct ProjectInteractor: ProjectInteractorType {
     
     func localizeProject(languageCode: String) throws {
         guard let project = appState.value.project,
-              let rootObject = project.pxbproj.pbxproj.rootObject,
+              let rootObject = project.rootObject,
               !rootObject.knownRegions.contains(languageCode)
         else {return}
         
