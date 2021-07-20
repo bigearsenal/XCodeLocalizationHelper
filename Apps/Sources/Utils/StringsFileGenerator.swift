@@ -25,7 +25,8 @@ struct StringsFileGenerator: FileGeneratorType {
                 /*
                   Localizable.strings
 
-                  Created with XCodeLocalizationHelper (https://github.com/bigearsenal/xcodelocalizationhelper).
+                  Created with XCodeLocalizationHelper.
+                  https://github.com/bigearsenal/xcodelocalizationhelper
                   
                 */
                 

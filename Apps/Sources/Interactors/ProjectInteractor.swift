@@ -115,7 +115,7 @@ struct ProjectInteractor: ProjectInteractorType {
         // add <languageCode>.lproj/Localizable.strings to project at localizableStringsGroupPath
         try stringsFileGenerator.generateFile(at: localizableStringsGroupFullPath + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS, languageCode: languageCode)
         
-        try localizableStringsGroup.addFile(at: localizableStringsGroupPath + "\(languageCode).lproj" + LOCALIZABLE_STRINGS, sourceRoot: project.projectFolderPath)
+        try localizableStringsGroup.addFile(at: localizableStringsGroupFullPath + "\(languageCode).lproj" + LOCALIZABLE_STRINGS, sourceRoot: localizableStringsGroupPath.parent())
         
         // set flag CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES
         let key = "CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED"
