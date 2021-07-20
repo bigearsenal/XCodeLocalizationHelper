@@ -14,7 +14,7 @@ extension PBXGroup {
     ///   - name: group's name
     ///   - recursively: should find recursively or not
     /// - Returns: group with the given name in the project
-    public func group(named name: String, recursively: Bool) -> PBXGroup? {
+    func group(named name: String, recursively: Bool) -> PBXGroup? {
         // Non-recursively
         if !recursively {
             return group(named: name)

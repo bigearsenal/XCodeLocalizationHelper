@@ -7,16 +7,8 @@
 
 import XCTest
 @testable import LocalizationHelper
-import XcodeProj
-
-// FIXME: - REPLACE THIS URL BEFORE TESTING
-let repositoryLocalURL = "/Users/bigears/Documents/macos/XCodeLocalizationHelper"
-
-let homeUrl = repositoryLocalURL + "/Apps/Tests/"
 
 class PBXGroupTests: XCTestCase {
-    
-    let LOCALIZABLE_STRINGS = "Localizable.strings"
     
     func testGetGroupRecursively1() throws {
         let project = try getXcodeProj(fileName: "Test1.xcodeproj")
@@ -48,11 +40,6 @@ class PBXGroupTests: XCTestCase {
         let group = project.pbxproj.rootObject?.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)
         XCTAssertNil(group)
-    }
-    
-    // MARK: - Helper
-    private func getXcodeProj(fileName: String) throws -> XcodeProj {
-        try XcodeProj(pathString: homeUrl + "/" + fileName)
     }
 
 }

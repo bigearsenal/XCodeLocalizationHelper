@@ -6,18 +6,16 @@
 //
 
 import XCTest
+@testable import LocalizationHelper
 
 class ProjectInteractorTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    var interactor: ProjectInteractor?
+    
+    func testLocalizeFile() throws {
+        let project = try getXcodeProj(fileName: "Test1.xcodeproj")
+        
+        let group = project.pbxproj.rootObject?.mainGroup
+            .group(named: LOCALIZABLE_STRINGS, recursively: true)
+        XCTAssertNotNil(group)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
