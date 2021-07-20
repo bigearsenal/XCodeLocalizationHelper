@@ -9,8 +9,13 @@ import XCTest
 @testable import LocalizationHelper
 import XcodeProj
 
+// FIXME: - REPLACE THIS URL BEFORE TESTING
+let repositoryLocalURL = "/Users/bigears/Documents/macos/XCodeLocalizationHelper"
+
+let homeUrl = repositoryLocalURL + "/Apps/Tests/Extensions/PBXGroupTests/"
+
 class PBXGroupTests: XCTestCase {
-    let homeUrl = "/Users/bigears/Documents/macos/XCodeLocalizationHelper/Apps/Tests/Extensions/PBXGroupTests/"
+    
     let LOCALIZABLE_STRINGS = "Localizable.strings"
     
     func testGetGroupRecursively1() throws {
@@ -18,7 +23,7 @@ class PBXGroupTests: XCTestCase {
         
         let group = project.pbxproj.rootObject?.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)
-        XCTAssertNotEqual(group, nil)
+        XCTAssertNotNil(group)
     }
     
     func testGetGroupRecursively2() throws {
@@ -26,7 +31,7 @@ class PBXGroupTests: XCTestCase {
         
         let group = project.pbxproj.rootObject?.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)
-        XCTAssertNotEqual(group, nil)
+        XCTAssertNotNil(group)
     }
     
     func testGetGroupRecursively3() throws {
@@ -34,7 +39,15 @@ class PBXGroupTests: XCTestCase {
         
         let group = project.pbxproj.rootObject?.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)
-        XCTAssertNotEqual(group, nil)
+        XCTAssertNotNil(group)
+    }
+    
+    func testGetGroupRecursively4() throws {
+        let project = try getXcodeProj(fileName: "GetGroupRecursively4.xcodeproj")
+        
+        let group = project.pbxproj.rootObject?.mainGroup
+            .group(named: LOCALIZABLE_STRINGS, recursively: true)
+        XCTAssertNil(group)
     }
     
     // MARK: - Helper
