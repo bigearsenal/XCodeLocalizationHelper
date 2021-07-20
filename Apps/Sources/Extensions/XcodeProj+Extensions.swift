@@ -9,7 +9,7 @@ import Foundation
 import XcodeProj
 
 extension PBXGroup {
-    /// Returns group with the given name contained in the given parent group.
+    /// Returns group with the given name contained in the project.
     /// - Parameters:
     ///   - name: group's name
     ///   - recursively: should find recursively or not
