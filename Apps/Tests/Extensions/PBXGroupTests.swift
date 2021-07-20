@@ -11,7 +11,7 @@ import XCTest
 class PBXGroupTests: XCTestCase {
     
     func testGetGroupRecursively1() throws {
-        let project = try getXcodeProj(fileName: "Test1.xcodeproj")
+        let project = try getXcodeProj(fileName: "Test1")
         
         let group = project.pbxproj.rootObject?.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)
@@ -19,7 +19,7 @@ class PBXGroupTests: XCTestCase {
     }
     
     func testGetGroupRecursively2() throws {
-        let project = try getXcodeProj(fileName: "Test2.xcodeproj")
+        let project = try getXcodeProj(fileName: "Test2")
         
         let group = project.pbxproj.rootObject?.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)
@@ -27,7 +27,7 @@ class PBXGroupTests: XCTestCase {
     }
     
     func testGetGroupRecursively3() throws {
-        let project = try getXcodeProj(fileName: "Test3.xcodeproj")
+        let project = try getXcodeProj(fileName: "Test3")
         
         let group = project.pbxproj.rootObject?.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)
@@ -35,7 +35,7 @@ class PBXGroupTests: XCTestCase {
     }
     
     func testGetGroupRecursively4() throws {
-        let project = try getXcodeProj(fileName: "Test4.xcodeproj")
+        let project = try getXcodeProj(fileName: "Test4")
         
         let group = project.pbxproj.rootObject?.mainGroup
             .group(named: LOCALIZABLE_STRINGS, recursively: true)

@@ -16,5 +16,5 @@ let homeUrl = repositoryLocalURL + "/Apps/Tests/"
 let LOCALIZABLE_STRINGS = "Localizable.strings"
 
 func getXcodeProj(fileName: String) throws -> XcodeProj {
-    try XcodeProj(pathString: homeUrl + "/" + fileName)
+    try XcodeProj(pathString: homeUrl + "/" + fileName + "/" + fileName + ".xcodeproj")
 }
