@@ -18,58 +18,43 @@ protocol ProjectInteractorType {
 
 struct ProjectInteractor: ProjectInteractorType {
     private let LOCALIZABLE_STRINGS = "Localizable.strings"
+    
     // MARK: - Dependencies
     private let stringsFileGenerator: StringsFileGeneratorType
-    
-    // MARK: - UserDefaults
-    private let projectPathKey = "KEYS.PROJECT_PATH"
-    private let targetKey = "KEYS.TARGET"
-    
-    private var projectPath: String? {
-        get {
-            UserDefaults.standard.string(forKey: projectPathKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: projectPathKey)
-        }
-    }
-    private var targetName: String? {
-        get {
-            UserDefaults.standard.string(forKey: targetKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: targetKey)
-        }
-    }
-    
+    private let projectRepository: ProjectRepositoryType
     
     // MARK: - Properties
     let appState: Store<AppState>
     
     // MARK: - Initializers
-    init(stringsFileGenerator: StringsFileGeneratorType) {
+    init(
+        projectRepository: ProjectRepositoryType,
+        stringsFileGenerator: StringsFileGeneratorType
+    ) {
         self.stringsFileGenerator = stringsFileGenerator
+        self.projectRepository = projectRepository
         appState = .init(.init(project: nil))
         
         // open current saved project
-        if let path = projectPath, let targetName = targetName {
+        if let path = projectRepository.getProjectPath(), let targetName = projectRepository.getTargetName() {
             try? openProject(path: path, targetName: targetName)
         }
     }
     
     // MARK: - Methods
     func openProject(path: String, targetName: String) throws {
-        let path = Path(path)
-        let project = try XcodeProj(path: path)
+        let project = try XcodeProj(pathString: path)
         guard let target = project.pbxproj.targets(named: targetName).first else {
             return
         }
+        projectRepository.saveProjectPath(path)
+        projectRepository.saveTargetName(targetName)
         appState.send(
             .init(
                 project: .init(
                     pxbproj: project,
                     target: target,
-                    path: path
+                    path: Path(path)
                 )
             )
         )
@@ -120,6 +105,8 @@ struct ProjectInteractor: ProjectInteractorType {
     }
     
     func closeProject() {
+        projectRepository.saveProjectPath(nil)
+        projectRepository.saveTargetName(nil)
         appState.send(.init(project: nil))
     }
     
