@@ -30,7 +30,7 @@ class ProjectInteractorTests: XCTestCase {
     }
     
     func testLocalizeFile4() throws {
-        try testLocalizeProject(fileName: "Test4", languageCode: "vi", expectedNumberOfLocalizableFile: 3)
+        try testLocalizeProject(fileName: "Test4", languageCode: "vi", expectedNumberOfLocalizableFile: 1)
     }
     
     func testLocalizeTuistProject() throws {

@@ -19,7 +19,7 @@ public class MainVM: ObservableObject {
     
     // MARK: - Subjects
     @Published public var project: XcodeProj?
-    @Published public var error: Error?
+    @Published public var error: Swift.Error?
     @Published public var localizationFiles = [LocalizableFile]()
     @Published public var query = ""
     
