@@ -53,7 +53,16 @@ private func createAppTarget(
             bundleId: bundleId + "Tests",
             infoPlist: .default,
             sources: [
-                "\(platformDir)/Tests/**"
+                .init(
+                    Path("\(platformDir)/Tests/**"),
+                    excluding: [
+                        Path("\(platformDir)/Tests/Test1/**"),
+                        Path("\(platformDir)/Tests/Test2/**"),
+                        Path("\(platformDir)/Tests/Test3/**"),
+                        Path("\(platformDir)/Tests/Test4/**"),
+                        Path("\(platformDir)/Tests/TestWithTuist/**")
+                    ]
+                )
             ],
             dependencies: [
                 .target(name: "\(name)")
