@@ -12,7 +12,7 @@ import PathKit
 
 protocol ProjectInteractorType {
     func openCurrentProject() throws
-    func openProject(path: String, targetName: String, ciType: CIType) throws
+    func openProject(_ project: Project) throws
     func localizeProject(languageCode: String) throws
     func closeProject()
 }
@@ -26,6 +26,7 @@ struct ProjectInteractor: ProjectInteractorType {
         case localizableStringsGroupNotFound
         case localizableStringsGroupFullPathNotFound
         case couldNotCreateLocalizableStringsGroup
+        case resourcePathIsNotADirectory
     }
     
     // MARK: - Dependencies
@@ -47,31 +48,14 @@ struct ProjectInteractor: ProjectInteractorType {
     
     // MARK: - Methods
     func openCurrentProject() throws {
-        if let path = projectRepository.getProjectPath(),
-           let targetName = projectRepository.getTargetName()
-        {
-            try openProject(path: path, targetName: targetName, ciType: projectRepository.getCIType())
-        }
+        guard let project = projectRepository.getCurrentProject()
+        else {throw Error.projectNotFound}
+        try openProject(project)
     }
     
-    func openProject(path: String, targetName: String, ciType: CIType) throws {
-        let project = try XcodeProj(pathString: path)
-        guard let target = project.pbxproj.targets(named: targetName).first else {
-            throw Error.targetNotFound
-        }
-        projectRepository.saveProjectPath(path)
-        projectRepository.saveTargetName(targetName)
-        projectRepository.saveCIType(ciType)
-        appState.send(
-            .init(
-                project: .init(
-                    pxbproj: project,
-                    target: target,
-                    path: Path(path),
-                    ciType: ciType
-                )
-            )
-        )
+    func openProject(_ project: Project) throws {
+        projectRepository.setCurrentProject(project)
+        appState.send(.init(project: project))
     }
     
     func localizeProject(languageCode: String) throws {
@@ -80,33 +64,33 @@ struct ProjectInteractor: ProjectInteractorType {
             throw Error.projectNotFound
         }
         
-        // with tuist (just find file in Resources)
-        if project.ciType == .tuist {
-            try localizeProjectWithTuist(languageCode: languageCode)
+        switch project {
+        case .default(let defaultProject):
+            try localizeDefaultProject(defaultProject, languageCode: languageCode)
+        case .tuist(let tuistProject):
+            try localizeTuistProject(tuistProject, languageCode: languageCode)
         }
-        // without tuist (modify project directly)
-        else {
-            try localizeProjectWithoutTuist(languageCode: languageCode)
-        }
-        
-        // save project
-        try saveProject()
     }
     
     func closeProject() {
-        projectRepository.saveProjectPath(nil)
-        projectRepository.saveTargetName(nil)
+        projectRepository.clearCurrentProject()
         appState.send(.init(project: nil))
     }
     
     // MARK: - Helpers
-    private func localizeProjectWithTuist(languageCode: String) throws {
-        fatalError("Implementing")
+    private func localizeTuistProject(_ project: TuistProject, languageCode: String) throws
+    {
+        let path = project.resourcePath
+        guard path.isDirectory else {
+            throw Error.resourcePathIsNotADirectory
+        }
+        
+        try stringsFileGenerator.generateFile(at: path + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS)
     }
     
-    private func localizeProjectWithoutTuist(languageCode: String) throws {
-        guard let project = appState.value.project,
-              let rootObject = project.rootObject
+    private func localizeDefaultProject(_ project: DefaultProject, languageCode: String) throws
+    {
+        guard let rootObject = project.rootObject
         else {
             throw Error.projectNotFound
         }
@@ -150,7 +134,7 @@ struct ProjectInteractor: ProjectInteractorType {
         }
         
         // add <languageCode>.lproj/Localizable.strings to project at localizableStringsGroupPath
-        try stringsFileGenerator.generateFile(at: localizableStringsGroupFullPath + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS, languageCode: languageCode)
+        try stringsFileGenerator.generateFile(at: localizableStringsGroupFullPath + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS)
         
         let newFileFullPath = localizableStringsGroupFullPath + "\(languageCode).lproj" + LOCALIZABLE_STRINGS
         try localizableStringsGroup.addFile(at: newFileFullPath, sourceRoot: project.projectFolderPath)
@@ -160,12 +144,9 @@ struct ProjectInteractor: ProjectInteractorType {
         project.target.buildConfigurationList?.buildConfigurations.forEach {
             $0.buildSettings[key] = "YES"
         }
-    }
-    
-    private func saveProject() throws {
-        guard let project = appState.value.project?.pxbproj,
-            let path = appState.value.project?.path else {return}
-        try project.write(path: path)
+        
+        // save project
+        try project.pxbproj.write(path: project.path)
     }
 }
 
@@ -174,11 +155,11 @@ struct StubProjectInteractor: ProjectInteractorType {
         
     }
     
-    func openProject(path: String, targetName: String, ciType: CIType) throws {
+    func openProject(_ project: Project) throws {
         
     }
     
-    func localizeProject(languageCode: String) {
+    func localizeProject(languageCode: String) throws {
         
     }
     

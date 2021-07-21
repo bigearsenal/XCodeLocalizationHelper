@@ -7,29 +7,10 @@
 
 import Foundation
 import Combine
-import XcodeProj
-import PathKit
 
 /// The struct that contains all shared data inside application
 struct AppState: Equatable {
-    var project: ProjectData?
-}
-
-extension AppState {
-    struct ProjectData: Equatable {
-        var pxbproj: XcodeProj
-        var target: PBXTarget
-        var path: Path
-        var ciType: CIType
-        
-        var rootObject: PBXProject? {
-            pxbproj.pbxproj.rootObject
-        }
-        
-        var projectFolderPath: Path {
-            path.parent()
-        }
-    }
+    var project: Project?
 }
 
 #if DEBUG

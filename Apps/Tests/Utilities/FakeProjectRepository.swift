@@ -7,35 +7,28 @@
 
 import Foundation
 @testable import LocalizationHelper
+import PathKit
 
 struct FakeProjectRepository: ProjectRepositoryType {
-    private let fileName: String
-    private let targetName: String
-    private let projectPath: String
-    private let ciType: CIType
+    let testName: String
     
-    init(fileName: String, targetName: String, ciType: CIType = .none) {
-        self.fileName = fileName
-        self.projectPath = homeUrl + "/" + fileName + "/" + fileName + ".xcodeproj"
-        self.targetName = targetName
-        self.ciType = ciType
+    func getCurrentProject() -> Project? {
+        switch testName {
+        case let testName where testName.starts(with: "Test"):
+            // DefaultProject
+            let proj = try! getXcodeProj(fileName: testName)
+            let target = proj.pbxproj.targets(named: testName).first!
+            return .default(.init(pxbproj: proj, target: target, path: Path(xcodeprojPath(fileName: testName))))
+        case let testName where testName.starts(with: "TestWithTuist"):
+            // TuistProject
+            let path = Path(homeUrl) + testName + "Targets" + testName + "Resources"
+            return .tuist(.init(resourcePath: path))
+        default:
+            return nil
+        }
     }
     
-    func getProjectPath() -> String? {
-        projectPath
-    }
+    func setCurrentProject(_ project: Project) {}
     
-    func saveProjectPath(_ projectPath: String?) {}
-    
-    func getTargetName() -> String? {
-        targetName
-    }
-    
-    func saveTargetName(_ targetName: String?) {}
-    
-    func getCIType() -> CIType {
-        ciType
-    }
-    
-    func saveCIType(_ ciType: CIType) {}
+    func clearCurrentProject() {}
 }

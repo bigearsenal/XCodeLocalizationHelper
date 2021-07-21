@@ -9,11 +9,11 @@ import Foundation
 import PathKit
 
 protocol FileGeneratorType {
-    func generateFile(at path: Path, fileName: String, languageCode: String) throws
+    func generateFile(at path: Path, fileName: String) throws
 }
 
 struct StringsFileGenerator: FileGeneratorType {
-    func generateFile(at path: Path, fileName: String, languageCode: String) throws {
+    func generateFile(at path: Path, fileName: String) throws {
         let folder = path
         let file = folder + fileName
         if !file.exists {

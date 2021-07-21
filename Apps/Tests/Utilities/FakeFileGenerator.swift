@@ -10,7 +10,7 @@ import Foundation
 import PathKit
 
 struct FakeFileGenerator: FileGeneratorType {
-    func generateFile(at path: Path, fileName: String, languageCode: String) throws {
-        print("Created file at path: \(path.string), filename: \(fileName), languageCode: \(languageCode)")
+    func generateFile(at path: Path, fileName: String) throws {
+        print("Created file at path: \(path.string), filename: \(fileName)")
     }
 }

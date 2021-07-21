@@ -6,46 +6,77 @@
 //
 
 import Foundation
+import XcodeProj
+import PathKit
 
 protocol ProjectRepositoryType {
-    func getProjectPath() -> String?
-    func saveProjectPath(_ projectPath: String?)
-    func getTargetName() -> String?
-    func saveTargetName(_ targetName: String?)
-    func getCIType() -> CIType
-    func saveCIType(_ ciType: CIType)
+    func getCurrentProject() -> Project?
+    func setCurrentProject(_ project: Project)
+    func clearCurrentProject()
 }
 
 struct ProjectRepositoryUserDefaults: ProjectRepositoryType {
     // MARK: - Keys
+    // Default project
     private let projectPathKey = "KEYS.PROJECT_PATH"
     private let targetKey = "KEYS.TARGET"
-    private let ciTypeKey = "KEYS.CITYPE"
+    // Tuist project
+    private let resourcePathKey = "KEYS.RESOURCE_PATH"
     
     // MARK: - Methods
-    func saveProjectPath(_ projectPath: String?) {
-        UserDefaults.standard.set(projectPath, forKey: projectPathKey)
+    func getCurrentProject() -> Project? {
+        // default project
+        if let projectPath = UserDefaults.standard.string(forKey: projectPathKey),
+           let targetName = UserDefaults.standard.string(forKey: targetKey),
+           let project = try? XcodeProj(pathString: projectPath),
+           let target = project.pbxproj.targets(named: targetName).first
+        {
+            return .default(
+                .init(
+                    pxbproj: project,
+                    target: target,
+                    path: Path(projectPath)
+                )
+            )
+        }
+        
+        // tuist project
+        if let resourcePath = UserDefaults.standard.string(forKey: resourcePathKey)
+        {
+            let path = Path(resourcePath)
+            if path.isDirectory {
+                return .tuist(
+                    .init(resourcePath: path)
+                )
+            }
+        }
+        
+        return nil
     }
     
-    func saveTargetName(_ targetName: String?) {
-        UserDefaults.standard.set(targetName, forKey: targetKey)
+    func setCurrentProject(_ project: Project) {
+        switch project {
+        case .default(let defaultProject):
+            // set new value
+            UserDefaults.standard.set(defaultProject.path.string, forKey: projectPathKey)
+            UserDefaults.standard.set(defaultProject.target.name, forKey: targetKey)
+            // Remove tuist project if exists
+            UserDefaults.standard.set(nil, forKey: resourcePathKey)
+        case .tuist(let tuistProject):
+            // set new value
+            UserDefaults.standard.set(tuistProject.resourcePath.string, forKey: resourcePathKey)
+            // Remove default project if exists
+            UserDefaults.standard.set(nil, forKey: projectPathKey)
+            UserDefaults.standard.set(nil, forKey: targetKey)
+        }
     }
     
-    func getProjectPath() -> String? {
-        UserDefaults.standard.string(forKey: projectPathKey)
-    }
-    
-    func getTargetName() -> String? {
-        UserDefaults.standard.string(forKey: targetKey)
-    }
-    
-    func getCIType() -> CIType {
-        guard let raw = UserDefaults.standard.string(forKey: projectPathKey)
-        else {return .none}
-        return .init(rawValue: raw) ?? .none
-    }
-    
-    func saveCIType(_ ciType: CIType) {
-        UserDefaults.standard.set(ciType.rawValue, forKey: ciTypeKey)
+    func clearCurrentProject() {
+        // Remove tuist project if exists
+        UserDefaults.standard.set(nil, forKey: resourcePathKey)
+        
+        // Remove default project if exists
+        UserDefaults.standard.set(nil, forKey: projectPathKey)
+        UserDefaults.standard.set(nil, forKey: targetKey)
     }
 }
