@@ -7,7 +7,7 @@
 
 import PathKit
 
-public struct LocalizationFile: Identifiable {
+public struct LocalizableFile: Identifiable {
     public struct Content: Identifiable {
         public var key: String
         public var value: String

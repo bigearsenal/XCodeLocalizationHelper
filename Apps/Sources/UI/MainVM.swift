@@ -20,7 +20,7 @@ public class MainVM: ObservableObject {
     // MARK: - Subjects
     @Published public var project: XcodeProj?
     @Published public var error: Error?
-    @Published public var localizationFiles = [LocalizationFile]()
+    @Published public var localizationFiles = [LocalizableFile]()
     @Published public var query = ""
     
     // MARK: - Variables
@@ -97,7 +97,7 @@ public class MainVM: ObservableObject {
     public func openLocalizableFiles() throws {
         guard let path = mainGroupPath else {return}
         let stringFiles = path.glob("*.lproj/Localizable.strings")
-        localizationFiles = try stringFiles.compactMap { file -> LocalizationFile in
+        localizationFiles = try stringFiles.compactMap { file -> LocalizableFile in
             let text = try file.read(.utf8)
             let array = text
                 .components(separatedBy: .newlines)
@@ -106,7 +106,7 @@ public class MainVM: ObservableObject {
                         .map {$0.trimmingCharacters(in: .whitespaces)}
                         .map {String($0.dropFirst().dropLast())}
                 }
-                .compactMap { pair -> LocalizationFile.Content? in
+                .compactMap { pair -> LocalizableFile.Content? in
                     if pair.count != 2 {return nil}
                     if let key = pair.first,
                        !key.isEmpty,
@@ -117,7 +117,7 @@ public class MainVM: ObservableObject {
                     }
                     return nil
                 }
-            return LocalizationFile(
+            return LocalizableFile(
                 languageCode: file.parent().lastComponent.replacingOccurrences(of: ".lproj", with: ""),
                 path: file,
                 content: array,
@@ -196,7 +196,7 @@ public class MainVM: ObservableObject {
                 fileHandler.write(data)
                 try fileHandler.close()
 
-                file.content.append(LocalizationFile.Content(key: query, value: file.newValue))
+                file.content.append(LocalizableFile.Content(key: query, value: file.newValue))
                 file.newValue = ""
                 var files = localizationFiles
                 if let index = files.firstIndex(where: {$0.id == file.id}) {

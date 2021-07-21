@@ -14,6 +14,7 @@ protocol ProjectInteractorType {
     func openCurrentProject() throws
     func openProject(_ project: Project) throws
     func localizeProject(languageCode: String) throws
+    func getLocalizableFiles() throws -> [LocalizableFile]
     func closeProject()
 }
 
@@ -70,6 +71,21 @@ struct ProjectInteractor: ProjectInteractorType {
         case .tuist(let tuistProject):
             try localizeTuistProject(tuistProject, languageCode: languageCode)
         }
+    }
+    
+    func getLocalizableFiles() throws -> [LocalizableFile] {
+        guard let project = appState.value.project
+        else {
+            throw Error.projectNotFound
+        }
+        switch project {
+        case .default(let defaultProject):
+            break
+        case .tuist(let tuistProject):
+            break
+        }
+        
+        return []
     }
     
     func closeProject() {
@@ -161,6 +177,10 @@ struct StubProjectInteractor: ProjectInteractorType {
     
     func localizeProject(languageCode: String) throws {
         
+    }
+    
+    func getLocalizableFiles() throws -> [LocalizableFile] {
+        []
     }
     
     func closeProject() {

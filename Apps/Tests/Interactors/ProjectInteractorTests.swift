@@ -14,43 +14,52 @@ class ProjectInteractorTests: XCTestCase {
         case languageCodeNotFoundInKnownRegions
         case fileNotFoundInLocalizableStringsGroup
         case fileNotFound
+        case wrongNumberOfLocalizableFiles
     }
     
     func testLocalizeFile1() throws {
-        try testLocalizeProject(fileName: "Test1", languageCode: "zh")
+        try testLocalizeProject(fileName: "Test1", languageCode: "zh", expectedNumberOfLocalizableFile: 3)
     }
     
     func testLocalizeFile2() throws {
-        try testLocalizeProject(fileName: "Test2", languageCode: "ru")
+        try testLocalizeProject(fileName: "Test2", languageCode: "ru", expectedNumberOfLocalizableFile: 3)
     }
     
     func testLocalizeFile3() throws {
-        try testLocalizeProject(fileName: "Test3", languageCode: "ar")
+        try testLocalizeProject(fileName: "Test3", languageCode: "ar", expectedNumberOfLocalizableFile: 3)
     }
     
     func testLocalizeFile4() throws {
-        try testLocalizeProject(fileName: "Test4", languageCode: "vi")
+        try testLocalizeProject(fileName: "Test4", languageCode: "vi", expectedNumberOfLocalizableFile: 3)
     }
     
     func testLocalizeTuistProject() throws {
-        try testLocalizeProject(fileName: "TestWithTuist", languageCode: "vi")
+        try testLocalizeProject(fileName: "TestWithTuist", languageCode: "vi", expectedNumberOfLocalizableFile: 1)
     }
     
     // MARK: - DefaultProject
-    private func testLocalizeProject(fileName: String, languageCode: String) throws {
+    private func testLocalizeProject(fileName: String, languageCode: String, expectedNumberOfLocalizableFile: Int) throws {
         let interactor = try ProjectInteractor(
             projectRepository: FakeProjectRepository(testName: fileName),
             stringsFileGenerator: StringsFileGenerator()
         )
         
+        // test localize project
         try interactor.openCurrentProject()
         try interactor.localizeProject(languageCode: languageCode)
         
+        // checkIfFileWasLocalizedCorrectly
         switch interactor.appState.value.project! {
         case .default(let defaultProject):
             try checkIfFileWasLocalizedCorrectly(defaultProject: defaultProject, languageCode: languageCode)
         case .tuist(let tuistProject):
             try checkIfFileWasLocalizedCorrectly(tuistProject: tuistProject, languageCode: languageCode)
+        }
+        
+        // check number of localizableFile after all
+        let localizableFiles = try interactor.getLocalizableFiles()
+        if localizableFiles.count != expectedNumberOfLocalizableFile {
+            throw Error.wrongNumberOfLocalizableFiles
         }
     }
     

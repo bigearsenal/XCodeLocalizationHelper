@@ -227,7 +227,7 @@ struct MainView: View {
         )
     }
     
-    private func bindingForTextField(file: LocalizationFile) -> Binding<String>
+    private func bindingForTextField(file: LocalizableFile) -> Binding<String>
     {
         Binding<String>(
             get: {
