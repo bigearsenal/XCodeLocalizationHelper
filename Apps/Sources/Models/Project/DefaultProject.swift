@@ -28,7 +28,7 @@ extension DefaultProject {
     {
         guard let rootObject = rootObject
         else {
-            throw Error.projectNotFound
+            throw LocalizationHelperError.projectNotFound
         }
         
         // add knownRegions if not exists
@@ -50,7 +50,7 @@ extension DefaultProject {
             
             guard let localizableStringsGroup = localizableStringsGroup
             else {
-                throw Error.couldNotCreateLocalizableStringsGroup
+                throw LocalizationHelperError.couldNotCreateLocalizableStringsGroup
             }
             
             // add Localizable.strings group to target
@@ -61,12 +61,12 @@ extension DefaultProject {
         // get localizableStringsGroup's path
         guard let localizableStringsGroup = localizableStringsGroup
         else {
-            throw Error.localizableStringsGroupNotFound
+            throw LocalizationHelperError.localizableStringsGroupNotFound
         }
         
         guard let localizableStringsGroupFullPath = try localizableStringsGroup.fullPath(sourceRoot: projectFolderPath)
         else {
-            throw Error.localizableStringsGroupFullPathNotFound
+            throw LocalizationHelperError.localizableStringsGroupFullPathNotFound
         }
         
         // add <languageCode>.lproj/Localizable.strings to project at localizableStringsGroupPath

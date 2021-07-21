@@ -17,7 +17,7 @@ extension TuistProject {
     {
         let path = resourcePath
         guard path.isDirectory else {
-            throw Error.resourcePathIsNotADirectory
+            throw LocalizationHelperError.resourcePathIsNotADirectory
         }
         
         try fileGenerator.generateFile(at: path + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS)

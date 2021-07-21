@@ -29,7 +29,7 @@ extension Project {
         switch self {
         case .default(let project):
             guard let _path = project.getLocalizableStringsGroupFullPath()
-            else {throw Error.localizableStringsGroupNotFound}
+            else {throw LocalizationHelperError.localizableStringsGroupNotFound}
             path = _path
         case .tuist(let project):
             path = project.resourcePath

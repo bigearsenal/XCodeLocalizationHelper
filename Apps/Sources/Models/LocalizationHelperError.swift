@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Error: Swift.Error {
+enum LocalizationHelperError: Swift.Error {
     case projectNotFound
     case targetNotFound
     case localizableStringsGroupNotFound

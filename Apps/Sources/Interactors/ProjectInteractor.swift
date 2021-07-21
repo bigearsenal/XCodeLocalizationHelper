@@ -39,7 +39,7 @@ struct ProjectInteractor: ProjectInteractorType {
     // MARK: - Methods
     func openCurrentProject() throws {
         guard let project = projectRepository.getCurrentProject()
-        else {throw Error.projectNotFound}
+        else {throw LocalizationHelperError.projectNotFound}
         try openProject(project)
     }
     
@@ -51,7 +51,7 @@ struct ProjectInteractor: ProjectInteractorType {
     func localizeProject(languageCode: String) throws {
         guard let project = appState.value.project
         else {
-            throw Error.projectNotFound
+            throw LocalizationHelperError.projectNotFound
         }
         
         try project.localize(fileGenerator: stringsFileGenerator, languageCode: languageCode)
@@ -60,7 +60,7 @@ struct ProjectInteractor: ProjectInteractorType {
     func getLocalizableFiles() throws -> [LocalizableFile] {
         guard let project = appState.value.project
         else {
-            throw Error.projectNotFound
+            throw LocalizationHelperError.projectNotFound
         }
         return try project.getLocalizableFiles()
     }
