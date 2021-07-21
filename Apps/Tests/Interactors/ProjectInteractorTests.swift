@@ -7,6 +7,7 @@
 
 import XCTest
 @testable import LocalizationHelper
+import PathKit
 
 class ProjectInteractorTests: XCTestCase {
     enum Error: Swift.Error {
@@ -16,23 +17,27 @@ class ProjectInteractorTests: XCTestCase {
     }
     
     func testLocalizeFile1() throws {
-        try testLocalizeDefaultProject(fileName: "Test1", languageCode: "zh")
+        try testLocalizeProject(fileName: "Test1", languageCode: "zh")
     }
     
     func testLocalizeFile2() throws {
-        try testLocalizeDefaultProject(fileName: "Test2", languageCode: "ru")
+        try testLocalizeProject(fileName: "Test2", languageCode: "ru")
     }
     
     func testLocalizeFile3() throws {
-        try testLocalizeDefaultProject(fileName: "Test3", languageCode: "ar")
+        try testLocalizeProject(fileName: "Test3", languageCode: "ar")
     }
     
     func testLocalizeFile4() throws {
-        try testLocalizeDefaultProject(fileName: "Test4", languageCode: "vi")
+        try testLocalizeProject(fileName: "Test4", languageCode: "vi")
     }
     
-    // MARK: - Helpers
-    private func testLocalizeDefaultProject(fileName: String, languageCode: String) throws {
+    func testLocalizeTuistProject() throws {
+        try testLocalizeProject(fileName: "TestWithTuist", languageCode: "vi")
+    }
+    
+    // MARK: - DefaultProject
+    private func testLocalizeProject(fileName: String, languageCode: String) throws {
         let interactor = try ProjectInteractor(
             projectRepository: FakeProjectRepository(testName: fileName),
             stringsFileGenerator: StringsFileGenerator()
@@ -45,7 +50,7 @@ class ProjectInteractorTests: XCTestCase {
         case .default(let defaultProject):
             try checkIfFileWasLocalizedCorrectly(defaultProject: defaultProject, languageCode: languageCode)
         case .tuist(let tuistProject):
-            break
+            try checkIfFileWasLocalizedCorrectly(tuistProject: tuistProject, languageCode: languageCode)
         }
     }
     
@@ -69,6 +74,15 @@ class ProjectInteractorTests: XCTestCase {
         let zhFile = localizationGroup?.children.first(where: {$0.path == "\(languageCode).lproj/Localizable.strings"})
         let fullPath = try zhFile?.fullPath(sourceRoot: project.projectFolderPath)
         if fullPath?.exists != true {
+            throw Error.fileNotFound
+        }
+    }
+    
+    // MARK: - TuistProject
+    private func checkIfFileWasLocalizedCorrectly(tuistProject project: TuistProject, languageCode: String) throws
+    {
+        let localizableFilePath = project.resourcePath + "\(languageCode).lproj" + LOCALIZABLE_STRINGS
+        if !localizableFilePath.exists || !localizableFilePath.isFile {
             throw Error.fileNotFound
         }
     }
