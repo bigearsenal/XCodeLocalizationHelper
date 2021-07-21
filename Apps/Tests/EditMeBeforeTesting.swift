@@ -11,7 +11,7 @@ import XcodeProj
 // FIXME: - REPLACE THIS URL BEFORE TESTING
 let repositoryLocalURL = "/Users/bigears/Documents/macos/XCodeLocalizationHelper"
 
-let homeUrl = repositoryLocalURL + "/Apps/Tests/"
+let homeUrl = repositoryLocalURL + "/Apps/TestsProjects/"
 
 let LOCALIZABLE_STRINGS = "Localizable.strings"
 
