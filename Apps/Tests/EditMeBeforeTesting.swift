@@ -19,5 +19,5 @@ func xcodeprojPath(fileName: String) -> String {
     homeUrl + "/" + fileName + "/" + fileName + ".xcodeproj"
 }
 func getXcodeProj(fileName: String) throws -> XcodeProj {
-    try XcodeProj(pathString: xcodeprojPath(fileName: xcodeprojPath(fileName: fileName)))
+    try XcodeProj(pathString: xcodeprojPath(fileName: fileName))
 }
