@@ -85,7 +85,9 @@ extension DefaultProject {
         try pxbproj.write(path: path)
     }
     
-    func getLocalizableFiles() -> [LocalizableFile] {
-        []
+    func getLocalizableStringsGroupFullPath() -> Path? {
+        try? rootObject?.mainGroup
+            .group(named: LOCALIZABLE_STRINGS, recursively: true)?
+            .fullPath(sourceRoot: projectFolderPath)
     }
 }

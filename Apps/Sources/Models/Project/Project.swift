@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PathKit
 
 enum Project: Equatable {
     case `default`(DefaultProject)
@@ -22,12 +23,44 @@ extension Project {
             try project.localize(fileGenerator: fileGenerator, languageCode: languageCode)
         }
     }
-    func getLocalizableFiles() -> [LocalizableFile] {
+    
+    func getLocalizableFiles() throws -> [LocalizableFile] {
+        let path: Path
         switch self {
         case .default(let project):
-            return project.getLocalizableFiles()
+            guard let _path = project.getLocalizableStringsGroupFullPath()
+            else {throw Error.localizableStringsGroupNotFound}
+            path = _path
         case .tuist(let project):
-            return project.getLocalizableFiles()
+            path = project.resourcePath
+        }
+        let stringFiles = path.glob("*.lproj/Localizable.strings")
+        return try stringFiles.compactMap { file -> LocalizableFile in
+            let text = try file.read(.utf8)
+            let array = text
+                .components(separatedBy: .newlines)
+                .map {
+                    $0.components(separatedBy: "=")
+                        .map {$0.trimmingCharacters(in: .whitespaces)}
+                        .map {String($0.dropFirst().dropLast())}
+                }
+                .compactMap { pair -> LocalizableFile.Content? in
+                    if pair.count != 2 {return nil}
+                    if let key = pair.first,
+                       !key.isEmpty,
+                       let value = pair.last,
+                       !value.isEmpty
+                    {
+                        return .init(key: key, value: value)
+                    }
+                    return nil
+                }
+            return LocalizableFile(
+                languageCode: file.parent().lastComponent.replacingOccurrences(of: ".lproj", with: ""),
+                path: file,
+                content: array,
+                newValue: ""
+            )
         }
     }
 }

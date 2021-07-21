@@ -62,7 +62,7 @@ struct ProjectInteractor: ProjectInteractorType {
         else {
             throw Error.projectNotFound
         }
-        return project.getLocalizableFiles()
+        return try project.getLocalizableFiles()
     }
     
     func closeProject() {

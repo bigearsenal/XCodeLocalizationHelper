@@ -22,8 +22,4 @@ extension TuistProject {
         
         try fileGenerator.generateFile(at: path + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS)
     }
-    
-    func getLocalizableFiles() -> [LocalizableFile] {
-        []
-    }
 }
