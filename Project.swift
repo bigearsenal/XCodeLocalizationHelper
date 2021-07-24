@@ -17,6 +17,10 @@ let project = Project(
         .remote(
             url: "https://github.com/tuist/xcodeproj.git",
             requirement: .upToNextMajor(from: "8.0.0")
+        ),
+        .remote(
+            url: "https://github.com/hmlongco/Resolver.git",
+            requirement: .upToNextMajor(from: "1.4.3")
         )
     ],
     targets: macOSTargets
