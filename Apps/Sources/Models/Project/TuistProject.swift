@@ -20,6 +20,6 @@ extension TuistProject {
             throw LocalizationHelperError.resourcePathIsNotADirectory
         }
         
-        try fileGenerator.generateFile(at: path + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS)
+        try fileGenerator.generateFile(at: path + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS, content: .stringsFileHeader)
     }
 }

@@ -7,8 +7,6 @@
 
 import Foundation
 import Combine
-import XcodeProj
-import PathKit
 
 protocol ProjectServiceType {
     func openCurrentProject() throws

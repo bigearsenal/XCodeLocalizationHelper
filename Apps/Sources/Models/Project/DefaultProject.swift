@@ -70,7 +70,7 @@ extension DefaultProject {
         }
         
         // add <languageCode>.lproj/Localizable.strings to project at localizableStringsGroupPath
-        try fileGenerator.generateFile(at: localizableStringsGroupFullPath + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS)
+        try fileGenerator.generateFile(at: localizableStringsGroupFullPath + "\(languageCode).lproj", fileName: LOCALIZABLE_STRINGS, content: .stringsFileHeader)
         
         let newFileFullPath = localizableStringsGroupFullPath + "\(languageCode).lproj" + LOCALIZABLE_STRINGS
         try localizableStringsGroup.addFile(at: newFileFullPath, sourceRoot: projectFolderPath)

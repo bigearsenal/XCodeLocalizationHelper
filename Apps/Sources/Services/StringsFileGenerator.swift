@@ -9,30 +9,56 @@ import Foundation
 import PathKit
 
 protocol FileGeneratorType {
-    func generateFile(at path: Path, fileName: String) throws
+    func pathExists(path: Path) -> Bool
+    func createFolder(path: Path) throws
+    func write(file: Path, content: String) throws
 }
 
-struct StringsFileGenerator: FileGeneratorType {
-    func generateFile(at path: Path, fileName: String) throws {
+extension FileGeneratorType {
+    func generateFile(at path: Path, fileName: String, content: String) throws {
         let folder = path
         let file = folder + fileName
-        if !file.exists {
+        
+        if !pathExists(path: file) {
             if !folder.exists {
-                try folder.mkdir()
+                try createFolder(path: folder)
             }
-            try file.write(
-                """
-                /*
-                  Localizable.strings
-
-                  Created with XCodeLocalizationHelper.
-                  https://github.com/bigearsenal/xcodelocalizationhelper
-                  
-                */
-                
-                
-                """
-            )
+            try write(file: file, content: content)
         }
     }
 }
+
+struct StringsFileGenerator: FileGeneratorType {
+    func pathExists(path: Path) -> Bool {
+        path.exists
+    }
+    
+    func createFolder(path: Path) throws {
+        try path.mkdir()
+    }
+    
+    func write(file: Path, content: String) throws {
+        try file.write(content)
+    }
+}
+
+#if DEBUG
+class FakeStringsFileGenerator: FileGeneratorType {
+    private var generatedFilePaths = [Path]()
+    
+    func pathExists(path: Path) -> Bool {
+        generatedFilePaths.map {$0.parent()}.contains(path)
+    }
+    
+    func createFolder(path: Path) throws {
+        // do nothing
+    }
+    
+    func write(file: Path, content: String) throws {
+        // fake writing
+        if !generatedFilePaths.contains(file) {
+            generatedFilePaths.append(file)
+        }
+    }
+}
+#endif
