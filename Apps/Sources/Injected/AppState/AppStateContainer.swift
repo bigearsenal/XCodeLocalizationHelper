@@ -29,7 +29,7 @@ struct AppStateContainer: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    var injected: AppStateContainer {
+    var appStateContainer: AppStateContainer {
         get { self[AppStateContainer.self] }
         set { self[AppStateContainer.self] = newValue }
     }
@@ -56,6 +56,6 @@ extension View {
     func inject(_ container: AppStateContainer) -> some View {
         return self
             .modifier(RootViewAppearance())
-            .environment(\.injected, container)
+            .environment(\.appStateContainer, container)
     }
 }

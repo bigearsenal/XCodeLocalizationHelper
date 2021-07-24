@@ -24,7 +24,7 @@ struct ProjectService: ProjectServiceType {
     private let projectRepository: ProjectRepositoryType
     
     // MARK: - Properties
-    let appState: Store<AppState>
+    let appState: Store<AppState> = .init(.initial)
     
     // MARK: - Initializers
     init(
@@ -33,7 +33,6 @@ struct ProjectService: ProjectServiceType {
     ) throws {
         self.stringsFileGenerator = stringsFileGenerator
         self.projectRepository = projectRepository
-        appState = .init(.init(project: nil))
     }
     
     // MARK: - Methods

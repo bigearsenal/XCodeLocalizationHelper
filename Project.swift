@@ -4,25 +4,27 @@ let projectName = "LocalizationHelper"
 let bundleIdMacOS = "info.bigears.LocalizationHelper"
 let kitName = projectName + "Kit"
 
-let macOSTargets = makeKitFrameworkTargets(platform: .macOS, spm: ["Alamofire", "XcodeProj"]) +
+let spm: [String: Package] = [
+    "Alamofire": .remote(
+        url: "https://github.com/Alamofire/Alamofire.git",
+        requirement: .upToNextMajor(from: "5.4.0")
+    ),
+    "XcodeProj": .remote(
+        url: "https://github.com/tuist/xcodeproj.git",
+        requirement: .upToNextMajor(from: "8.0.0")
+    ),
+    "Resolver": .remote(
+        url: "https://github.com/hmlongco/Resolver.git",
+        requirement: .upToNextMajor(from: "1.4.3")
+    )
+]
+
+let macOSTargets = makeKitFrameworkTargets(platform: .macOS, spm: spm.map {$0.key}) +
     createAppTarget(platform: .macOS, bundleId: bundleIdMacOS)
 
 let project = Project(
     name: projectName,
-    packages: [
-        .remote(
-            url: "https://github.com/Alamofire/Alamofire.git",
-            requirement: .upToNextMajor(from: "5.4.0")
-        ),
-        .remote(
-            url: "https://github.com/tuist/xcodeproj.git",
-            requirement: .upToNextMajor(from: "8.0.0")
-        ),
-        .remote(
-            url: "https://github.com/hmlongco/Resolver.git",
-            requirement: .upToNextMajor(from: "1.4.3")
-        )
-    ],
+    packages: spm.map {$0.value},
     targets: macOSTargets
 )
 

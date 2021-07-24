@@ -11,6 +11,10 @@ import Combine
 /// The struct that contains all shared data inside application
 struct AppState: Equatable {
     var project: Project?
+    
+    static var initial: Self {
+        .init(project: nil)
+    }
 }
 
 #if DEBUG
