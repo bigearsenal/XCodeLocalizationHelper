@@ -11,7 +11,7 @@ import Combine
 // MARK: - RootViewAppearance
 struct RootViewAppearance: ViewModifier {
     
-    @Environment(\.injected) private var injected: DIContainer
+    @Environment(\.injected) private var injected: AppStateContainer
     @State private var isActive: Bool = false
     let inspection = PassthroughSubject<((AnyView) -> Void), Never>()
     

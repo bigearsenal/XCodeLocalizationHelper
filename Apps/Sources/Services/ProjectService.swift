@@ -71,7 +71,7 @@ struct ProjectService: ProjectServiceType {
     }
 }
 
-struct StubProjectInteractor: ProjectServiceType {
+struct StubProjectService: ProjectServiceType {
     func openCurrentProject() throws {
         
     }
