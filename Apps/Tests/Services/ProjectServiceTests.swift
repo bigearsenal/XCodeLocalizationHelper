@@ -41,7 +41,7 @@ class ProjectServiceTests: XCTestCase {
     // MARK: - DefaultProject
     private func testLocalizeProject(fileName: String, languageCode: String, expectedNumberOfLocalizableFile: Int) throws {
         // Test using TestProjectRepository
-        let test = Resolver.mock
+        let test = Resolver(parent: .mock)
         test.register {TestProjectRepository(testName: fileName) as ProjectRepositoryType}
         test.register {StringsFileGenerator() as FileGeneratorType}
         
