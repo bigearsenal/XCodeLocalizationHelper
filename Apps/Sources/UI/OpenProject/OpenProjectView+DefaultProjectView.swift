@@ -52,7 +52,11 @@ extension OpenProjectView {
                             Text("Please select one target")
                                 .foregroundColor(.secondary)
                                 .tag("")
-                            ForEach(project.0.pbxproj.nativeTargets, id: \.name) { target in
+                            ForEach(
+                                project.0.pbxproj.nativeTargets
+                                    .filter {!$0.name.hasSuffix("Tests")},
+                                id: \.name)
+                            { target in
                                 Text(target.name).tag(target.name)
                             }
                         })
@@ -93,7 +97,7 @@ extension OpenProjectView.DefaultProjectView {
                     do {
                         project = (try XcodeProj(path: path), path)
                     } catch {
-                        
+                        self.error = error
                     }
                     
                 }
