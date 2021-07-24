@@ -8,16 +8,18 @@
 import SwiftUI
 
 struct MainView: View {
+    // MARK: - Observed objects
     @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
         content
+            .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
     }
     
     var content: AnyView {
         guard let project = viewModel.appState.project
         else {
-            return AnyView(openProjectButton)
+            return AnyView(OpenProjectView())
         }
         
         switch project {
@@ -29,22 +31,10 @@ struct MainView: View {
     }
 }
 
-// MARK: - Subviews
-extension MainView {
-    var openProjectButton: some View {
-        Button(action: {
-            
-        }, label: {
-            Text("Open a project")
-        })
-    }
-}
-
 #if DEBUG
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView(viewModel: .init(resolver: .mock))
-            .frame(width: 680, height: 300)
     }
 }
 #endif

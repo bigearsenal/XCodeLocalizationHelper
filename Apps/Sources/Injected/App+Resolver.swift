@@ -18,7 +18,7 @@ extension Resolver: ResolverRegistering {
         
         #if DEBUG
         mock.register {FakeStringsFileGenerator() as FileGeneratorType}
-        mock.register {InMemoryProjectRepository.default as ProjectRepositoryType}
+        mock.register {InMemoryProjectRepository(project: nil) as ProjectRepositoryType}
         
         // register entire container as replacement for main
         root = mock

@@ -102,21 +102,19 @@ class InMemoryProjectRepository: ProjectRepositoryType {
     }
     
     static var `default`: InMemoryProjectRepository {
-        let repositoryLocalURL = "/Users/bigears/Documents/macos/XCodeLocalizationHelper"
-        let homeUrl = Path(repositoryLocalURL + "/Apps/TestsProjects/")
-        let test1 = homeUrl + "Test1" + "Test1.xcodeproj"
-        
-        guard let pbxproj = try? XcodeProj(path: test1),
-              let target = pbxproj.pbxproj.targets(named: "Test1").first
+        guard let xcodeProj = XcodeProj.demoProject.0,
+              let target = xcodeProj.pbxproj.targets(named: "Test1").first
         else {
             return .init(project: nil)
         }
         
+        let path = XcodeProj.demoProject.1
+        
         return .init(project: .default(
             .init(
-                pxbproj: pbxproj,
+                pxbproj: xcodeProj,
                 target: target,
-                path: test1
+                path: path
             )
         ))
     }

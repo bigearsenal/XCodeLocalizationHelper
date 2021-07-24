@@ -7,6 +7,7 @@
 
 import Foundation
 import XcodeProj
+import PathKit
 
 extension PBXGroup {
     /// Returns group with the given name contained in the project.
@@ -35,3 +36,15 @@ extension PBXGroup {
         return nil
     }
 }
+
+#if DEBUG
+extension XcodeProj {
+    static var demoProject: (XcodeProj?, Path) {
+        let repositoryLocalURL = "/Users/bigears/Documents/macos/XCodeLocalizationHelper"
+        let homeUrl = Path(repositoryLocalURL + "/Apps/TestsProjects/")
+        let test1 = homeUrl + "Test1" + "Test1.xcodeproj"
+        
+        return (try? XcodeProj(path: test1), test1)
+    }
+}
+#endif
