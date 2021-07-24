@@ -1,29 +1,32 @@
 //
-//  ProjectService.swift
-//  LocalizationHelperKit
+//  MainViewModel.swift
+//  LocalizationHelper
 //
-//  Created by Chung Tran on 19/07/2021.
+//  Created by Chung Tran on 24/07/2021.
 //
 
 import Foundation
-import Combine
 import Resolver
 
-protocol ProjectServiceType {
-    func openCurrentProject() throws
-    func openProject(_ project: Project) throws
-    func localizeProject(languageCode: String) throws
-    func getLocalizableFiles() throws -> [LocalizableFile]
-    func closeProject()
-}
-
-struct ProjectService: ProjectServiceType {
+class MainViewModel: ObservableObject {
     // MARK: - Dependencies
     @Injected var stringsFileGenerator: FileGeneratorType
     @Injected var projectRepository: ProjectRepositoryType
     
     // MARK: - Properties
-    let appState: Store<AppState> = .init(.initial)
+    @Published var appState: AppState = .initial
+    
+    #if DEBUG
+    init(resolver: Resolver) {
+        self.stringsFileGenerator = resolver.resolve()
+        self.projectRepository = resolver.resolve()
+        try? openCurrentProject()
+    }
+    #endif
+    
+    init() {
+        try? openCurrentProject()
+    }
     
     // MARK: - Methods
     func openCurrentProject() throws {
@@ -34,11 +37,11 @@ struct ProjectService: ProjectServiceType {
     
     func openProject(_ project: Project) throws {
         projectRepository.setCurrentProject(project)
-        appState.send(.init(project: project))
+        appState = .init(project: project)
     }
     
     func localizeProject(languageCode: String) throws {
-        guard let project = appState.value.project
+        guard let project = appState.project
         else {
             throw LocalizationHelperError.projectNotFound
         }
@@ -47,7 +50,7 @@ struct ProjectService: ProjectServiceType {
     }
     
     func getLocalizableFiles() throws -> [LocalizableFile] {
-        guard let project = appState.value.project
+        guard let project = appState.project
         else {
             throw LocalizationHelperError.projectNotFound
         }
@@ -56,28 +59,6 @@ struct ProjectService: ProjectServiceType {
     
     func closeProject() {
         projectRepository.clearCurrentProject()
-        appState.send(.init(project: nil))
-    }
-}
-
-struct StubProjectService: ProjectServiceType {
-    func openCurrentProject() throws {
-        
-    }
-    
-    func openProject(_ project: Project) throws {
-        
-    }
-    
-    func localizeProject(languageCode: String) throws {
-        
-    }
-    
-    func getLocalizableFiles() throws -> [LocalizableFile] {
-        []
-    }
-    
-    func closeProject() {
-        
+        appState = .init(project: nil)
     }
 }

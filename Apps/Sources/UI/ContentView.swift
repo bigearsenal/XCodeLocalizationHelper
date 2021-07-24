@@ -8,7 +8,7 @@
 import SwiftUI
 import LocalizationHelperKit
 
-struct MainView: View {
+struct ContentView: View {
     // MARK: - Constants
     let colWidth: CGFloat = 300
     
@@ -274,11 +274,5 @@ struct MainView: View {
             }
             
         }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainView()
     }
 }

@@ -8,7 +8,7 @@
 import XCTest
 @testable import LocalizationHelper
 
-class PBXGroupTests: XCTestCase {
+class _1PBXGroupTests: XCTestCase {
     
     func testGetGroupRecursively1() throws {
         let project = try getXcodeProj(fileName: "Test1")

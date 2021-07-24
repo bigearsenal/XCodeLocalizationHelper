@@ -10,7 +10,7 @@ import XCTest
 import PathKit
 import Resolver
 
-class ProjectServiceTests: XCTestCase {
+class _2MainViewModelTests: XCTestCase {
     enum Error: Swift.Error {
         case languageCodeNotFoundInKnownRegions
         case fileNotFoundInLocalizableStringsGroup
@@ -45,14 +45,13 @@ class ProjectServiceTests: XCTestCase {
         test.register {TestProjectRepository(testName: fileName) as ProjectRepositoryType}
         test.register {StringsFileGenerator() as FileGeneratorType}
         
-        let service = ProjectService(stringsFileGenerator: .init(container: test), projectRepository: .init(container: test))
+        let service = MainViewModel(resolver: test)
         
         // test localize project
-        try service.openCurrentProject()
         try service.localizeProject(languageCode: languageCode)
         
         // checkIfFileWasLocalizedCorrectly
-        switch service.appState.value.project! {
+        switch service.appState.project! {
         case .default(let defaultProject):
             try checkIfFileWasLocalizedCorrectly(defaultProject: defaultProject, languageCode: languageCode)
         case .tuist(let tuistProject):
