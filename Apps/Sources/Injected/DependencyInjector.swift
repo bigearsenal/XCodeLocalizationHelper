@@ -12,14 +12,14 @@ import Combine
 struct DIContainer: EnvironmentKey {
     
     let appState: Store<AppState>
-    let interactors: Interactors
+    let interactors: Services
     
-    init(appState: Store<AppState>, interactors: Interactors) {
+    init(appState: Store<AppState>, interactors: Services) {
         self.appState = appState
         self.interactors = interactors
     }
     
-    init(appState: AppState, interactors: Interactors) {
+    init(appState: AppState, interactors: Services) {
         self.init(appState: Store<AppState>(appState), interactors: interactors)
     }
     
@@ -47,7 +47,7 @@ extension DIContainer {
 extension View {
     
     func inject(_ appState: AppState,
-                _ interactors: DIContainer.Interactors) -> some View {
+                _ interactors: DIContainer.Services) -> some View {
         let container = DIContainer(appState: .init(appState),
                                     interactors: interactors)
         return inject(container)

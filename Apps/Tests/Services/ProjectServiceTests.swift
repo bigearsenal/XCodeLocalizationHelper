@@ -1,5 +1,5 @@
 //
-//  ProjectInteractorTests.swift
+//  ProjectServiceTests.swift
 //  LocalizationHelperTests
 //
 //  Created by Chung Tran on 20/07/2021.
@@ -9,7 +9,7 @@ import XCTest
 @testable import LocalizationHelper
 import PathKit
 
-class ProjectInteractorTests: XCTestCase {
+class ProjectServiceTests: XCTestCase {
     enum Error: Swift.Error {
         case languageCodeNotFoundInKnownRegions
         case fileNotFoundInLocalizableStringsGroup
@@ -39,17 +39,17 @@ class ProjectInteractorTests: XCTestCase {
     
     // MARK: - DefaultProject
     private func testLocalizeProject(fileName: String, languageCode: String, expectedNumberOfLocalizableFile: Int) throws {
-        let interactor = try ProjectInteractor(
+        let service = try ProjectService(
             projectRepository: FakeProjectRepository(testName: fileName),
             stringsFileGenerator: StringsFileGenerator()
         )
         
         // test localize project
-        try interactor.openCurrentProject()
-        try interactor.localizeProject(languageCode: languageCode)
+        try service.openCurrentProject()
+        try service.localizeProject(languageCode: languageCode)
         
         // checkIfFileWasLocalizedCorrectly
-        switch interactor.appState.value.project! {
+        switch service.appState.value.project! {
         case .default(let defaultProject):
             try checkIfFileWasLocalizedCorrectly(defaultProject: defaultProject, languageCode: languageCode)
         case .tuist(let tuistProject):
@@ -57,7 +57,7 @@ class ProjectInteractorTests: XCTestCase {
         }
         
         // check number of localizableFile after all
-        let localizableFiles = try interactor.getLocalizableFiles()
+        let localizableFiles = try service.getLocalizableFiles()
         if localizableFiles.count != expectedNumberOfLocalizableFile {
             throw Error.wrongNumberOfLocalizableFiles
         }

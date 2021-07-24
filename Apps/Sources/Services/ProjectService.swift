@@ -1,5 +1,5 @@
 //
-//  ProjectInteractor.swift
+//  ProjectService.swift
 //  LocalizationHelperKit
 //
 //  Created by Chung Tran on 19/07/2021.
@@ -10,7 +10,7 @@ import Combine
 import XcodeProj
 import PathKit
 
-protocol ProjectInteractorType {
+protocol ProjectServiceType {
     func openCurrentProject() throws
     func openProject(_ project: Project) throws
     func localizeProject(languageCode: String) throws
@@ -18,7 +18,7 @@ protocol ProjectInteractorType {
     func closeProject()
 }
 
-struct ProjectInteractor: ProjectInteractorType {
+struct ProjectService: ProjectServiceType {
     // MARK: - Dependencies
     private let stringsFileGenerator: FileGeneratorType
     private let projectRepository: ProjectRepositoryType
@@ -71,7 +71,7 @@ struct ProjectInteractor: ProjectInteractorType {
     }
 }
 
-struct StubProjectInteractor: ProjectInteractorType {
+struct StubProjectInteractor: ProjectServiceType {
     func openCurrentProject() throws {
         
     }
