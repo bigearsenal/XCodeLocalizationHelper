@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Resolver
 
 protocol ProjectServiceType {
     func openCurrentProject() throws
@@ -18,20 +19,11 @@ protocol ProjectServiceType {
 
 struct ProjectService: ProjectServiceType {
     // MARK: - Dependencies
-    private let stringsFileGenerator: FileGeneratorType
-    private let projectRepository: ProjectRepositoryType
+    @Injected var stringsFileGenerator: FileGeneratorType
+    @Injected var projectRepository: ProjectRepositoryType
     
     // MARK: - Properties
     let appState: Store<AppState> = .init(.initial)
-    
-    // MARK: - Initializers
-    init(
-        projectRepository: ProjectRepositoryType,
-        stringsFileGenerator: FileGeneratorType
-    ) throws {
-        self.stringsFileGenerator = stringsFileGenerator
-        self.projectRepository = projectRepository
-    }
     
     // MARK: - Methods
     func openCurrentProject() throws {

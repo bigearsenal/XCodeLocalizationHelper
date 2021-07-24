@@ -9,7 +9,7 @@ import Foundation
 @testable import LocalizationHelper
 import PathKit
 
-struct FakeProjectRepository: ProjectRepositoryType {
+struct TestProjectRepository: ProjectRepositoryType {
     let testName: String
     
     func getCurrentProject() -> Project? {

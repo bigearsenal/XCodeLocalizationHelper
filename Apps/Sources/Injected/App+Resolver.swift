@@ -13,11 +13,15 @@ extension Resolver: ResolverRegistering {
     #endif
     
     public static func registerAllServices() {
-        // String file generator
         register {StringsFileGenerator() as FileGeneratorType}
+        register {UserDefaultsProjectRepository() as ProjectRepositoryType}
         
         #if DEBUG
+        mock.register {FakeStringsFileGenerator() as FileGeneratorType}
+        mock.register {InMemoryProjectRepository.default as ProjectRepositoryType}
         
+        // register entire container as replacement for main
+        root = mock
         #endif
     }
 }

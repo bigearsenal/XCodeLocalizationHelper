@@ -8,6 +8,11 @@
 import XCTest
 @testable import LocalizationHelper
 import PathKit
+import Resolver
+
+fileprivate extension Resolver {
+    static let test = Resolver(parent: mock)
+}
 
 class ProjectServiceTests: XCTestCase {
     enum Error: Swift.Error {
@@ -15,6 +20,19 @@ class ProjectServiceTests: XCTestCase {
         case fileNotFoundInLocalizableStringsGroup
         case fileNotFound
         case wrongNumberOfLocalizableFiles
+    }
+    
+    override func setUpWithError() throws {
+        // switch to test container
+        Resolver.root = Resolver.test
+        
+        // Using real Strings file generator
+        Resolver.test.register {StringsFileGenerator() as FileGeneratorType}
+    }
+    
+    override func tearDownWithError() throws {
+        // switch back to mock
+        Resolver.root = Resolver.mock
     }
     
     func testLocalizeFile1() throws {
@@ -39,10 +57,10 @@ class ProjectServiceTests: XCTestCase {
     
     // MARK: - DefaultProject
     private func testLocalizeProject(fileName: String, languageCode: String, expectedNumberOfLocalizableFile: Int) throws {
-        let service = try ProjectService(
-            projectRepository: FakeProjectRepository(testName: fileName),
-            stringsFileGenerator: StringsFileGenerator()
-        )
+        // Test using TestProjectRepository
+        Resolver.test.register {TestProjectRepository(testName: fileName) as ProjectRepositoryType}
+        
+        let service = ProjectService()
         
         // test localize project
         try service.openCurrentProject()
