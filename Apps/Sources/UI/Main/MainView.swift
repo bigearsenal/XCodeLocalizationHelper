@@ -50,7 +50,7 @@ struct MainView: View {
             return AnyView(OpenProjectView(handler: viewModel))
         }
         
-        return AnyView(ProjectView())
+        return AnyView(ProjectView(viewModel: .init(project: project)))
     }
     
     var footer: some View {

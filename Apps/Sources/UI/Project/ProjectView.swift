@@ -6,8 +6,13 @@
 //
 
 import SwiftUI
+#if DEBUG
+import XcodeProj
+#endif
 
 struct ProjectView: View {
+    @ObservedObject var viewModel: ProjectViewModel
+    
     var body: some View {
         Group {
             Text("Hello, World!")
@@ -17,8 +22,10 @@ struct ProjectView: View {
     }
 }
 
+#if DEBUG
 struct ProjectView_Previews: PreviewProvider {
     static var previews: some View {
-        ProjectView()
+        ProjectView(viewModel: .init(project: .default(.demo)))
     }
 }
+#endif

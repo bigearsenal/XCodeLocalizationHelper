@@ -33,19 +33,6 @@ class MainViewModel: ObservableObject {
         self.appState = appState
     }
     
-    func localizeProject(languageCode: String) throws {
-        guard let project = appState.project else {throw LocalizationHelperError.projectNotFound}
-        try projectService.localizeProject(project, languageCode: languageCode)
-    }
-    
-    func getLocalizableFiles() throws -> [LocalizableFile] {
-        guard let project = appState.project
-        else {
-            throw LocalizationHelperError.projectNotFound
-        }
-        return try projectService.getLocalizableFiles(fromProject: project)
-    }
-    
     func closeProject() {
         guard let project = appState.project else {return}
         projectService.closeProject(project)

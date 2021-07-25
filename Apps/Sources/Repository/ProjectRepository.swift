@@ -113,21 +113,7 @@ class InMemoryProjectRepository: ProjectRepositoryType {
     }
     
     static var `default`: InMemoryProjectRepository {
-        guard let xcodeProj = XcodeProj.demoProject.0,
-              let target = xcodeProj.pbxproj.targets(named: "Test1").first
-        else {
-            return .init(project: nil)
-        }
-        
-        let path = XcodeProj.demoProject.1
-        
-        return .init(project: .default(
-            .init(
-                pxbproj: xcodeProj,
-                target: target,
-                path: path
-            )
-        ))
+        .init(project: .default(.demo))
     }
 }
 #endif

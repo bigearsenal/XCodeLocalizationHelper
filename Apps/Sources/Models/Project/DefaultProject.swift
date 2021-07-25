@@ -93,3 +93,14 @@ extension DefaultProject {
             .fullPath(sourceRoot: projectFolderPath)
     }
 }
+
+#if DEBUG
+extension DefaultProject {
+    static var demo: Self {
+        let xcodeProj = XcodeProj.demoProject.0!
+        let target = xcodeProj.pbxproj.targets(named: "Test1").first!
+        let path = XcodeProj.demoProject.1
+        return .init(pxbproj: xcodeProj, target: target, path: path)
+    }
+}
+#endif
