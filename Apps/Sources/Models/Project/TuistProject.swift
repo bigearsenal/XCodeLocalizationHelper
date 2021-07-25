@@ -10,6 +10,7 @@ import PathKit
 
 struct TuistProject: Equatable {
     var resourcePath: Path
+    var projectName: String
 }
 
 extension TuistProject {

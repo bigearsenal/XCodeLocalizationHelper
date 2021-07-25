@@ -12,6 +12,7 @@ extension OpenProjectView {
     struct TuistProjectView: View {
         @Injected fileprivate var filePickerService: FilePickerServiceType
         @State private var resourcePath: PathKit.Path?
+        @State private var projectName = ""
         let handler: OpenProjectHandler
         @State private var isShowingAlert = false
         @State private var error: Error?
@@ -34,14 +35,21 @@ extension OpenProjectView {
                 Text(path.string)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                Button("Open") {
-                    do {
-                        try handler.openProject(.tuist(.init(resourcePath: path)))
-                    } catch {
-                        self.error = error
-                        self.isShowingAlert.toggle()
+                HStack {
+                    Text("Project name")
+                    Spacer()
+                    TextField("Please enter the project's name", text: $projectName)
+                }
+                if !projectName.isEmpty {
+                    Button("Open") {
+                        do {
+                            try handler.openProject(.tuist(.init(resourcePath: path, projectName: projectName)))
+                        } catch {
+                            self.error = error
+                            self.isShowingAlert.toggle()
+                        }
+                        
                     }
-                    
                 }
             }
         }

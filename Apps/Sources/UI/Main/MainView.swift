@@ -31,7 +31,7 @@ struct MainView: View {
             case .default(let project):
                 text = project.target.name
             case .tuist(let project):
-                text = project.resourcePath.parent().string
+                text = project.projectName
             }
         }
         
@@ -55,7 +55,7 @@ struct MainView: View {
         case .default(let project):
             return AnyView(Text(project.target.name))
         case .tuist(let project):
-            return AnyView(Text(project.resourcePath.string))
+            return AnyView(Text(project.projectName))
         }
     }
     

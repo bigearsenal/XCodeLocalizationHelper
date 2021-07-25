@@ -22,6 +22,7 @@ struct UserDefaultsProjectRepository: ProjectRepositoryType {
     private let targetKey = "KEYS.TARGET"
     // Tuist project
     private let resourcePathKey = "KEYS.RESOURCE_PATH"
+    private let projectNameKey = "KEYS.PROJECT_NAME"
     
     // MARK: - Methods
     func getCurrentProject() -> Project? {
@@ -41,12 +42,13 @@ struct UserDefaultsProjectRepository: ProjectRepositoryType {
         }
         
         // tuist project
-        if let resourcePath = UserDefaults.standard.string(forKey: resourcePathKey)
+        if let resourcePath = UserDefaults.standard.string(forKey: resourcePathKey),
+           let name = UserDefaults.standard.string(forKey: projectNameKey)
         {
             let path = Path(resourcePath)
             if path.isDirectory {
                 return .tuist(
-                    .init(resourcePath: path)
+                    .init(resourcePath: path, projectName: name)
                 )
             }
         }
@@ -65,6 +67,7 @@ struct UserDefaultsProjectRepository: ProjectRepositoryType {
         case .tuist(let tuistProject):
             // set new value
             UserDefaults.standard.set(tuistProject.resourcePath.string, forKey: resourcePathKey)
+            UserDefaults.standard.set(tuistProject.projectName, forKey: projectNameKey)
             // Remove default project if exists
             UserDefaults.standard.set(nil, forKey: projectPathKey)
             UserDefaults.standard.set(nil, forKey: targetKey)
@@ -74,6 +77,7 @@ struct UserDefaultsProjectRepository: ProjectRepositoryType {
     func clearCurrentProject() {
         // Remove tuist project if exists
         UserDefaults.standard.set(nil, forKey: resourcePathKey)
+        UserDefaults.standard.set(nil, forKey: projectNameKey)
         
         // Remove default project if exists
         UserDefaults.standard.set(nil, forKey: projectPathKey)
