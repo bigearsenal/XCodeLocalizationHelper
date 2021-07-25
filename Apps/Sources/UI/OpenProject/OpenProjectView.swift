@@ -40,20 +40,7 @@ struct OpenProjectView: View {
         case .default:
             return AnyView(DefaultProjectView(handler: handler))
         case .tuist:
-            return AnyView(tuistProjectView)
-        }
-    }
-}
-
-// MARK: - Subviews
-extension OpenProjectView {
-    var tuistProjectView: some View {
-        Form {
-            Section {
-                Button("Choose \"Resources\" folder") {
-                    
-                }
-            }
+            return AnyView(TuistProjectView(handler: handler))
         }
     }
 }

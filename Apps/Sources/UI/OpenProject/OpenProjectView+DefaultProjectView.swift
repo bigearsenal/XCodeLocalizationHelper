@@ -37,7 +37,6 @@ extension OpenProjectView {
             .alert(isPresented: $isShowingAlert, content: {
                 Alert(title: Text("Error"), message: Text("Could not open project. Error: \(self.error?.localizedDescription ?? "")"))
             })
-            
         }
         
         var content: some View {
