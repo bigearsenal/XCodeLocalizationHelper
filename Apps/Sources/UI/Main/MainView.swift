@@ -15,7 +15,6 @@ struct MainView: View {
         VStack {
             title
             content
-            Spacer()
             footer
         }
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
@@ -51,12 +50,7 @@ struct MainView: View {
             return AnyView(OpenProjectView(handler: viewModel))
         }
         
-        switch project {
-        case .default(let project):
-            return AnyView(Text(project.target.name))
-        case .tuist(let project):
-            return AnyView(Text(project.projectName))
-        }
+        return AnyView(ProjectView())
     }
     
     var footer: some View {

@@ -20,7 +20,7 @@ struct OpenProjectView: View {
     
     // MARK: - Body
     var body: some View {
-        VStack {
+        Group {
             Picker("", selection: $projectType) {
                 Text("Default project").tag(ProjectType.default)
                 Text("Tuist project").tag(ProjectType.tuist)
@@ -30,6 +30,8 @@ struct OpenProjectView: View {
             
             content
                 .padding()
+            
+            Spacer()
         }
         
     }
