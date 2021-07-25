@@ -6,20 +6,17 @@
 //
 
 import Foundation
-import Resolver
 
 class MainViewModel: ObservableObject {
     // MARK: - Dependencies
-    @Injected var stringsFileGenerator: FileGeneratorType
-    @Injected var projectRepository: ProjectRepositoryType
+    @Injected var projectService: XCodeProjectServiceType
     
     // MARK: - Properties
     @Published var appState: AppState = .initial
     
     #if DEBUG
     init(resolver: Resolver) {
-        self.stringsFileGenerator = resolver.resolve()
-        self.projectRepository = resolver.resolve()
+        self.projectService = resolver.resolve()
         try? openCurrentProject()
     }
     #endif
@@ -30,23 +27,18 @@ class MainViewModel: ObservableObject {
     
     // MARK: - Methods
     func openCurrentProject() throws {
-        guard let project = projectRepository.getCurrentProject()
-        else {throw LocalizationHelperError.projectNotFound}
-        try openProject(project)
+        let project = try projectService.openCurrentProject()
+        appState.project = project
     }
     
     func openProject(_ project: Project) throws {
-        projectRepository.setCurrentProject(project)
-        appState = .init(project: project)
+        let project = try projectService.openProject(project)
+        appState.project = project
     }
     
     func localizeProject(languageCode: String) throws {
-        guard let project = appState.project
-        else {
-            throw LocalizationHelperError.projectNotFound
-        }
-        
-        try project.localize(fileGenerator: stringsFileGenerator, languageCode: languageCode)
+        guard let project = appState.project else {throw LocalizationHelperError.projectNotFound}
+        try projectService.localizeProject(project, languageCode: languageCode)
     }
     
     func getLocalizableFiles() throws -> [LocalizableFile] {
@@ -54,11 +46,12 @@ class MainViewModel: ObservableObject {
         else {
             throw LocalizationHelperError.projectNotFound
         }
-        return try project.getLocalizableFiles()
+        return try projectService.getLocalizableFiles(fromProject: project)
     }
     
     func closeProject() {
-        projectRepository.clearCurrentProject()
-        appState = .init(project: nil)
+        guard let project = appState.project else {return}
+        projectService.closeProject(project)
+        appState.project = nil
     }
 }

@@ -8,7 +8,6 @@
 import XCTest
 @testable import LocalizationHelper
 import PathKit
-import Resolver
 
 class _2MainViewModelTests: XCTestCase {
     enum Error: Swift.Error {

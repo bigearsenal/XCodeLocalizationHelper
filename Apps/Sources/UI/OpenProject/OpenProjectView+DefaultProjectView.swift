@@ -8,7 +8,6 @@
 import SwiftUI
 import XcodeProj
 import PathKit
-import Resolver
 
 extension OpenProjectView {
     struct DefaultProjectView: View {
