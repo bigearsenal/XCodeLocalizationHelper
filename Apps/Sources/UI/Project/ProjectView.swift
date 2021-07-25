@@ -46,7 +46,14 @@ struct ProjectView: View {
     }
     
     fileprivate var selectLanaguagesView: some View {
-        Text("test")
+        SelectLanguageView(
+            languages: ISOLanguageCode.all
+                .filter {code in
+                    !viewModel.localizableFiles.contains(where: {$0.languageCode == code.code})
+                },
+            isShowing: $isLocalizingProject,
+            canSelectMultipleLanguages: true
+        )
             .frame(width: 400, height: 400, alignment: .center)
     }
 }
