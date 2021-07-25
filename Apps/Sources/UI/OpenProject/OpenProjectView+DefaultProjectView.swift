@@ -11,20 +11,14 @@ import PathKit
 
 extension OpenProjectView {
     struct DefaultProjectView: View {
-        @State fileprivate var project: (XcodeProj, PathKit.Path)?
-        @State fileprivate var targetName = ""
-        @State fileprivate var isShowingAlert = false
-        @State fileprivate var error: Error?
-        
-        #if DEBUG
-        init(project: (XcodeProj, PathKit.Path)?) {
-            self.project = project
-        }
-        #endif
+        @State private var project: (XcodeProj, PathKit.Path)?
+        @State private var targetName = ""
+        @State private var isShowingAlert = false
+        @State private var error: Error?
         
         var body: some View {
             VStack {
-                form
+                content
                 
                 if project != nil, !targetName.isEmpty {
                     Button("Open") {
@@ -38,36 +32,57 @@ extension OpenProjectView {
             
         }
         
-        var form: some View {
-            Form {
-                Section {
-                    if let project = project {
-                        Text(project.1.string)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                            .lineLimit(1)
-                        
-                        Picker(selection: $targetName, label: Text("Target"), content: {
-                            
-                            Text("Please select one target")
-                                .foregroundColor(.secondary)
-                                .tag("")
-                            ForEach(
-                                project.0.pbxproj.nativeTargets
-                                    .filter {!$0.name.hasSuffix("Tests")},
-                                id: \.name)
-                            { target in
-                                Text(target.name).tag(target.name)
-                            }
-                        })
-                    } else {
-                        Button("Open a .xcodeproj file") {
-                            showFilePicker()
-                        }
-                    }
+        var content: some View {
+            Group {
+                if let project = project {
+                    projectView(project: project)
+                } else {
+                    nilProjectView
                 }
             }
-            .padding()
+            
+        }
+    }
+}
+
+// MARK: - Subviews
+private extension OpenProjectView.DefaultProjectView {
+    func projectView(project: (XcodeProj, PathKit.Path)) -> some View {
+        VStack {
+            HStack {
+                Text("Directory")
+                Spacer()
+                Text(project.1.string)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .lineLimit(1)
+            }
+            
+            HStack {
+                Text("Target")
+                Spacer()
+                Picker("", selection: $targetName, content: {
+                    
+                    Text("Please select one target")
+                        .foregroundColor(.secondary)
+                        .tag("")
+                    ForEach(
+                        project.0.pbxproj.nativeTargets
+                            .filter {!$0.name.hasSuffix("Tests")},
+                        id: \.name)
+                    { target in
+                        Text(target.name).tag(target.name)
+                    }
+                })
+                .frame(width: 200)
+            }
+        }
+        .padding()
+    }
+    
+    var nilProjectView: some View {
+        Button("Open a .xcodeproj file") {
+            showFilePicker()
         }
     }
 }
@@ -115,11 +130,16 @@ extension OpenProjectView.DefaultProjectView {
     }
 }
 
-
+#if DEBUG
 struct OpenDefaultProjectView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            OpenProjectView.DefaultProjectView(project: (XcodeProj.demoProject.0!, XcodeProj.demoProject.1))
+            OpenProjectView.DefaultProjectView()
+                .nilProjectView
+            
+            OpenProjectView.DefaultProjectView()
+                .projectView(project: (XcodeProj.demoProject.0!, XcodeProj.demoProject.1))
         }
     }
 }
+#endif

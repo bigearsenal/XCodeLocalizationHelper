@@ -41,7 +41,7 @@ struct OpenProjectView: View {
     var content: AnyView {
         switch projectType {
         case .default:
-            return AnyView(DefaultProjectView(project: nil))
+            return AnyView(DefaultProjectView())
         case .tuist:
             return AnyView(tuistProjectView)
         }
