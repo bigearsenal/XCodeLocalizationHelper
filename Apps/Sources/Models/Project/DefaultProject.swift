@@ -44,7 +44,9 @@ extension DefaultProject {
         if localizableStringsGroup == nil
         {
             // create Localizable.strings group
-            let group = rootObject.mainGroup.children.first(where: {$0.path == target.name}) as? PBXGroup
+            let group = (rootObject.mainGroup.children.first(where: {$0.path == target.name}) as? PBXGroup) ??
+                (rootObject.mainGroup.children.first as? PBXGroup)?.group(named: "Resources", recursively: true) ??
+                rootObject.mainGroup
             
             localizableStringsGroup = try group?.addVariantGroup(named: LOCALIZABLE_STRINGS).first
             

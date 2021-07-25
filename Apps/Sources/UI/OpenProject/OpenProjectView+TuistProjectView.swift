@@ -67,8 +67,9 @@ extension OpenProjectView {
                 allowsMultipleSelection: false,
                 canChooseDirectories: true,
                 canChooseFiles: false,
-                allowedFileTypes: [])
-            { path in
+                allowedFileTypes: [],
+                directoryURL: nil
+            ) { path in
                 self.resourcePath = .init(path)
             }
         }

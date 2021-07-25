@@ -12,7 +12,7 @@ import XcodeProj
 #endif
 
 protocol FilePickerServiceType {
-    func showFilePicker(title: String, showsResizeIndicator: Bool, showsHiddenFiles: Bool, allowsMultipleSelection: Bool, canChooseDirectories: Bool, canChooseFiles: Bool, allowedFileTypes: [String], completion: @escaping (String) -> Void)
+    func showFilePicker(title: String, showsResizeIndicator: Bool, showsHiddenFiles: Bool, allowsMultipleSelection: Bool, canChooseDirectories: Bool, canChooseFiles: Bool, allowedFileTypes: [String], directoryURL: String?, completion: @escaping (String) -> Void)
 }
 
 struct FilePickerService: FilePickerServiceType {
@@ -24,6 +24,7 @@ struct FilePickerService: FilePickerServiceType {
         canChooseDirectories: Bool,
         canChooseFiles: Bool,
         allowedFileTypes: [String] = [],
+        directoryURL: String?,
         completion: @escaping (String) -> Void
     ) {
         (NSApplication.shared.delegate as! AppDelegate).statusBar?.hidePopover()
@@ -39,6 +40,10 @@ struct FilePickerService: FilePickerServiceType {
             dialog.canChooseDirectories    = canChooseDirectories
             dialog.canChooseFiles          = canChooseFiles
             dialog.allowedFileTypes        = allowedFileTypes
+            if let string = directoryURL, let url = URL(string: string)
+            {
+                dialog.directoryURL        = url
+            }
 
             if (dialog.runModal() ==  .OK) {
                 let result = dialog.url // Pathname of the file
@@ -62,7 +67,7 @@ struct FilePickerService: FilePickerServiceType {
 
 #if DEBUG
 struct MockFilePickerService: FilePickerServiceType {
-    func showFilePicker(title: String, showsResizeIndicator: Bool, showsHiddenFiles: Bool, allowsMultipleSelection: Bool, canChooseDirectories: Bool, canChooseFiles: Bool, allowedFileTypes: [String], completion: @escaping (String) -> Void) {
+    func showFilePicker(title: String, showsResizeIndicator: Bool, showsHiddenFiles: Bool, allowsMultipleSelection: Bool, canChooseDirectories: Bool, canChooseFiles: Bool, allowedFileTypes: [String], directoryURL: String?, completion: @escaping (String) -> Void) {
         if canChooseFiles {
             completion(XcodeProj.demoProject.1.string)
         }

@@ -104,8 +104,9 @@ extension OpenProjectView.DefaultProjectView {
             allowsMultipleSelection: false,
             canChooseDirectories: false,
             canChooseFiles: true,
-            allowedFileTypes: ["xcodeproj"])
-        { pathString in
+            allowedFileTypes: ["xcodeproj"],
+            directoryURL: nil
+        ) { pathString in
             let path = PathKit.Path(pathString)
             do {
                 project = (try XcodeProj(path: path), path)
