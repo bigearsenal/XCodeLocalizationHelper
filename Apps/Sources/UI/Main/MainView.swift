@@ -12,8 +12,36 @@ struct MainView: View {
     @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
-        content
-            .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
+        VStack {
+            title
+            
+            content
+                .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
+        }
+        
+    }
+    
+    var title: some View {
+        var text = "Open a project"
+        
+        if let project = viewModel.appState.project
+        {
+            switch project {
+            case .default(let project):
+                text = project.target.name
+            case .tuist(let project):
+                text = project.resourcePath.parent().string
+            }
+        }
+        
+        return Group {
+            Text(text)
+                .lineLimit(1)
+                .truncationMode(.middle)
+                .padding(.top, 20)
+                .font(.title)
+            Divider()
+        }
     }
     
     var content: AnyView {

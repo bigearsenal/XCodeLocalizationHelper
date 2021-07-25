@@ -20,10 +20,6 @@ struct OpenProjectView: View {
     // MARK: - Body
     var body: some View {
         VStack {
-            Text("Open a project")
-                .padding(.top)
-                .font(.title)
-            Divider()
             Picker("", selection: $projectType) {
                 Text("Default project").tag(ProjectType.default)
                 Text("Tuist project").tag(ProjectType.tuist)
