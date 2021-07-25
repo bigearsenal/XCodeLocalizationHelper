@@ -40,11 +40,9 @@ class XcodeProjectServiceTests: XCTestCase {
     // MARK: - DefaultProject
     private func testLocalizeProject(fileName: String, languageCode: String, expectedNumberOfLocalizableFile: Int) throws {
         // Test using TestProjectRepository
-        let test = Resolver(parent: .mock)
-        test.register {TestProjectRepository(testName: fileName) as ProjectRepositoryType}
-        test.register {StringsFileGenerator() as FileGeneratorType}
+        Resolver.main.register {TestProjectRepository(testName: fileName) as ProjectRepositoryType}
         
-        let service = XCodeProjectService(stringsFileGenerator: test.resolve(), projectRepository: test.resolve())
+        let service = XCodeProjectService()
         
         // test localize project
         let project = try service.openCurrentProject()
