@@ -40,17 +40,16 @@ extension OpenProjectView {
                     Spacer()
                     TextField("Please enter the project's name", text: $projectName)
                 }
-                if !projectName.isEmpty {
-                    Button("Open") {
-                        do {
-                            try handler.openProject(.tuist(.init(resourcePath: path, projectName: projectName)))
-                        } catch {
-                            self.error = error
-                            self.isShowingAlert.toggle()
-                        }
-                        
+                Button("Open") {
+                    do {
+                        try handler.openProject(.tuist(.init(resourcePath: path, projectName: projectName)))
+                    } catch {
+                        self.error = error
+                        self.isShowingAlert.toggle()
                     }
+                    
                 }
+                .disabled(projectName.isEmpty)
             }
         }
         

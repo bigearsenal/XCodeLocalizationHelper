@@ -23,16 +23,16 @@ extension OpenProjectView {
             VStack {
                 content
                 
-                if let project = project, !targetName.isEmpty {
-                    Button("Open") {
-                        do {
-                            try handler.openDefaultProject(xcodeproj: project.0, targetName: targetName, path: project.1)
-                        } catch {
-                            self.error = error
-                            self.isShowingAlert.toggle()
-                        }
+                Button("Open") {
+                    do {
+                        guard let project = project else {return}
+                        try handler.openDefaultProject(xcodeproj: project.0, targetName: targetName, path: project.1)
+                    } catch {
+                        self.error = error
+                        self.isShowingAlert.toggle()
                     }
                 }
+                .disabled(project == nil || targetName.isEmpty)
             }
             .alert(isPresented: $isShowingAlert, content: {
                 Alert(title: Text("Error"), message: Text("Could not open project. Error: \(self.error?.localizedDescription ?? "")"))
