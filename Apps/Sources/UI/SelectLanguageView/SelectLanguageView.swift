@@ -11,13 +11,14 @@ struct SelectLanguageView: View {
     @State var languages: [ISOLanguageCode]
     @Binding var isShowing: Bool
     let canSelectMultipleLanguages: Bool
+    let handler: SelectLanguagesHandler
     
     var body: some View {
         VStack(spacing: 0) {
             headerView
             listView
             Button("Done") {
-                isShowing.toggle()
+                doneButtonDidTouch()
             }
                 .padding()
         }
@@ -68,6 +69,12 @@ struct SelectLanguageView: View {
             }
         }
     }
+    
+    // MARK: - Actions
+    private func doneButtonDidTouch() {
+        try? handler.languagesDidSelect(languages.filter({$0.isSelected}))
+        isShowing = false
+    }
 }
 
 struct SelectLanguageView_Previews: PreviewProvider {
@@ -75,7 +82,8 @@ struct SelectLanguageView_Previews: PreviewProvider {
         SelectLanguageView(
             languages: ISOLanguageCode.all,
             isShowing: .constant(true),
-            canSelectMultipleLanguages: false
+            canSelectMultipleLanguages: false,
+            handler: SelectLanguagesHandler_Preview()
         )
     }
 }

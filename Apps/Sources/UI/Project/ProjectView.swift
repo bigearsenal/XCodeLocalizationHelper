@@ -22,6 +22,9 @@ struct ProjectView: View {
                 localizableFilesList
             }
         }
+        .onAppear(perform: {
+            viewModel.refresh()
+        })
         .sheet(isPresented: $isLocalizingProject, content: {
             selectLanaguagesView
         })
@@ -52,7 +55,8 @@ struct ProjectView: View {
                     !viewModel.localizableFiles.contains(where: {$0.languageCode == code.code})
                 },
             isShowing: $isLocalizingProject,
-            canSelectMultipleLanguages: true
+            canSelectMultipleLanguages: true,
+            handler: viewModel
         )
             .frame(width: 400, height: 400, alignment: .center)
     }

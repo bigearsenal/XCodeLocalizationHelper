@@ -18,16 +18,18 @@ class ProjectViewModel: ObservableObject {
     
     init(project: Project) {
         self.project = project
-        if let localizableFiles = try? projectService.getLocalizableFiles(fromProject: project) {
-            self.localizableFiles = localizableFiles
-        }
     }
     
-    func localizeProject(languageCode: String) throws {
-        try projectService.localizeProject(project, languageCode: languageCode)
+    func refresh() {
+        self.localizableFiles = (try? projectService.getLocalizableFiles(fromProject: project)) ?? []
     }
+}
 
-    func getLocalizableFiles() throws -> [LocalizableFile] {
-        return try projectService.getLocalizableFiles(fromProject: project)
+extension ProjectViewModel: SelectLanguagesHandler {
+    func languagesDidSelect(_ languages: [ISOLanguageCode]) throws {
+        for language in languages {
+            try projectService.localizeProject(project, languageCode: language.code)
+        }
+        refresh()
     }
 }
