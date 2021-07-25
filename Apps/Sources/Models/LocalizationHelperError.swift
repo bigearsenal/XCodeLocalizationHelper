@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum LocalizationHelperError: Swift.Error {
+enum LocalizationHelperError: String, Swift.Error {
     case projectNotFound
     case targetNotFound
     case localizableStringsGroupNotFound
@@ -15,4 +15,10 @@ enum LocalizationHelperError: Swift.Error {
     case couldNotCreateLocalizableStringsGroup
     case resourcePathIsNotADirectory
     case resourcePathMustBeInsideProjectPath
+}
+
+extension LocalizationHelperError: LocalizedError {
+    var errorDescription: String? {
+        self.rawValue
+    }
 }
