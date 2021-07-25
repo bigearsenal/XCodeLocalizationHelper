@@ -16,6 +16,7 @@ struct OpenProjectView: View {
     
     // MARK: - State
     @State private var projectType = ProjectType.default
+    let handler: OpenProjectHandler
     
     // MARK: - Body
     var body: some View {
@@ -37,7 +38,7 @@ struct OpenProjectView: View {
     var content: AnyView {
         switch projectType {
         case .default:
-            return AnyView(DefaultProjectView())
+            return AnyView(DefaultProjectView(handler: handler))
         case .tuist:
             return AnyView(tuistProjectView)
         }
@@ -59,7 +60,7 @@ extension OpenProjectView {
 
 struct OpenProjectView_Previews: PreviewProvider {
     static var previews: some View {
-        OpenProjectView()
+        OpenProjectView(handler: OpenProjectHandler_Preview())
             .frame(width: 500, height: 500)
     }
 }

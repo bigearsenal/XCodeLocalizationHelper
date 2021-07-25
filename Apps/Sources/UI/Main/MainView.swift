@@ -14,10 +14,11 @@ struct MainView: View {
     var body: some View {
         VStack {
             title
-            
             content
-                .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
+            Spacer()
+            footer
         }
+        .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
         
     }
     
@@ -47,7 +48,7 @@ struct MainView: View {
     var content: AnyView {
         guard let project = viewModel.appState.project
         else {
-            return AnyView(OpenProjectView())
+            return AnyView(OpenProjectView(handler: viewModel))
         }
         
         switch project {
@@ -57,12 +58,40 @@ struct MainView: View {
             return AnyView(Text(project.resourcePath.string))
         }
     }
+    
+    var footer: some View {
+        Group {
+            Divider()
+            HStack {
+                Text("Author: Chung Tran (bigearsenal)")
+                Link(url: "https://www.linkedin.com/in/chung-tr%E1%BA%A7n-39b46569/", description: "LinkedIn")
+                Link(url: "https://github.com/bigearsenal/XCodeLocalizationHelper", description: "Repository")
+                Spacer()
+                Link(url: "https://www.buymeacoffee.com/bigearsenal", description: "☕ Buy me a coffee")
+                Spacer()
+                
+                if viewModel.appState.project != nil {
+                    Button("Open another...") {
+                        viewModel.closeProject()
+                    }
+                }
+                
+                Button("Quit") {
+                    NSApplication.shared.terminate(self)
+                }
+            }
+            .padding(.bottom, 8)
+            .padding(.leading)
+            .padding(.trailing)
+        }
+        
+    }
 }
 
 #if DEBUG
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView(viewModel: .init(resolver: .mock))
+        MainView(viewModel: .init())
     }
 }
 #endif

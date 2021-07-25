@@ -14,13 +14,6 @@ class MainViewModel: ObservableObject {
     // MARK: - Properties
     @Published var appState: AppState = .initial
     
-    #if DEBUG
-    init(resolver: Resolver) {
-        self.projectService = resolver.resolve()
-        try? openCurrentProject()
-    }
-    #endif
-    
     init() {
         try? openCurrentProject()
     }
@@ -28,12 +21,16 @@ class MainViewModel: ObservableObject {
     // MARK: - Methods
     func openCurrentProject() throws {
         let project = try projectService.openCurrentProject()
+        var appState = appState
         appState.project = project
+        self.appState = appState
     }
     
     func openProject(_ project: Project) throws {
         let project = try projectService.openProject(project)
+        var appState = appState
         appState.project = project
+        self.appState = appState
     }
     
     func localizeProject(languageCode: String) throws {
@@ -52,6 +49,10 @@ class MainViewModel: ObservableObject {
     func closeProject() {
         guard let project = appState.project else {return}
         projectService.closeProject(project)
+        var appState = appState
         appState.project = nil
+        self.appState = appState
     }
 }
+
+extension MainViewModel: OpenProjectHandler {}

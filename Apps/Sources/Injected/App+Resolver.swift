@@ -20,11 +20,12 @@ extension Resolver: ResolverRegistering {
         
         #if DEBUG
 //        mock.register {FakeStringsFileGenerator() as FileGeneratorType}
-//        mock.register {InMemoryProjectRepository(project: nil) as ProjectRepositoryType}
+//        mock.register {InMemoryProjectRepository.default as ProjectRepositoryType}
 //        mock.register {MockFilePickerService() as FilePickerServiceType}
+//        mock.register {OpenProjectHandler_Preview() as OpenProjectHandler}
         
         // register entire container as replacement for main
-        root = mock
+//        root = mock
         #endif
     }
 }

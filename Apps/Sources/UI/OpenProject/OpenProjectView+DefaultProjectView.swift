@@ -12,6 +12,7 @@ import PathKit
 extension OpenProjectView {
     struct DefaultProjectView: View {
         @Injected fileprivate var filePickerService: FilePickerServiceType
+        let handler: OpenProjectHandler
         
         @State private var project: (XcodeProj, PathKit.Path)?
         @State private var targetName = ""
@@ -22,9 +23,14 @@ extension OpenProjectView {
             VStack {
                 content
                 
-                if project != nil, !targetName.isEmpty {
+                if let project = project, !targetName.isEmpty {
                     Button("Open") {
-                        
+                        do {
+                            try handler.openDefaultProject(xcodeproj: project.0, targetName: targetName, path: project.1)
+                        } catch {
+                            self.error = error
+                            self.isShowingAlert.toggle()
+                        }
                     }
                 }
             }
@@ -115,10 +121,10 @@ extension OpenProjectView.DefaultProjectView {
 struct OpenDefaultProjectView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            OpenProjectView.DefaultProjectView()
+            OpenProjectView.DefaultProjectView(handler: OpenProjectHandler_Preview())
                 .nilProjectView
             
-            OpenProjectView.DefaultProjectView()
+            OpenProjectView.DefaultProjectView(handler: OpenProjectHandler_Preview())
                 .projectView(project: (XcodeProj.demoProject.0!, XcodeProj.demoProject.1))
         }
     }
