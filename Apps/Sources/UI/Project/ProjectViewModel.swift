@@ -14,8 +14,13 @@ class ProjectViewModel: ObservableObject {
     // MARK: - Properties
     let project: Project
     
+    @Published var localizableFiles = [LocalizableFile]()
+    
     init(project: Project) {
         self.project = project
+        if let localizableFiles = try? projectService.getLocalizableFiles(fromProject: project) {
+            self.localizableFiles = localizableFiles
+        }
     }
     
     func localizeProject(languageCode: String) throws {
