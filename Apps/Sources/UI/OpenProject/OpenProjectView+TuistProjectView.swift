@@ -10,17 +10,18 @@ import PathKit
 
 extension OpenProjectView {
     struct TuistProjectView: View {
+        let handler: OpenProjectHandler
         @Injected fileprivate var filePickerService: FilePickerServiceType
+        @State private var path: PathKit.Path?
         @State private var resourcePath: PathKit.Path?
         @State private var projectName = ""
-        let handler: OpenProjectHandler
         @State private var isShowingAlert = false
         @State private var error: Error?
         
         var body: some View {
             Group {
-                if let resourcePath = resourcePath {
-                    pathSelectedView(path: resourcePath)
+                if let path = path {
+                    pathSelectedView(path: path)
                 } else {
                     emptyView
                 }
@@ -32,36 +33,71 @@ extension OpenProjectView {
         
         func pathSelectedView(path: PathKit.Path) -> some View {
             VStack {
-                Text(path.string)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
+                HStack {
+                    Text("Root folder")
+                    Spacer()
+                    Text(path.string)
+                        .frame(maxWidth: 400, alignment: .trailing)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                    Image(systemName: "xmark.circle.fill")
+                        .onTapGesture {
+                            self.path = nil
+                            self.resourcePath = nil
+                            self.projectName = ""
+                        }
+                }
+                
                 HStack {
                     Text("Project name")
                     Spacer()
                     TextField("Please enter the project's name", text: $projectName)
+                        .multilineTextAlignment(.trailing)
+                        .frame(maxWidth: 400)
+                    Image(systemName: "xmark.circle.fill")
+                        .onTapGesture {
+                            self.projectName = ""
+                        }
                 }
-                Button("Open") {
-                    do {
-                        try handler.openProject(.tuist(.init(resourcePath: path, projectName: projectName)))
-                    } catch {
-                        self.error = error
-                        self.isShowingAlert.toggle()
-                    }
+                
+                HStack {
+                    Text("Resources folder")
+                    Spacer()
                     
+                    if let resourcePath = resourcePath {
+                        Text(resourcePath.string.replacingOccurrences(of: path.string, with: "."))
+                            .frame(maxWidth: 400, alignment: .trailing)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                        
+                        Image(systemName: "xmark.circle.fill")
+                            .onTapGesture {
+                                self.resourcePath = nil
+                            }
+                    } else {
+                        Button("Select \"Resouces\" folder") {
+                            openFilePickerForSelectingResourceFolder()
+                        }
+                    }
                 }
-                .disabled(projectName.isEmpty)
+                
+                Button("Open") {
+                    openProject()
+                }
+                .disabled(resourcePath == nil || projectName.isEmpty)
             }
         }
         
         var emptyView: some View {
-            Button("Choose \"Resource\" folder") {
-                openFilePicker()
+            Button("Choose project's root folder") {
+                openFilePickerForSelectingProjectRootFolder()
             }
         }
         
-        func openFilePicker() {
+        // MARK: - Actions
+        private func openFilePickerForSelectingProjectRootFolder() {
             filePickerService.showFilePicker(
-                title: "Choose \"Resource\" folder of your project",
+                title: "Choose your project's root folder",
                 showsResizeIndicator: true,
                 showsHiddenFiles: false,
                 allowsMultipleSelection: false,
@@ -70,7 +106,45 @@ extension OpenProjectView {
                 allowedFileTypes: [],
                 directoryURL: nil
             ) { path in
-                self.resourcePath = .init(path)
+                self.path = .init(path)
+                self.projectName = self.path?.lastComponent ?? ""
+            }
+        }
+        
+        private func openFilePickerForSelectingResourceFolder() {
+            guard let path = path else {return}
+            filePickerService.showFilePicker(
+                title: "Choose your project's root folder",
+                showsResizeIndicator: true,
+                showsHiddenFiles: false,
+                allowsMultipleSelection: false,
+                canChooseDirectories: true,
+                canChooseFiles: false,
+                allowedFileTypes: [],
+                directoryURL: path.string
+            ) { resourcePath in
+                guard let projectPath = self.path?.string,
+                      resourcePath.contains(projectPath)
+                else {
+                    self.error = LocalizationHelperError.resourcePathMustBeInsideProjectPath
+                    self.isShowingAlert.toggle()
+                    return
+                }
+                
+                self.resourcePath = .init(resourcePath)
+            }
+        }
+        
+        private func openProject() {
+            guard let path = path,
+                  let resourcePath = resourcePath,
+                  !projectName.isEmpty
+            else {return}
+            do {
+                try handler.openProject(.tuist(.init(path: path, resourcePath: resourcePath, projectName: projectName)))
+            } catch {
+                self.error = error
+                self.isShowingAlert.toggle()
             }
         }
     }

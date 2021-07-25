@@ -14,4 +14,5 @@ enum LocalizationHelperError: Swift.Error {
     case localizableStringsGroupFullPathNotFound
     case couldNotCreateLocalizableStringsGroup
     case resourcePathIsNotADirectory
+    case resourcePathMustBeInsideProjectPath
 }

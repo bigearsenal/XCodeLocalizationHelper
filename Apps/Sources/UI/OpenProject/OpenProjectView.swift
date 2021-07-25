@@ -25,12 +25,11 @@ struct OpenProjectView: View {
                 Text("Default project").tag(ProjectType.default)
                 Text("Tuist project").tag(ProjectType.tuist)
             }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
             
             content
-            
-            Spacer()
+                .padding()
         }
         
     }

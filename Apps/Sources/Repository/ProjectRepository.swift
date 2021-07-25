@@ -18,17 +18,18 @@ protocol ProjectRepositoryType {
 struct UserDefaultsProjectRepository: ProjectRepositoryType {
     // MARK: - Keys
     // Default project
-    private let projectPathKey = "KEYS.PROJECT_PATH"
-    private let targetKey = "KEYS.TARGET"
+    private let defaultProjectPathKey       = "KEYS.DEFAULT_PROJECT.PROJECT_PATH"
+    private let defaultProjectTargetKey     = "KEYS.DEFAULT_PROJECT.TARGET"
     // Tuist project
-    private let resourcePathKey = "KEYS.RESOURCE_PATH"
-    private let projectNameKey = "KEYS.PROJECT_NAME"
+    private let tuistProjectPathKey         = "KEYS.TUIST_PROJECT.PATH"
+    private let tuistProjectResourcePathKey = "KEYS.TUIST_PROJECT.RESOURCE_PATH"
+    private let tuistProjectNameKey         = "KEYS.TUIST_PROJECT.PROJECT_NAME"
     
     // MARK: - Methods
     func getCurrentProject() -> Project? {
         // default project
-        if let projectPath = UserDefaults.standard.string(forKey: projectPathKey),
-           let targetName = UserDefaults.standard.string(forKey: targetKey),
+        if let projectPath = UserDefaults.standard.string(forKey: defaultProjectPathKey),
+           let targetName = UserDefaults.standard.string(forKey: defaultProjectTargetKey),
            let project = try? XcodeProj(pathString: projectPath),
            let target = project.pbxproj.targets(named: targetName).first
         {
@@ -42,13 +43,15 @@ struct UserDefaultsProjectRepository: ProjectRepositoryType {
         }
         
         // tuist project
-        if let resourcePath = UserDefaults.standard.string(forKey: resourcePathKey),
-           let name = UserDefaults.standard.string(forKey: projectNameKey)
+        if let path = UserDefaults.standard.string(forKey: tuistProjectPathKey),
+           let resourcePath = UserDefaults.standard.string(forKey: tuistProjectResourcePathKey),
+           let name = UserDefaults.standard.string(forKey: tuistProjectNameKey)
         {
-            let path = Path(resourcePath)
+            let path = Path(path)
+            let resourcePath = Path(resourcePath)
             if path.isDirectory {
                 return .tuist(
-                    .init(resourcePath: path, projectName: name)
+                    .init(path: path, resourcePath: resourcePath, projectName: name)
                 )
             }
         }
@@ -60,28 +63,32 @@ struct UserDefaultsProjectRepository: ProjectRepositoryType {
         switch project {
         case .default(let defaultProject):
             // set new value
-            UserDefaults.standard.set(defaultProject.path.string, forKey: projectPathKey)
-            UserDefaults.standard.set(defaultProject.target.name, forKey: targetKey)
+            UserDefaults.standard.set(defaultProject.path.string, forKey: defaultProjectPathKey)
+            UserDefaults.standard.set(defaultProject.target.name, forKey: defaultProjectTargetKey)
             // Remove tuist project if exists
-            UserDefaults.standard.set(nil, forKey: resourcePathKey)
+            UserDefaults.standard.set(nil, forKey: tuistProjectPathKey)
+            UserDefaults.standard.set(nil, forKey: tuistProjectResourcePathKey)
+            UserDefaults.standard.set(nil, forKey: tuistProjectNameKey)
         case .tuist(let tuistProject):
             // set new value
-            UserDefaults.standard.set(tuistProject.resourcePath.string, forKey: resourcePathKey)
-            UserDefaults.standard.set(tuistProject.projectName, forKey: projectNameKey)
+            UserDefaults.standard.set(tuistProject.path.string, forKey: tuistProjectPathKey)
+            UserDefaults.standard.set(tuistProject.resourcePath.string, forKey: tuistProjectResourcePathKey)
+            UserDefaults.standard.set(tuistProject.projectName, forKey: tuistProjectNameKey)
             // Remove default project if exists
-            UserDefaults.standard.set(nil, forKey: projectPathKey)
-            UserDefaults.standard.set(nil, forKey: targetKey)
+            UserDefaults.standard.set(nil, forKey: defaultProjectPathKey)
+            UserDefaults.standard.set(nil, forKey: defaultProjectTargetKey)
         }
     }
     
     func clearCurrentProject() {
         // Remove tuist project if exists
-        UserDefaults.standard.set(nil, forKey: resourcePathKey)
-        UserDefaults.standard.set(nil, forKey: projectNameKey)
+        UserDefaults.standard.set(nil, forKey: tuistProjectPathKey)
+        UserDefaults.standard.set(nil, forKey: tuistProjectResourcePathKey)
+        UserDefaults.standard.set(nil, forKey: tuistProjectNameKey)
         
         // Remove default project if exists
-        UserDefaults.standard.set(nil, forKey: projectPathKey)
-        UserDefaults.standard.set(nil, forKey: targetKey)
+        UserDefaults.standard.set(nil, forKey: defaultProjectPathKey)
+        UserDefaults.standard.set(nil, forKey: defaultProjectTargetKey)
     }
 }
 

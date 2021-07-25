@@ -63,6 +63,10 @@ private extension OpenProjectView.DefaultProjectView {
                     .lineLimit(1)
                     .truncationMode(.middle)
                     .lineLimit(1)
+                Image(systemName: "xmark.circle.fill")
+                    .onTapGesture {
+                        self.project = nil
+                    }
             }
             
             HStack {
@@ -84,7 +88,6 @@ private extension OpenProjectView.DefaultProjectView {
                 .frame(width: 200)
             }
         }
-        .padding()
     }
     
     var nilProjectView: some View {

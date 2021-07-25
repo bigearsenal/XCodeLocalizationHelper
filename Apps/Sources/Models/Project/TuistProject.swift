@@ -9,6 +9,7 @@ import Foundation
 import PathKit
 
 struct TuistProject: Equatable {
+    var path: Path
     var resourcePath: Path
     var projectName: String
 }
