@@ -8,9 +8,12 @@
 import SwiftUI
 import XcodeProj
 import PathKit
+import Resolver
 
 extension OpenProjectView {
     struct DefaultProjectView: View {
+        @Injected fileprivate var filePickerService: FilePickerServiceType
+        
         @State private var project: (XcodeProj, PathKit.Path)?
         @State private var targetName = ""
         @State private var isShowingAlert = false
@@ -90,41 +93,20 @@ private extension OpenProjectView.DefaultProjectView {
 // MARK: - Actions
 extension OpenProjectView.DefaultProjectView {
     private func showFilePicker() {
-        (NSApplication.shared.delegate as! AppDelegate).statusBar?.hidePopover()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            let dialog = NSOpenPanel()
-            
-
-            dialog.title                   = "Choose a .xcodeproj file"
-            dialog.showsResizeIndicator    = true
-            dialog.showsHiddenFiles        = false
-            dialog.allowsMultipleSelection = false
-            dialog.canChooseDirectories    = false
-            dialog.canChooseFiles          = true
-            dialog.allowedFileTypes = ["xcodeproj"]
-
-            if (dialog.runModal() ==  .OK) {
-                let result = dialog.url // Pathname of the file
-
-                if let pathString = result?.path {
-                    let path = PathKit.Path(pathString)
-                    do {
-                        project = (try XcodeProj(path: path), path)
-                    } catch {
-                        self.error = error
-                    }
-                    
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    (NSApplication.shared.delegate as! AppDelegate).statusBar?.showPopover()
-                }
-            } else {
-                // User clicked on "Cancel"
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    (NSApplication.shared.delegate as! AppDelegate).statusBar?.showPopover()
-                }
+        filePickerService.showFilePicker(
+            title: "Choose a .xcodeproj file",
+            showsResizeIndicator: true,
+            showsHiddenFiles: false,
+            allowsMultipleSelection: false,
+            canChooseDirectories: false,
+            canChooseFiles: true,
+            allowedFileTypes: ["xcodeproj"])
+        { pathString in
+            let path = PathKit.Path(pathString)
+            do {
+                project = (try XcodeProj(path: path), path)
+            } catch {
+                self.error = error
             }
         }
     }

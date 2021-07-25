@@ -15,10 +15,12 @@ extension Resolver: ResolverRegistering {
     public static func registerAllServices() {
         register {StringsFileGenerator() as FileGeneratorType}
         register {UserDefaultsProjectRepository() as ProjectRepositoryType}
+        register {FilePickerService() as FilePickerServiceType}
         
         #if DEBUG
 //        mock.register {FakeStringsFileGenerator() as FileGeneratorType}
 //        mock.register {InMemoryProjectRepository(project: nil) as ProjectRepositoryType}
+//        mock.register {MockFilePickerService() as FilePickerServiceType}
         
         // register entire container as replacement for main
         root = mock
