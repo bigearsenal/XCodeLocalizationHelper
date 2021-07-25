@@ -9,7 +9,7 @@ import XCTest
 @testable import LocalizationHelper
 import PathKit
 
-class _2MainViewModelTests: XCTestCase {
+class XcodeProjectServiceTests: XCTestCase {
     enum Error: Swift.Error {
         case languageCodeNotFoundInKnownRegions
         case fileNotFoundInLocalizableStringsGroup
@@ -44,13 +44,14 @@ class _2MainViewModelTests: XCTestCase {
         test.register {TestProjectRepository(testName: fileName) as ProjectRepositoryType}
         test.register {StringsFileGenerator() as FileGeneratorType}
         
-        let service = MainViewModel(resolver: test)
+        let service = XCodeProjectService(stringsFileGenerator: test.resolve(), projectRepository: test.resolve())
         
         // test localize project
-        try service.localizeProject(languageCode: languageCode)
+        let project = try service.openCurrentProject()
+        try service.localizeProject(project, languageCode: languageCode)
         
         // checkIfFileWasLocalizedCorrectly
-        switch service.appState.project! {
+        switch project {
         case .default(let defaultProject):
             try checkIfFileWasLocalizedCorrectly(defaultProject: defaultProject, languageCode: languageCode)
         case .tuist(let tuistProject):
@@ -58,7 +59,7 @@ class _2MainViewModelTests: XCTestCase {
         }
         
         // check number of localizableFile after all
-        let localizableFiles = try service.getLocalizableFiles()
+        let localizableFiles = try service.getLocalizableFiles(fromProject: project)
         if localizableFiles.count != expectedNumberOfLocalizableFile {
             throw Error.wrongNumberOfLocalizableFiles
         }
