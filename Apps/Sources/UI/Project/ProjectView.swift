@@ -22,6 +22,7 @@ struct ProjectView: View {
             } else {
                 VStack {
                     localizableFilesList
+                    Divider()
                     actionViews
                 }
             }
@@ -68,7 +69,7 @@ struct ProjectView: View {
             }))
                 .frame(width: 300)
             Button("Translate") {
-                self.viewModel.translate()
+                self.viewModel.translate(query: query)
             }
                 .disabled(!isNewKey())
             
