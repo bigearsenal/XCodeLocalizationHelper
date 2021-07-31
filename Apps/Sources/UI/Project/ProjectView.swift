@@ -13,6 +13,7 @@ import XcodeProj
 struct ProjectView: View {
     @ObservedObject var viewModel: ProjectViewModel
     @State var isLocalizingProject = false
+    @State var query: String = ""
     
     var body: some View {
         ZStack {
@@ -37,14 +38,19 @@ struct ProjectView: View {
     }
     
     fileprivate var localizableFilesList: some View {
-        List {
-            ForEach(viewModel.localizableFiles, id: \.id) { file in
-                Text(file.id)
-            }
-            Image(systemName: "plus.circle.fill")
-                .onTapGesture {
-                    isLocalizingProject.toggle()
+        ScrollView(.horizontal) {
+            LazyHStack {
+                ForEach(viewModel.localizableFiles, id: \.id) { file in
+                    LocalizableFileView(file: file, query: $query, newValue: newValueBinding(file: file))
+                    Color(red: 208/255, green: 207/255, blue: 209/255)
+                        .frame(width: 1)
                 }
+                Image(systemName: "plus.circle.fill")
+                    .onTapGesture {
+                        isLocalizingProject.toggle()
+                    }
+            }
+            .padding([.leading, .trailing])
         }
     }
     
@@ -59,6 +65,24 @@ struct ProjectView: View {
             handler: viewModel
         )
             .frame(width: 400, height: 400, alignment: .center)
+    }
+    
+    // MARK: - Helpers
+    private func newValueBinding(file: LocalizableFile) -> Binding<String>
+    {
+        Binding<String>(
+            get: {
+                file.newValue
+            },
+            set: {
+                var file = file
+                file.newValue = $0
+                var files = viewModel.localizableFiles
+                guard let index = files.firstIndex(where: {$0.id == file.id}) else {return}
+                files[index] = file
+                viewModel.localizableFiles = files
+            }
+        )
     }
 }
 

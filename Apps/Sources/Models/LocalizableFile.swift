@@ -17,7 +17,6 @@ public struct LocalizableFile: Identifiable {
     public var languageCode: String
     public var path: Path
     public var content: [Content]
-    public var isMatching: Bool?
     public var id: String { path.string }
     
     // for writing
