@@ -17,7 +17,7 @@ public struct GoogleTranslate {
     public static func translate(text: String, fromLang: String = "auto", toLang: String = "vi", completion: @escaping (Error?, String?) -> Void) {
         // Remember adding the oe=utf-8 and ie=utf-8
         let replacements: [String: String] = [
-            "\n":"<N>",
+            "\\n":"<N>",
             "%@":"<S>",
             "%d":"<D>"
         ]
