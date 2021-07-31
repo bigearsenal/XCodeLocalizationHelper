@@ -25,8 +25,12 @@
 	<key>NSPrincipalClass</key>
 	<string>LocalizationHelper.Application</string>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string>public.app-category.developer-tools</string>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSMainStoryboardFile</key>
+	<string>Main</string>
 </dict>
 </plist>
