@@ -130,7 +130,17 @@ struct ProjectView: View {
             if isAutomationEnabled,
                let result = viewModel.automationCommandOutPut
             {
-                Text(result)
+                HStack {
+                    Text("Log: ")
+                    ScrollView {
+                        Text(result)
+                            .font(.custom("AppleColorEmoji", size: 11))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 40)
+                    .background(Color(red: 46/255, green: 53/255, blue: 59/255))
+                }
             }
         }
         .padding([.leading, .trailing])
