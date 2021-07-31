@@ -11,6 +11,13 @@ import XcodeProj
 #endif
 
 struct ProjectView: View {
+    // MARK: - AppStorage
+    @AppStorage("isAutomationEnabled") var isAutomationEnabled = false
+    @AppStorage("isCopyingToClipboardEnabled") var isCopyingToClipboardEnabled = true
+    @AppStorage("automationCommand") var automationCommand: String?
+    @AppStorage("copyPattern") var copyPattern = "NSLocalizedString(\"<key>\", comment: \"\")"
+    
+    // MARK: - State
     @ObservedObject var viewModel: ProjectViewModel
     @State var isLocalizingProject = false
     @State var query: String = ""
@@ -24,6 +31,12 @@ struct ProjectView: View {
                     localizableFilesList
                     Divider()
                     actionViews
+                    Divider()
+                    patternView
+                    Divider()
+                    if viewModel.error != nil {
+                        errorView
+                    }
                 }
             }
         }
@@ -65,29 +78,49 @@ struct ProjectView: View {
     fileprivate var actionViews: some View {
         HStack {
             TextField("Enter key...", text: $query.didSet({ _ in
-                self.viewModel.clearTextFields()
+                viewModel.clearTextFields()
             }))
                 .frame(width: 300)
             Button("Translate") {
-                self.viewModel.translate(query: query)
+                viewModel.translate(query: query)
             }
                 .disabled(!isNewKey())
             
-//            Button("Add and \(isSwiftgenEnabled ? "run swiftgen": "copy to clipboard")") {
-//                viewModel.addNewPhrase()
-//                if isSwiftgenEnabled {
-//                    print(self.viewModel.runSwiftgen())
-//                } else {
-//                    let pasteboard = NSPasteboard.general
-//                    pasteboard.clearContents()
-//                    pasteboard.setString(exampleText, forType: .string)
-//                }
-//            }
-//                .disabled(!canAdd)
+            Button("Add this key") {
+                viewModel.addNewPhrase(key: query)
+                if isAutomationEnabled {
+                    viewModel.runAutomation(command: automationCommand)
+                }
+                
+                if isCopyingToClipboardEnabled {
+                    viewModel.copyToClipboard(text: copyPattern.replacingOccurrences(of: "<key>", with: query))
+                }
+            }
+                .disabled(!canAdd())
             
             Spacer()
         }
         .padding([.leading, .trailing])
+    }
+    
+    fileprivate var patternView: some View {
+        HStack {
+            Toggle(isOn: $isCopyingToClipboardEnabled) {
+                Text("Copy to clipboard with custom pattern: ")
+            }
+            TextField("NSLocalizedString(\"<key>\", comment: \"\")", text: $copyPattern)
+        }
+        .padding([.leading, .trailing])
+    }
+    
+    fileprivate var errorView: some View {
+        Text(viewModel.error ?? "")
+            .foregroundColor(.red)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    self.viewModel.error = nil
+                }
+            }
     }
     
     fileprivate var selectLanaguagesView: some View {
@@ -99,7 +132,7 @@ struct ProjectView: View {
             isShowing: $isLocalizingProject,
             canSelectMultipleLanguages: true
         ) { languages in
-            try? self.viewModel.languagesDidSelect(languages)
+            self.viewModel.languagesDidSelect(languages)
         }
             .frame(width: 400, height: 400, alignment: .center)
     }
@@ -133,6 +166,14 @@ struct ProjectView: View {
         }
         return true
     }
+    
+    private func canAdd() -> Bool {
+        guard isNewKey() else {return false}
+        for file in viewModel.localizableFiles {
+            if file.newValue.isEmpty {return false}
+        }
+        return true
+    }
 }
 
 #if DEBUG
@@ -143,6 +184,9 @@ struct ProjectView_Previews: PreviewProvider {
         
         ProjectView(viewModel: .init(project: .default(.demo)))
             .localizableFilesList
+        
+        ProjectView(viewModel: .init(project: .default(.demo)))
+            .actionViews
     }
 }
 #endif

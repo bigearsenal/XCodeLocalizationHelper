@@ -14,6 +14,15 @@ enum Project: Equatable {
 }
 
 extension Project {
+    var rootFolder: Path {
+        switch self {
+        case .default(let project):
+            return project.path.parent()
+        case .tuist(let project):
+            return project.path
+        }
+    }
+    
     func localize(fileGenerator: FileGeneratorType, languageCode: String) throws
     {
         switch self {
