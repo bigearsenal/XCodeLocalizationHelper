@@ -10,6 +10,9 @@ import LocalizationHelperKit
 import AppKit
 
 class ProjectViewModel: ObservableObject {
+    // MARK: - Constants
+    static let defaultCopyPattern = "NSLocalizedString(\"<key>\", comment: \"\")"
+    
     // MARK: - Dependencies
     @Injected var projectService: XCodeProjectServiceType
     
