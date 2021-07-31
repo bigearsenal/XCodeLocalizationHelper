@@ -23,9 +23,7 @@ class ProjectViewModel: ObservableObject {
     func refresh() {
         self.localizableFiles = (try? projectService.getLocalizableFiles(fromProject: project)) ?? []
     }
-}
-
-extension ProjectViewModel: SelectLanguagesHandler {
+    
     func languagesDidSelect(_ languages: [ISOLanguageCode]) throws {
         for language in languages {
             try projectService.localizeProject(project, languageCode: language.code)

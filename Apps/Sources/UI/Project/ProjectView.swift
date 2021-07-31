@@ -45,10 +45,14 @@ struct ProjectView: View {
                     Color(red: 208/255, green: 207/255, blue: 209/255)
                         .frame(width: 1)
                 }
-                Image(systemName: "plus.circle.fill")
+                
+                Image(systemName: "plus.circle")
+                    .resizable()
+                    .frame(width: 40, height: 40, alignment: .center)
                     .onTapGesture {
                         isLocalizingProject.toggle()
                     }
+                    .padding([.leading, .trailing])
             }
             .padding([.leading, .trailing])
         }
@@ -61,9 +65,10 @@ struct ProjectView: View {
                     !viewModel.localizableFiles.contains(where: {$0.languageCode == code.code})
                 },
             isShowing: $isLocalizingProject,
-            canSelectMultipleLanguages: true,
-            handler: viewModel
-        )
+            canSelectMultipleLanguages: true
+        ) { languages in
+            try? self.viewModel.languagesDidSelect(languages)
+        }
             .frame(width: 400, height: 400, alignment: .center)
     }
     
