@@ -46,9 +46,11 @@ struct OpenProjectView: View {
     }
 }
 
+#if DEBUG
 struct OpenProjectView_Previews: PreviewProvider {
     static var previews: some View {
         OpenProjectView(handler: OpenProjectHandler_Preview())
             .frame(width: 500, height: 500)
     }
 }
+#endif
