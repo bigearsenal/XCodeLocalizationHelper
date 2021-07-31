@@ -10,12 +10,14 @@ import SwiftUI
 import XcodeProj
 #endif
 
+private let defaultCopyPattern = "NSLocalizedString(\"<key>\", comment: \"\")"
+
 struct ProjectView: View {
     // MARK: - AppStorage
     @AppStorage("isAutomationEnabled") var isAutomationEnabled = false
     @AppStorage("isCopyingToClipboardEnabled") var isCopyingToClipboardEnabled = true
     @AppStorage("automationCommand") var automationCommand: String?
-    @AppStorage("copyPattern") var copyPattern = "NSLocalizedString(\"<key>\", comment: \"\")"
+    @AppStorage("copyPattern") var copyPattern = defaultCopyPattern
     
     // MARK: - State
     @ObservedObject var viewModel: ProjectViewModel
@@ -93,7 +95,10 @@ struct ProjectView: View {
                 }
                 
                 if isCopyingToClipboardEnabled {
-                    viewModel.copyToClipboard(text: copyPattern.replacingOccurrences(of: "<key>", with: query))
+                    viewModel.copyToClipboard(
+                        text: (copyPattern.isEmpty ? defaultCopyPattern: copyPattern)
+                            .replacingOccurrences(of: "<key>", with: query)
+                    )
                 }
             }
                 .disabled(!canAdd())
@@ -108,7 +113,7 @@ struct ProjectView: View {
             Toggle(isOn: $isCopyingToClipboardEnabled) {
                 Text("Copy to clipboard with custom pattern: ")
             }
-            TextField("NSLocalizedString(\"<key>\", comment: \"\")", text: $copyPattern)
+            TextField(defaultCopyPattern, text: $copyPattern)
         }
         .padding([.leading, .trailing])
     }
