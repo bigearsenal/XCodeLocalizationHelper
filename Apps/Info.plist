@@ -28,5 +28,7 @@
 	<string></string>
 	<key>UILaunchScreen</key>
 	<dict/>
+	<key>LSUIElement</key>
+	<true/>
 </dict>
 </plist>
