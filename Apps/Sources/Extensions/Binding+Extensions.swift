@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 extension Binding {
-    func didSet(execute: @escaping (Value) -> Void) -> Binding {
+    func didSet(_ execute: @escaping (Value) -> Void) -> Binding {
         return Binding(
             get: {
                 return self.wrappedValue

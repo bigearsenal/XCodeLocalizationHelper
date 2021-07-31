@@ -20,7 +20,10 @@ struct ProjectView: View {
             if viewModel.localizableFiles.isEmpty {
                 emptyView
             } else {
-                localizableFilesList
+                VStack {
+                    localizableFilesList
+                    actionViews
+                }
             }
         }
         .onAppear(perform: {
@@ -58,6 +61,34 @@ struct ProjectView: View {
         }
     }
     
+    fileprivate var actionViews: some View {
+        HStack {
+            TextField("Enter key...", text: $query.didSet({ _ in
+                self.viewModel.clearTextFields()
+            }))
+                .frame(width: 300)
+            Button("Translate") {
+                self.viewModel.translate()
+            }
+                .disabled(!isNewKey())
+            
+//            Button("Add and \(isSwiftgenEnabled ? "run swiftgen": "copy to clipboard")") {
+//                viewModel.addNewPhrase()
+//                if isSwiftgenEnabled {
+//                    print(self.viewModel.runSwiftgen())
+//                } else {
+//                    let pasteboard = NSPasteboard.general
+//                    pasteboard.clearContents()
+//                    pasteboard.setString(exampleText, forType: .string)
+//                }
+//            }
+//                .disabled(!canAdd)
+            
+            Spacer()
+        }
+        .padding([.leading, .trailing])
+    }
+    
     fileprivate var selectLanaguagesView: some View {
         SelectLanguageView(
             languages: ISOLanguageCode.all
@@ -72,7 +103,7 @@ struct ProjectView: View {
             .frame(width: 400, height: 400, alignment: .center)
     }
     
-    // MARK: - Helpers
+    // MARK: - Binding
     private func newValueBinding(file: LocalizableFile) -> Binding<String>
     {
         Binding<String>(
@@ -88,6 +119,18 @@ struct ProjectView: View {
                 viewModel.localizableFiles = files
             }
         )
+    }
+    
+    // MARK: - Helpers
+    private func isNewKey() -> Bool {
+        if !query.isEmpty {
+            for file in viewModel.localizableFiles {
+                if file.content.map({$0.key}).contains(query) {return false}
+            }
+        } else {
+            return false
+        }
+        return true
     }
 }
 

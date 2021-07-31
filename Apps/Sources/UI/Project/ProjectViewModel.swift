@@ -30,4 +30,15 @@ class ProjectViewModel: ObservableObject {
         }
         refresh()
     }
+    
+    func clearTextFields() {
+        var newFiles = localizableFiles
+        for i in 0..<newFiles.count {
+            newFiles[i].newValue = ""
+        }
+        localizableFiles = newFiles
+    }
+    
+    func translate() {
+    }
 }
