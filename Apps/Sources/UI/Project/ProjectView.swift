@@ -83,7 +83,7 @@ struct ProjectView: View {
                 viewModel.clearTextFields()
                 viewModel.automationCommandOutPut = nil
             }))
-                .frame(width: 300)
+                .frame(maxWidth: .infinity)
             Button("Translate") {
                 viewModel.translate(query: query)
             }
@@ -103,8 +103,6 @@ struct ProjectView: View {
                 }
             }
                 .disabled(!canAdd())
-            
-            Spacer()
         }
         .padding([.leading, .trailing])
     }
@@ -136,9 +134,10 @@ struct ProjectView: View {
                         Text(result)
                             .font(.custom("AppleColorEmoji", size: 11))
                             .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
+                            .padding([.leading, .trailing], 8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 40)
+                    .frame(maxWidth: .infinity, maxHeight: 30)
                     .background(Color(red: 46/255, green: 53/255, blue: 59/255))
                 }
             }
