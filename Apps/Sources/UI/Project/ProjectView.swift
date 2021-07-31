@@ -51,8 +51,12 @@ struct ProjectView: View {
     }
     
     fileprivate var emptyView: some View {
-        Button("Localize project") {
-            isLocalizingProject.toggle()
+        VStack {
+            Spacer()
+            Button("Localize project") {
+                isLocalizingProject.toggle()
+            }
+            Spacer()
         }
     }
     

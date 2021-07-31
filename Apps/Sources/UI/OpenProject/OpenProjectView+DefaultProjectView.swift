@@ -26,6 +26,7 @@ extension OpenProjectView {
                 Button("Open") {
                     do {
                         guard let project = project else {return}
+                        UserDefaults.standard.set("Pods/swiftgen/bin/swiftgen config run --config swiftgen.yml", forKey: "automationCommand")
                         try handler.openDefaultProject(xcodeproj: project.0, targetName: targetName, path: project.1)
                     } catch {
                         self.error = error

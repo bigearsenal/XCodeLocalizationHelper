@@ -20,7 +20,7 @@ struct SelectLanguageView: View {
             Button("Done") {
                 doneButtonDidTouch()
             }
-                .disabled(languages.filter {$0.isSelected}.count > 0)
+                .disabled(languages.filter {$0.isSelected}.count <= 0)
                 .padding()
         }
     }

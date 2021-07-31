@@ -142,6 +142,7 @@ extension OpenProjectView {
             else {return}
             do {
                 try handler.openProject(.tuist(.init(path: path, resourcePath: resourcePath, projectName: projectName)))
+                UserDefaults.standard.set("tuist generate", forKey: "automationCommand")
             } catch {
                 self.error = error
                 self.isShowingAlert.toggle()
