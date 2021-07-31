@@ -14,7 +14,7 @@ struct ProjectView: View {
     // MARK: - AppStorage
     @AppStorage("isAutomationEnabled") var isAutomationEnabled = false
     @AppStorage("isCopyingToClipboardEnabled") var isCopyingToClipboardEnabled = true
-    @AppStorage("automationCommand") var automationCommand: String?
+    @AppStorage("automationCommand") var automationCommand: String = ProjectViewModel.defaultAutomationCommand
     @AppStorage("copyPattern") var copyPattern = ProjectViewModel.defaultCopyPattern
     
     // MARK: - State
@@ -34,7 +34,9 @@ struct ProjectView: View {
                     Divider()
                     patternView
                     Divider()
+                    automationView
                     if viewModel.error != nil {
+                        Divider()
                         errorView
                     }
                 }
@@ -79,6 +81,7 @@ struct ProjectView: View {
         HStack {
             TextField("Enter key...", text: $query.didSet({ _ in
                 viewModel.clearTextFields()
+                viewModel.automationCommandOutPut = nil
             }))
                 .frame(width: 300)
             Button("Translate") {
@@ -112,6 +115,23 @@ struct ProjectView: View {
                 Text("Copy to clipboard with custom pattern: ")
             }
             TextField(ProjectViewModel.defaultCopyPattern, text: $copyPattern)
+        }
+        .padding([.leading, .trailing])
+    }
+    
+    fileprivate var automationView: some View {
+        VStack {
+            HStack {
+                Toggle(isOn: $isAutomationEnabled.didSet({_ in viewModel.automationCommandOutPut = nil})) {
+                    Text("Run automation: ")
+                }
+                TextField(ProjectViewModel.defaultAutomationCommand, text: $automationCommand)
+            }
+            if isAutomationEnabled,
+               let result = viewModel.automationCommandOutPut
+            {
+                Text(result)
+            }
         }
         .padding([.leading, .trailing])
     }

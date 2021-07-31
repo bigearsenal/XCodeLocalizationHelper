@@ -12,13 +12,13 @@ import AppKit
 class ProjectViewModel: ObservableObject {
     // MARK: - Constants
     static let defaultCopyPattern = "NSLocalizedString(\"<key>\", comment: \"\")"
+    static let defaultAutomationCommand = "Pods/swiftgen/bin/swiftgen config run --config swiftgen.yml"
     
     // MARK: - Dependencies
     @Injected var projectService: XCodeProjectServiceType
     
     // MARK: - Properties
     let project: Project
-    let defaultAutomationCommand = "Pods/swiftgen/bin/swiftgen config run --config swiftgen.yml"
     
     @Published var localizableFiles = [LocalizableFile]()
     @Published var automationCommandOutPut: String?
@@ -104,12 +104,14 @@ class ProjectViewModel: ObservableObject {
     }
     
     func runAutomation(command: String?) {
+        automationCommandOutPut = nil
+        
         let task = Process()
         let pipe = Pipe()
         
         task.standardOutput = pipe
         
-        task.arguments = ["-c", "cd \(project.rootFolder.string) && \(command ?? defaultAutomationCommand)"]
+        task.arguments = ["-c", "cd \(project.rootFolder.string) && \(command ?? Self.defaultAutomationCommand)"]
         task.launchPath = "/bin/zsh"
         task.launch()
         
