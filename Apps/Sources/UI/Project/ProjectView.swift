@@ -83,11 +83,14 @@ struct ProjectView: View {
     
     fileprivate var actionViews: some View {
         HStack {
-            TextField("Enter key...", text: $query.didSet({ _ in
-                viewModel.clearTextFields()
-                viewModel.automationCommandOutPut = nil
-            }))
-                .frame(maxWidth: .infinity)
+            BETextEditor(
+                placeholder: "Enter a key",
+                lineLimit: 3,
+                text: $query.didSet({ _ in
+                    viewModel.clearTextFields()
+                    viewModel.automationCommandOutPut = nil
+                })
+            )
             Button("Translate") {
                 viewModel.translate(query: query)
             }

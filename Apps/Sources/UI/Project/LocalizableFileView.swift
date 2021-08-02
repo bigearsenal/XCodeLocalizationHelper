@@ -18,7 +18,8 @@ struct LocalizableFileView: View {
     
     var body: some View {
         VStack {
-            Text(ISOLanguageCode.all.first(where: {file.languageCode == $0.code})?.name ?? file.languageCode)
+            Text(languageName)
+                .layoutPriority(1)
             ForEach(file.filteredContent(query: query)) { text in
                 VStack(alignment: .leading) {
                     Text(text.key)
@@ -32,10 +33,17 @@ struct LocalizableFileView: View {
                 .padding(.bottom, 8)
             }
             Spacer()
-            TextField(file.languageCode, text: $newValue)
+            TextField("Localized string for \(languageName)", text: $newValue)
                 .frame(width: colWidth)
+                .layoutPriority(1)
+            Spacer()
+                .frame(height: 16)
         }
         .frame(width: colWidth)
+    }
+    
+    var languageName: String {
+        ISOLanguageCode.all.first(where: {file.languageCode == $0.code})?.name ?? file.languageCode
     }
 }
 

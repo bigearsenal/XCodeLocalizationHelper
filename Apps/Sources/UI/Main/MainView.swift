@@ -17,7 +17,7 @@ struct MainView: View {
             content
             footer
         }
-        .frame(minWidth: 500, maxWidth: .infinity, minHeight: 500, maxHeight: .infinity)
+        .frame(minWidth: 600, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity)
         
     }
     
