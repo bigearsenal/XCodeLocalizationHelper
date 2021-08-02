@@ -21,7 +21,6 @@ struct ProjectView: View {
     @ObservedObject var viewModel: ProjectViewModel
     @State var isLocalizingProject = false
     @State var query: String = ""
-    @State private var queryTextViewHeight: CGFloat = .zero
     
     var body: some View {
         ZStack {
@@ -84,33 +83,14 @@ struct ProjectView: View {
     
     fileprivate var actionViews: some View {
         HStack {
-            ZStack(alignment: .topLeading) {
-                TextEditor(text: $query.didSet({ _ in
+            BETextEditor(
+                placeholder: "Enter a key",
+                lineLimit: 3,
+                text: $query.didSet({ _ in
                     viewModel.clearTextFields()
                     viewModel.automationCommandOutPut = nil
-                }))
-                    .frame(maxHeight: queryTextViewHeight)
-                    // following line is a hack to force TextEditor to appear
-                    //  similar to .textFieldStyle(RoundedBorderTextFieldStyle())...
-                    .cornerRadius(6.0)
-                    .foregroundColor(Color(.labelColor))
-                    .multilineTextAlignment(.leading)
-                Text(query.isEmpty ? "Enter a key": query)
-                    .lineLimit(3)
-                    // following line is a hack to create an inset similar to the TextEditor inset...
-                    .padding(.leading, 4)
-                    .foregroundColor(Color(.placeholderTextColor))
-                    .opacity(query.isEmpty ? 1 : 0)
-                    .background(GeometryReader {
-                        Color.clear.preference(key: ViewHeightKey.self, value: $0.frame(in: .local).height)
-                    })
-                    .allowsHitTesting(false)
-            }
-                .font(.body)
-                .onPreferenceChange(ViewHeightKey.self) {
-                    queryTextViewHeight = $0
-                    print(queryTextViewHeight)
-                }
+                })
+            )
             Button("Translate") {
                 viewModel.translate(query: query)
             }
