@@ -13,6 +13,7 @@ import XcodeProj
 struct ProjectView: View {
     // MARK: - AppStorage
     @AppStorage("isAutomationEnabled") var isAutomationEnabled = false
+    @AppStorage("isAutomationLoggingEnabled") var isAutomationLoggingEnabled = true
     @AppStorage("isCopyingToClipboardEnabled") var isCopyingToClipboardEnabled = true
     @AppStorage("automationCommand") var automationCommand: String = ProjectViewModel.defaultAutomationCommand
     @AppStorage("copyPattern") var copyPattern = ProjectViewModel.defaultCopyPattern
@@ -132,20 +133,27 @@ struct ProjectView: View {
                 }
                 TextField(ProjectViewModel.defaultAutomationCommand, text: $automationCommand)
             }
-            if isAutomationEnabled,
-               let result = viewModel.automationCommandOutPut
-            {
+            if isAutomationEnabled {
                 HStack {
-                    Text("Log: ")
-                    ScrollView {
-                        Text(result)
-                            .font(.custom("AppleColorEmoji", size: 11))
-                            .foregroundColor(.white)
-                            .padding([.leading, .trailing], 8)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                    Toggle(isOn: $isAutomationLoggingEnabled) {
+                        Text("Show log")
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 30)
-                    .background(Color(red: 46/255, green: 53/255, blue: 59/255))
+                    
+                    if isAutomationLoggingEnabled,
+                       let result = viewModel.automationCommandOutPut
+                    {
+                        ScrollView {
+                            Text(result)
+                                .font(.custom("AppleColorEmoji", size: 11))
+                                .foregroundColor(.white)
+                                .padding([.leading, .trailing], 8)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: 30)
+                        .background(Color(red: 46/255, green: 53/255, blue: 59/255))
+                    } else {
+                        Spacer()
+                    }
                 }
             }
         }
