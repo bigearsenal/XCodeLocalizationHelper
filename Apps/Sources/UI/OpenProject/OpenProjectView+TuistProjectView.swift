@@ -103,7 +103,7 @@ extension OpenProjectView {
                 allowsMultipleSelection: false,
                 canChooseDirectories: true,
                 canChooseFiles: false,
-                allowedFileTypes: [],
+                allowedFileTypes: nil,
                 directoryURL: nil
             ) { path in
                 self.path = .init(path)
@@ -120,7 +120,7 @@ extension OpenProjectView {
                 allowsMultipleSelection: false,
                 canChooseDirectories: true,
                 canChooseFiles: false,
-                allowedFileTypes: [],
+                allowedFileTypes: nil,
                 directoryURL: path.string
             ) { resourcePath in
                 guard let projectPath = self.path?.string,

@@ -12,7 +12,7 @@ import XcodeProj
 #endif
 
 protocol FilePickerServiceType {
-    func showFilePicker(title: String, showsResizeIndicator: Bool, showsHiddenFiles: Bool, allowsMultipleSelection: Bool, canChooseDirectories: Bool, canChooseFiles: Bool, allowedFileTypes: [String], directoryURL: String?, completion: @escaping (String) -> Void)
+    func showFilePicker(title: String, showsResizeIndicator: Bool, showsHiddenFiles: Bool, allowsMultipleSelection: Bool, canChooseDirectories: Bool, canChooseFiles: Bool, allowedFileTypes: [String]?, directoryURL: String?, completion: @escaping (String) -> Void)
 }
 
 struct FilePickerService: FilePickerServiceType {
@@ -23,7 +23,7 @@ struct FilePickerService: FilePickerServiceType {
         allowsMultipleSelection: Bool = false,
         canChooseDirectories: Bool,
         canChooseFiles: Bool,
-        allowedFileTypes: [String] = [],
+        allowedFileTypes: [String]? = nil,
         directoryURL: String?,
         completion: @escaping (String) -> Void
     ) {
@@ -39,7 +39,10 @@ struct FilePickerService: FilePickerServiceType {
             dialog.allowsMultipleSelection = allowsMultipleSelection
             dialog.canChooseDirectories    = canChooseDirectories
             dialog.canChooseFiles          = canChooseFiles
-            dialog.allowedFileTypes        = allowedFileTypes
+            if let allowedFileTypes {
+                dialog.allowedFileTypes    = allowedFileTypes
+            }
+            
             if let string = directoryURL, let url = URL(string: string)
             {
                 dialog.directoryURL        = url
@@ -67,7 +70,7 @@ struct FilePickerService: FilePickerServiceType {
 
 #if DEBUG
 struct MockFilePickerService: FilePickerServiceType {
-    func showFilePicker(title: String, showsResizeIndicator: Bool, showsHiddenFiles: Bool, allowsMultipleSelection: Bool, canChooseDirectories: Bool, canChooseFiles: Bool, allowedFileTypes: [String], directoryURL: String?, completion: @escaping (String) -> Void) {
+    func showFilePicker(title: String, showsResizeIndicator: Bool, showsHiddenFiles: Bool, allowsMultipleSelection: Bool, canChooseDirectories: Bool, canChooseFiles: Bool, allowedFileTypes: [String]?, directoryURL: String?, completion: @escaping (String) -> Void) {
         if canChooseFiles {
             completion(XcodeProj.demoProject.1.string)
         }
