@@ -80,8 +80,10 @@ class ProjectViewModel: ObservableObject {
     }
     
     func addNewPhrase(key: String) {
+        let key = key.trimmingCharacters(in: .whitespaces)
         for var file in localizableFiles {
-            let textToWrite = "\"\(key.trimmingCharacters(in: .whitespaces))\" = \"\(file.newValue.trimmingCharacters(in: .whitespaces))\";\n"
+            let value = file.newValue.trimmingCharacters(in: .whitespaces)
+            let textToWrite = "\"\(key)\" = \"\(value)\";\n"
             guard let data = textToWrite.data(using: .utf8) else {return}
             do {
                 let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.path.string))
@@ -91,9 +93,9 @@ class ProjectViewModel: ObservableObject {
 
                 file.content.append(
                     .init(
+                        line: file.content.count,
                         key: key,
-                        value: file.newValue,
-                        line: file.content.count
+                        value: value
                     )
                 )
                 file.newValue = ""
@@ -125,7 +127,12 @@ class ProjectViewModel: ObservableObject {
             do {
                 // create content
                 let contentToWrite = contentAfterRemoving
-                    .map { "\"\($0.key)\" = \"\($0.value)\";"}
+                    .map { content in
+                        guard let key = content.key, let value = content.value else {
+                            return content.undefinedString ?? ""
+                        }
+                        return "\"\(key)\" = \"\(value)\";"
+                    }
                     .joined(separator: "\n")
                 + "\n" // last end of line
                 

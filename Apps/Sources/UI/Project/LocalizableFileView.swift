@@ -49,16 +49,16 @@ struct LocalizableFileView: View {
     
     private func phraseView(text: LocalizableFile.Content) -> some View {
         VStack(alignment: .leading) {
-            Text(text.key)
+            Text(text.key!)
                 .lineLimit(0)
                 .multilineTextAlignment(.leading)
-            Text(text.value)
+            Text(text.value!)
                 .lineLimit(0)
                 .multilineTextAlignment(.leading)
         }
             .contextMenu {
                 Button(role: .destructive) {
-                    removeKeyHandler(text.key)
+                    removeKeyHandler(text.key!)
                 } label: {
                     Text("Delete")
                     Image(systemName: "trash")
@@ -83,8 +83,8 @@ struct LocalizableFileView_Previews: PreviewProvider {
                 languageCode: "en",
                 path: path,
                 content: [
-                    .init(key: "test", value: "test", line: 0),
-                    .init(key: "test2", value: "test2", line: 1)
+                    .init(line: 0, key: "test", value: "test"),
+                    .init(line: 1, key: "test2", value: "test2"),
                 ],
                 newValue: "t"
             ),
