@@ -93,7 +93,7 @@ class ProjectViewModel: ObservableObject {
                     .init(
                         key: key,
                         value: file.newValue,
-                        line: file.content.last?.line ?? 0
+                        line: file.content.count
                     )
                 )
                 file.newValue = ""
