@@ -56,6 +56,8 @@ struct LocalizableFileView: View {
                 .lineLimit(0)
                 .multilineTextAlignment(.leading)
         }
+            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
             .contextMenu {
                 Button(role: .destructive) {
                     removeKeyHandler(text.key!)
@@ -64,7 +66,6 @@ struct LocalizableFileView: View {
                     Image(systemName: "trash")
                 }
             }
-            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
             .padding(.bottom, 8)
     }
     
