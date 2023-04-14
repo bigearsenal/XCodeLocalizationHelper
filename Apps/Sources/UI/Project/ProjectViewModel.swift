@@ -89,13 +89,60 @@ class ProjectViewModel: ObservableObject {
                 fileHandler.write(data)
                 try fileHandler.close()
 
-                file.content.append(LocalizableFile.Content(key: key, value: file.newValue))
+                file.content.append(
+                    .init(
+                        key: key,
+                        value: file.newValue,
+                        line: file.content.last?.line ?? 0
+                    )
+                )
                 file.newValue = ""
                 var files = localizableFiles
                 if let index = files.firstIndex(where: {$0.id == file.id}) {
                     files[index] = file
                     localizableFiles = files
                 }
+            } catch {
+                self.error = error.localizedDescription
+                return
+            }
+        }
+    }
+    
+    func removePhrase(key: String) {
+        for index in 0..<localizableFiles.count {
+            // find content's index
+            guard let contentIndex = localizableFiles[index].content.firstIndex(where: {$0.key == key})
+            else {
+                continue
+            }
+            
+//            // get content after removing
+            var contentAfterRemoving = localizableFiles[index].content
+            contentAfterRemoving.remove(at: contentIndex)
+            
+            // write to file
+            do {
+                // create content
+                let contentToWrite = contentAfterRemoving
+                    .map { "\"\($0.key)\" = \"\($0.value)\";"}
+                    .joined(separator: "\n")
+                + "\n" // last end of line
+                
+                // convert to data
+                guard let data = contentToWrite.data(using: .utf8) else {
+                    self.error = "invalid data"
+                    return
+                }
+                
+                // erase old data and write new one
+                let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: localizableFiles[index].path.string))
+                try fileHandler.truncate(atOffset: 0)
+                try fileHandler.seek(toOffset: 0)
+                fileHandler.write(data)
+                
+                // assign content
+                localizableFiles[index].content = contentAfterRemoving
             } catch {
                 self.error = error.localizedDescription
                 return

@@ -12,6 +12,7 @@ import XcodeProj
 
 struct ProjectView: View {
     // MARK: - AppStorage
+
     @AppStorage("isAutomationEnabled") var isAutomationEnabled = false
     @AppStorage("isAutomationLoggingEnabled") var isAutomationLoggingEnabled = true
     @AppStorage("isCopyingToClipboardEnabled") var isCopyingToClipboardEnabled = true
@@ -19,6 +20,7 @@ struct ProjectView: View {
     @AppStorage("copyPattern") var copyPattern = ProjectViewModel.defaultCopyPattern
     
     // MARK: - State
+
     @ObservedObject var viewModel: ProjectViewModel
     @State var isLocalizingProject = false
     @State var query: String = ""
@@ -65,7 +67,14 @@ struct ProjectView: View {
         ScrollView(.horizontal) {
             LazyHStack {
                 ForEach(viewModel.localizableFiles, id: \.id) { file in
-                    LocalizableFileView(file: file, query: $query, newValue: newValueBinding(file: file))
+                    LocalizableFileView(
+                        file: file,
+                        query: query,
+                        newValue: newValueBinding(file: file),
+                        removeKeyHandler: { key in
+                            viewModel.removePhrase(key: key)
+                        }
+                    )
                     Color(red: 208/255, green: 207/255, blue: 209/255)
                         .frame(width: 1)
                 }

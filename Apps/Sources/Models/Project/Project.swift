@@ -56,7 +56,11 @@ extension Project {
                                 .replacingLastOccurrenceOfString("\"", with: "")
                         }
                 }
+                .enumerated()
                 .compactMap { pair -> LocalizableFile.Content? in
+                    let index = pair.offset
+                    let pair = pair.element
+                    
                     if pair.count != 2 {return nil}
                     if let key = pair.first,
                        !key.isEmpty,
@@ -65,7 +69,8 @@ extension Project {
                     {
                         return .init(
                             key: key,
-                            value: value.replacingLastOccurrenceOfString(";", with: "")
+                            value: value.replacingLastOccurrenceOfString(";", with: ""),
+                            line: index
                         )
                     }
                     return nil

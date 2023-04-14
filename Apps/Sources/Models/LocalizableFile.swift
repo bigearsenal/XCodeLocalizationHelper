@@ -12,6 +12,7 @@ public struct LocalizableFile: Identifiable {
         public var key: String
         public var value: String
         public var id: String {key}
+        public var line: Int
     }
     
     public var languageCode: String

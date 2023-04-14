@@ -13,36 +13,62 @@ struct LocalizableFileView: View {
     let colWidth: CGFloat = 300
     let file: LocalizableFile
     
-    @Binding var query: String
+    let query: String
     @Binding var newValue: String
+    
+    let removeKeyHandler: (String) -> Void
     
     var body: some View {
         VStack {
             Text(languageName)
                 .layoutPriority(1)
-            ForEach(file.filteredContent(query: query)) { text in
-                VStack(alignment: .leading) {
-                    Text(text.key)
-                        .lineLimit(0)
-                        .multilineTextAlignment(.leading)
-                    Text(text.value)
-                        .lineLimit(0)
-                        .multilineTextAlignment(.leading)
-                }
-                .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 8)
+            
+            ScrollView {
+                phraseListView
             }
+            
             Spacer()
+            
             TextField("Localized string for \(languageName)", text: $newValue)
                 .frame(width: colWidth)
                 .layoutPriority(1)
-            Spacer()
-                .frame(height: 16)
+                .padding(.bottom, 16)
         }
         .frame(width: colWidth)
     }
     
-    var languageName: String {
+    // MARK: - Helpers
+
+    private var phraseListView: some View {
+        LazyVStack {
+            ForEach(file.filteredContent(query: query)) { text in
+                phraseView(text: text)
+            }
+        }
+    }
+    
+    private func phraseView(text: LocalizableFile.Content) -> some View {
+        VStack(alignment: .leading) {
+            Text(text.key)
+                .lineLimit(0)
+                .multilineTextAlignment(.leading)
+            Text(text.value)
+                .lineLimit(0)
+                .multilineTextAlignment(.leading)
+        }
+            .contextMenu {
+                Button(role: .destructive) {
+                    removeKeyHandler(text.key)
+                } label: {
+                    Text("Delete")
+                    Image(systemName: "trash")
+                }
+            }
+            .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
+            .padding(.bottom, 8)
+    }
+    
+    private var languageName: String {
         ISOLanguageCode.all.first(where: {file.languageCode == $0.code})?.name ?? file.languageCode
     }
 }
@@ -56,11 +82,17 @@ struct LocalizableFileView_Previews: PreviewProvider {
             file: .init(
                 languageCode: "en",
                 path: path,
-                content: [.init(key: "test", value: "test"), .init(key: "test2", value: "test2")],
+                content: [
+                    .init(key: "test", value: "test", line: 0),
+                    .init(key: "test2", value: "test2", line: 1)
+                ],
                 newValue: "t"
             ),
-            query: .constant("test"),
-            newValue: .constant("new value")
+            query: "test",
+            newValue: .constant("new value"),
+            removeKeyHandler: { key in
+                
+            }
         )
     }
 }
