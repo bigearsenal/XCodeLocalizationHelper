@@ -51,7 +51,10 @@ extension Project {
                 .map {
                     $0.components(separatedBy: "=")
                         .map {$0.trimmingCharacters(in: .whitespaces)}
-                        .map {String($0.dropFirst().dropLast())}
+                        .map {
+                            String($0.dropFirst())
+                                .replacingLastOccurrenceOfString("\"", with: "")
+                        }
                 }
                 .compactMap { pair -> LocalizableFile.Content? in
                     if pair.count != 2 {return nil}
@@ -60,7 +63,10 @@ extension Project {
                        let value = pair.last,
                        !value.isEmpty
                     {
-                        return .init(key: key, value: value)
+                        return .init(
+                            key: key,
+                            value: value.replacingLastOccurrenceOfString(";", with: "")
+                        )
                     }
                     return nil
                 }
@@ -71,5 +77,28 @@ extension Project {
                 newValue: ""
             )
         }
+    }
+}
+
+private extension String {
+    func replacingLastOccurrenceOfString(_ searchString: String,
+                                         with replacementString: String,
+                                         caseInsensitive: Bool = true) -> String
+    {
+        let options: String.CompareOptions
+        if caseInsensitive {
+            options = [.backwards, .caseInsensitive]
+        } else {
+            options = [.backwards]
+        }
+        
+        if let range = self.range(of: searchString,
+                                  options: options,
+                                  range: nil,
+                                  locale: nil) {
+            
+            return self.replacingCharacters(in: range, with: replacementString)
+        }
+        return self
     }
 }
