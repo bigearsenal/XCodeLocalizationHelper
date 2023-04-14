@@ -81,7 +81,7 @@ class ProjectViewModel: ObservableObject {
     
     func addNewPhrase(key: String) {
         for var file in localizableFiles {
-            let textToWrite = "\"\(key)\" = \"\(file.newValue)\";\n"
+            let textToWrite = "\"\(key.trimmingCharacters(in: .whitespaces))\" = \"\(file.newValue.trimmingCharacters(in: .whitespaces))\";\n"
             guard let data = textToWrite.data(using: .utf8) else {return}
             do {
                 let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.path.string))
