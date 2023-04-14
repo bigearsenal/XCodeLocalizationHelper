@@ -80,8 +80,10 @@ class ProjectViewModel: ObservableObject {
     }
     
     func addNewPhrase(key: String) {
+        let key = key.trimmingCharacters(in: .whitespaces)
         for var file in localizableFiles {
-            let textToWrite = "\"\(key)\" = \"\(file.newValue)\";\n"
+            let value = file.newValue.trimmingCharacters(in: .whitespaces)
+            let textToWrite = "\"\(key)\" = \"\(value)\";\n"
             guard let data = textToWrite.data(using: .utf8) else {return}
             do {
                 let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: file.path.string))
@@ -89,13 +91,64 @@ class ProjectViewModel: ObservableObject {
                 fileHandler.write(data)
                 try fileHandler.close()
 
-                file.content.append(LocalizableFile.Content(key: key, value: file.newValue))
+                file.content.append(
+                    .init(
+                        line: file.content.count,
+                        key: key,
+                        value: value
+                    )
+                )
                 file.newValue = ""
                 var files = localizableFiles
                 if let index = files.firstIndex(where: {$0.id == file.id}) {
                     files[index] = file
                     localizableFiles = files
                 }
+            } catch {
+                self.error = error.localizedDescription
+                return
+            }
+        }
+    }
+    
+    func removePhrase(key: String) {
+        for index in 0..<localizableFiles.count {
+            // find content's index
+            guard let contentIndex = localizableFiles[index].content.firstIndex(where: {$0.key == key})
+            else {
+                continue
+            }
+            
+//            // get content after removing
+            var contentAfterRemoving = localizableFiles[index].content
+            contentAfterRemoving.remove(at: contentIndex)
+            
+            // write to file
+            do {
+                // create content
+                let contentToWrite = contentAfterRemoving
+                    .map { content in
+                        guard let key = content.key, let value = content.value else {
+                            return content.undefinedString ?? ""
+                        }
+                        return "\"\(key)\" = \"\(value)\";"
+                    }
+                    .joined(separator: "\n")
+                
+                // convert to data
+                guard let data = contentToWrite.data(using: .utf8) else {
+                    self.error = "invalid data"
+                    return
+                }
+                
+                // erase old data and write new one
+                let fileHandler = try FileHandle(forWritingTo: URL(fileURLWithPath: localizableFiles[index].path.string))
+                try fileHandler.truncate(atOffset: 0)
+                try fileHandler.seek(toOffset: 0)
+                fileHandler.write(data)
+                
+                // assign content
+                localizableFiles[index].content = contentAfterRemoving
             } catch {
                 self.error = error.localizedDescription
                 return

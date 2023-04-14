@@ -45,30 +45,47 @@ extension Project {
         }
         let stringFiles = path.glob("*.lproj/Localizable.strings")
         return try stringFiles.compactMap { file -> LocalizableFile in
+            // placeholder for new lines (for fixing conflict with invisible newline character)
+            let newlinePlaceholder = "<--newline-->"
+            
+            // read file
             let text = try file.read(.utf8)
+                .replacingOccurrences(of: "\\n", with: newlinePlaceholder)
+            
+            // get content
             let array = text
                 .components(separatedBy: .newlines)
-                .map {
-                    $0.components(separatedBy: "=")
+                .enumerated()
+                .map { line -> LocalizableFile.Content in
+                    // try parse to key value
+                    let index = line.offset
+                    let pair = line.element
+                        .components(separatedBy: "=")
                         .map {$0.trimmingCharacters(in: .whitespaces)}
                         .map {
                             String($0.dropFirst())
                                 .replacingLastOccurrenceOfString("\"", with: "")
                         }
-                }
-                .compactMap { pair -> LocalizableFile.Content? in
-                    if pair.count != 2 {return nil}
-                    if let key = pair.first,
-                       !key.isEmpty,
-                       let value = pair.last,
-                       !value.isEmpty
-                    {
+                    
+                    // check count of pair
+                    guard pair.count == 2, !pair[0].isEmpty, !pair[1].isEmpty else {
                         return .init(
-                            key: key,
-                            value: value.replacingLastOccurrenceOfString(";", with: "")
+                            line: index,
+                            undefinedString: line.element
                         )
                     }
-                    return nil
+                    
+                    let key = pair[0]
+                        .replacingOccurrences(of: newlinePlaceholder, with: "\\n")
+                    let value = pair[1]
+                        .replacingLastOccurrenceOfString(";", with: "")
+                        .replacingOccurrences(of: newlinePlaceholder, with: "\\n")
+                    
+                    return .init(
+                        line: index,
+                        key: key,
+                        value: value
+                    )
                 }
             return LocalizableFile(
                 languageCode: file.parent().lastComponent.replacingOccurrences(of: ".lproj", with: ""),
