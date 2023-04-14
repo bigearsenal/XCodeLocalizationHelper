@@ -77,11 +77,9 @@ extension Project {
                     
                     let key = pair[0]
                         .replacingOccurrences(of: newlinePlaceholder, with: "\\n")
-                        .trimmingCharacters(in: .whitespaces)
                     let value = pair[1]
                         .replacingLastOccurrenceOfString(";", with: "")
                         .replacingOccurrences(of: newlinePlaceholder, with: "\\n")
-                        .trimmingCharacters(in: .whitespaces)
                     
                     return .init(
                         line: index,
