@@ -134,6 +134,7 @@ class ProjectViewModel: ObservableObject {
                         return "\"\(key)\" = \"\(value)\";"
                     }
                     .joined(separator: "\n")
+                    + "\n" // last endofline
                 
                 // convert to data
                 guard let data = contentToWrite.data(using: .utf8) else {
