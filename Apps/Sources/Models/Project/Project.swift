@@ -45,7 +45,13 @@ extension Project {
         }
         let stringFiles = path.glob("*.lproj/Localizable.strings")
         return try stringFiles.compactMap { file -> LocalizableFile in
-            let text = try file.read(.utf8)
+            // placeholder for new lines (for fixing conflict with invisible newline character)
+            let newlinePlaceholder = "<--newline-->"
+            
+            // read file
+            let text = try file.read(.utf8).replacingOccurrences(of: "\\n", with: newlinePlaceholder)
+            
+            // replace newline
             let array = text
                 .components(separatedBy: .newlines)
                 .map {
@@ -68,8 +74,13 @@ extension Project {
                        !value.isEmpty
                     {
                         return .init(
-                            key: key,
-                            value: value.replacingLastOccurrenceOfString(";", with: ""),
+                            key: key
+                                .replacingOccurrences(of: newlinePlaceholder, with: "\\n")
+                                .trimmingCharacters(in: .whitespaces),
+                            value: value
+                                .replacingLastOccurrenceOfString(";", with: "")
+                                .replacingOccurrences(of: newlinePlaceholder, with: "\\n")
+                                .trimmingCharacters(in: .whitespaces),
                             line: index
                         )
                     }
