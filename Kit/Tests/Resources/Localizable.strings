@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  LocalizationHelper
+
+  Created by Chung Tran on 15/04/2023.
+  
+*/
+
+"test"="test";
+"test\nnewline"="test\nnewline";
