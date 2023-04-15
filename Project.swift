@@ -42,6 +42,7 @@ private func createAppTarget(
             platform: platform,
             product: .app,
             bundleId: bundleId,
+            deploymentTarget: .macOS(targetVersion: "12.0"),
             infoPlist: .file(path: .init(platformDir + "/Info.plist")),
             sources: [
                 "\(platformDir)/Sources/**"
@@ -57,6 +58,7 @@ private func createAppTarget(
             platform: platform,
             product: .unitTests,
             bundleId: bundleId + "Tests",
+            deploymentTarget: .macOS(targetVersion: "12.0"),
             infoPlist: .default,
             sources: [
                 "\(platformDir)/Tests/**"
@@ -77,6 +79,7 @@ private func makeKitFrameworkTargets(platform: Platform, spm: [String] = []) -> 
         platform: platform,
         product: .framework,
         bundleId: kitBundleId,
+        deploymentTarget: .macOS(targetVersion: "12.0"),
         infoPlist: .default,
         sources: ["Kit/Sources/**"],
         resources: [],
@@ -87,6 +90,7 @@ private func makeKitFrameworkTargets(platform: Platform, spm: [String] = []) -> 
         platform: platform,
         product: .unitTests,
         bundleId: kitBundleId + "Tests",
+        deploymentTarget: .macOS(targetVersion: "12.0"),
         infoPlist: .default,
         sources: ["Kit/Tests/**"],
         resources: [],
