@@ -15,6 +15,7 @@ enum LocalizationHelperError: String, Swift.Error {
     case couldNotCreateLocalizableStringsGroup
     case resourcePathIsNotADirectory
     case resourcePathMustBeInsideProjectPath
+    case lineReaderInitializingError
 }
 
 extension LocalizationHelperError: LocalizedError {

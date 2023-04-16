@@ -10,24 +10,27 @@ import Foundation
 
 public struct LocalizableFile: Identifiable {
     public struct Content: Identifiable {
-        public let line: Int
+        public let offset: Int
+        public let length: Int
         
         public let undefinedString: String?
         
         public let key: String?
         public let value: String?
         
-        public var id: String {undefinedString ?? key ?? "\(line)"}
+        public var id: String {undefinedString ?? key ?? "\(offset)"}
         
-        init(line: Int, undefinedString: String) {
-            self.line = line
+        init(offset: Int, length: Int, undefinedString: String) {
+            self.offset = offset
+            self.length = length
             self.undefinedString = undefinedString
             self.key = nil
             self.value = nil
         }
         
-        init(line: Int, key: String, value: String) {
-            self.line = line
+        init(offset: Int, length: Int, key: String, value: String) {
+            self.offset = offset
+            self.length = length
             self.undefinedString = nil
             self.key = key
             self.value = value

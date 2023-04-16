@@ -93,7 +93,7 @@ private func makeKitFrameworkTargets(platform: Platform, spm: [String] = []) -> 
         deploymentTarget: .macOS(targetVersion: "12.0"),
         infoPlist: .default,
         sources: ["Kit/Tests/**"],
-        resources: [],
+        resources: ["Kit/Tests/Resources/**"],
         dependencies: [
             .target(name: name)
         ]

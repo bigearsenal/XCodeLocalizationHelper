@@ -93,7 +93,8 @@ class ProjectViewModel: ObservableObject {
 
                 file.content.append(
                     .init(
-                        line: file.content.count,
+                        offset: file.content.count,
+                        length: textToWrite.data(using: .utf8)?.count ?? 0,
                         key: key,
                         value: value
                     )
