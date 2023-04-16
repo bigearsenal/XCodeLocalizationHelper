@@ -13,6 +13,7 @@ class MainViewModel: ObservableObject {
     
     // MARK: - Properties
     @Published var appState: AppState = .initial
+    var projectViewModel: ProjectViewModel!
     
     init() {
         try? openCurrentProject()
@@ -39,6 +40,13 @@ class MainViewModel: ObservableObject {
         var appState = appState
         appState.project = nil
         self.appState = appState
+    }
+    
+    func refresh() {
+        guard appState.project != nil else {
+            return
+        }
+        projectViewModel?.refresh()
     }
 }
 

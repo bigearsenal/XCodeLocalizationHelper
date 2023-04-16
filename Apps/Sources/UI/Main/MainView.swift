@@ -18,7 +18,6 @@ struct MainView: View {
             footer
         }
         .frame(minWidth: 600, maxWidth: .infinity, minHeight: 600, maxHeight: .infinity)
-        
     }
     
     var title: some View {
@@ -47,10 +46,11 @@ struct MainView: View {
     var content: AnyView {
         guard let project = viewModel.appState.project
         else {
+            viewModel.projectViewModel = nil
             return AnyView(OpenProjectView(handler: viewModel))
         }
-        
-        return AnyView(ProjectView(viewModel: .init(project: project)))
+        viewModel.projectViewModel = .init(project: project)
+        return AnyView(ProjectView(viewModel: viewModel.projectViewModel))
     }
     
     var footer: some View {

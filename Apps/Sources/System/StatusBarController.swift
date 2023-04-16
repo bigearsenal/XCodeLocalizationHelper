@@ -13,12 +13,14 @@ class StatusBarController {
     private var statusItem: NSStatusItem
     private var popover: NSPopover
     private var eventMonitor: EventMonitor?
+    let popoverWillShow: () -> Void
     
-    init(_ popover: NSPopover) {
+    init(_ popover: NSPopover, popoverWillShow: @escaping () -> Void) {
         self.popover = popover
         statusBar = NSStatusBar()
         // Creating a status bar item having a fixed length
         statusItem = statusBar.statusItem(withLength: 28.0)
+        self.popoverWillShow = popoverWillShow
         
         if let statusBarButton = statusItem.button {
             statusBarButton.image = Asset.MacOS.statusBarIcon.image
@@ -37,6 +39,7 @@ class StatusBarController {
             hidePopover(sender)
         }
         else {
+            popoverWillShow()
             showPopover(sender)
         }
     }

@@ -38,7 +38,7 @@ extension Project {
         }
     }
     
-    func getLocalizableFiles() throws -> [LocalizableFile] {
+    func getLocalizableFilePaths() throws -> [Path] {
         let path: Path
         switch self {
         case .default(let project):
@@ -48,8 +48,12 @@ extension Project {
         case .tuist(let project):
             path = project.resourcePath
         }
-        let stringFiles = path.glob("*.lproj/Localizable.strings")
-        return try stringFiles
+        let paths = path.glob("*.lproj/Localizable.strings")
+        return paths
+    }
+    
+    func getLocalizableFiles() throws -> [LocalizableFile] {
+        try getLocalizableFilePaths()
             .compactMap { file -> LocalizableFile in
                 try parseLocalizableFile(file)
             }
