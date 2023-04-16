@@ -7,12 +7,17 @@
 
 import Foundation
 import PathKit
+import LocalizationHelperKit
 
+/// Project type
 enum Project: Equatable {
+    /// Default project without using tuist
     case `default`(DefaultProject)
+    /// Project that was created using `tuist`
     case tuist(TuistProject)
 }
 
+/// Extension for project
 extension Project {
     var rootFolder: Path {
         switch self {
@@ -44,78 +49,117 @@ extension Project {
             path = project.resourcePath
         }
         let stringFiles = path.glob("*.lproj/Localizable.strings")
-        return try stringFiles.compactMap { file -> LocalizableFile in
-            // placeholder for new lines (for fixing conflict with invisible newline character)
-            let newlinePlaceholder = "<--newline-->"
+        return try stringFiles
+            .compactMap { file -> LocalizableFile in
+                try parseLocalizableFile(file)
+            }
+    }
+    
+    private func parseLocalizableFile(_ path: Path) throws -> LocalizableFile {
+        // create line reader
+        guard let lines = LineReader(path: path.string) else {
+            throw LocalizationHelperError.lineReaderInitializingError
+        }
+        
+        // read content of the file
+        var content = [LocalizableFile.Content]()
+        for line in lines {
+            // get key and value
+            let pair = line.string
+                // separate key and value by a "="
+                .components(separatedBy: "=")
             
-            // read file
-            let text = try file.read(.utf8)
-                .replacingOccurrences(of: "\\n", with: newlinePlaceholder)
-            
-            // get content
-            let array = text
-                .components(separatedBy: .newlines)
-                .enumerated()
-                .map { line -> LocalizableFile.Content in
-                    // try parse to key value
-                    let index = line.offset
-                    let pair = line.element
-                        .components(separatedBy: "=")
-                        .map {$0.trimmingCharacters(in: .whitespaces)}
-                        .map {
-                            String($0.dropFirst())
-                                .replacingLastOccurrenceOfString("\"", with: "")
-                        }
-                    
-                    // check count of pair
-                    guard pair.count == 2, !pair[0].isEmpty, !pair[1].isEmpty else {
-                        return .init(
-                            line: index,
-                            undefinedString: line.element
-                        )
-                    }
-                    
-                    let key = pair[0]
-                        .replacingOccurrences(of: newlinePlaceholder, with: "\\n")
-                    let value = pair[1]
-                        .replacingLastOccurrenceOfString(";", with: "")
-                        .replacingOccurrences(of: newlinePlaceholder, with: "\\n")
-                    
-                    return .init(
-                        line: index,
-                        key: key,
-                        value: value
+            // key pair is available only if pair.count == 2, key and value is not empty
+            guard pair.count == 2, !pair[0].isEmpty, !pair[1].isEmpty
+            else {
+                content.append(
+                    .init(
+                        offset: line.offset,
+                        length: line.length,
+                        undefinedString: line.string
                     )
-                }
-            return LocalizableFile(
-                languageCode: file.parent().lastComponent.replacingOccurrences(of: ".lproj", with: ""),
-                path: file,
-                content: array,
-                newValue: ""
+                )
+                continue
+            }
+            
+            // fix key
+            let key = pair[0]
+                // trim spaces
+                .trimmingCharacters(in: .whitespaces)
+                // remove first and last "
+                .replacingFirstAndLastOccurenceOf("\"", with: "")
+            
+            let value = pair[1]
+                // trim spaces
+                .trimmingCharacters(in: .whitespaces)
+                // remove first and last "
+                .replacingFirstAndLastOccurenceOf("\"", with: "")
+                // remove last ";"
+                .replacingLastOccurenceOf(";", with: "")
+            
+            content.append(
+                .init(
+                    offset: line.offset,
+                    length: line.length,
+                    key: key,
+                    value: value
+                )
             )
         }
+        
+        return LocalizableFile(
+            languageCode: path.parent().lastComponent.replacingOccurrences(of: ".lproj", with: ""),
+            path: path,
+            content: content,
+            newValue: ""
+        )
     }
 }
 
 private extension String {
-    func replacingLastOccurrenceOfString(_ searchString: String,
-                                         with replacementString: String,
-                                         caseInsensitive: Bool = true) -> String
-    {
-        let options: String.CompareOptions
-        if caseInsensitive {
-            options = [.backwards, .caseInsensitive]
-        } else {
-            options = [.backwards]
+    func replacingFirstAndLastOccurenceOf(
+        _ string: String,
+        with replacementString: String,
+        caseInsensitive: Bool = true
+    ) -> String {
+        // result
+        var result = self
+        
+        // replacing first occurence
+        result = result.replacingFirstOccurenceOf(string, with: replacementString)
+        
+        // replacing last occurence
+        result = result.replacingLastOccurenceOf(string, with: replacementString)
+        
+        // return result
+        return result
+    }
+    
+    func replacingFirstOccurenceOf(
+        _ string: String,
+        with replacementString: String,
+        caseInsensitive: Bool = true
+    ) -> String {
+        // replacing first occurence
+        if let range = range(of: string, options: caseInsensitive ? [.caseInsensitive]: [])
+        {
+            return replacingCharacters(in: range, with: replacementString)
         }
         
-        if let range = self.range(of: searchString,
-                                  options: options,
-                                  range: nil,
-                                  locale: nil) {
-            
-            return self.replacingCharacters(in: range, with: replacementString)
+        return self
+    }
+    
+    func replacingLastOccurenceOf(
+        _ string: String,
+        with replacementString: String,
+        caseInsensitive: Bool = true
+    ) -> String {
+        // replacing first occurence
+        if let range = range(of: string, options: caseInsensitive ? [.backwards ,.caseInsensitive]: [.backwards])
+        {
+            return replacingCharacters(in: range, with: replacementString)
         }
+        
         return self
     }
 }

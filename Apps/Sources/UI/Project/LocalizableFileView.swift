@@ -84,8 +84,18 @@ struct LocalizableFileView_Previews: PreviewProvider {
                 languageCode: "en",
                 path: path,
                 content: [
-                    .init(line: 0, key: "test", value: "test"),
-                    .init(line: 1, key: "test2", value: "test2"),
+                    .init(
+                        offset: 0,
+                        length: 4,
+                        key: "test",
+                        value: "test"
+                    ),
+                    .init(
+                        offset: 0,
+                        length: 5,
+                        key: "test2",
+                        value: "test2"
+                    ),
                 ],
                 newValue: "t"
             ),
