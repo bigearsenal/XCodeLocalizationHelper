@@ -110,12 +110,21 @@ So if you like this project, I kindly ask you to [buy me a coffee](https://www.b
 <!-- GETTING STARTED -->
 ### Installation
 
-Getting started by downloading the installer of [the latest version of the app](https://github.com/bigearsenal/XCodeLocalizationHelper/raw/features/README/release/LocalizationHelper.dmg).
+Getting started by downloading the installer of [the latest version of the app](https://github.com/bigearsenal/XCodeLocalizationHelper/raw/features/README/release/LocalizationHelper.zip).
 
-Mount the .dmg file, copy it to your `~/Applications` folder, open it and you're ready to go.
+Unzip the .zip file, copy it to your `~/Applications` folder, open it and you're ready to go.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+Add configuration file named `.xcode-localization-helper-config.json` into your project's root folder
+```json
+{
+  "automation": {
+    "script": "/opt/homebrew/bin/swiftgen config run --config ${PROJECT_DIR}/swiftgen.yml",
+    "pathType": "absolute"
+  }
+}
+```
 
 At the first time when you open the project, you will see the `Open a .xcodeproj file` button. Click it and open your `.xcodeproj` file.
 
