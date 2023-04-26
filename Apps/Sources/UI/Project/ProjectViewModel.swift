@@ -8,14 +8,16 @@
 import Foundation
 import LocalizationHelperKit
 import AppKit
+import Combine
 
+@MainActor
 class ProjectViewModel: ObservableObject {
     // MARK: - Constants
     static let defaultCopyPattern = "NSLocalizedString(\"<key>\", comment: \"\")"
-    static let defaultAutomationCommand = "Pods/swiftgen/bin/swiftgen config run --config swiftgen.yml"
     
     // MARK: - Dependencies
     @Injected var projectService: XCodeProjectServiceType
+    private let configManager: ConfigManager
     
     // MARK: - Properties
     let project: Project
@@ -23,13 +25,37 @@ class ProjectViewModel: ObservableObject {
     @Published var localizableFiles = [LocalizableFile]()
     @Published var automationCommandOutPut: String?
     @Published var error: String?
+    @Published var automationCommand: String = ""
+    private var isAbsolutePath: Bool = false
+    private var subscriptions = Set<AnyCancellable>()
     
     init(project: Project) {
         self.project = project
+        configManager = ConfigManagerImpl(
+            repository: ConfigRepositoryImpl(
+                projectDir: project.rootFolder.string
+            )
+        )
+        bind()
+    }
+    
+    private func bind() {
+        configManager.configPublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] config in
+                self?.automationCommand = config
+                    .automation
+                    .script
+                self?.isAbsolutePath = config.automation.pathType == .absolute
+            }
+            .store(in: &subscriptions)
     }
     
     func refresh() {
         self.localizableFiles = (try? projectService.getLocalizableFiles(fromProject: project)) ?? []
+        Task {
+            await configManager.getConfig()
+        }
     }
     
     func languagesDidSelect(_ languages: [ISOLanguageCode]) {
@@ -158,7 +184,7 @@ class ProjectViewModel: ObservableObject {
         }
     }
     
-    func runAutomation(command: String?) {
+    func runAutomation() {
         automationCommandOutPut = nil
         
         let task = Process()
@@ -166,7 +192,13 @@ class ProjectViewModel: ObservableObject {
         
         task.standardOutput = pipe
         
-        task.arguments = ["-c", "cd \(project.rootFolder.string) && \(command ?? Self.defaultAutomationCommand)"]
+        var command = ""
+        if !isAbsolutePath {
+            command += "cd \(project.rootFolder.string) && "
+        }
+        command = self.automationCommand.replacingOccurrences(of: "${PROJECT_DIR}", with: project.rootFolder.string)
+        
+        task.arguments = ["-c", command]
         task.launchPath = "/bin/zsh"
         task.launch()
         

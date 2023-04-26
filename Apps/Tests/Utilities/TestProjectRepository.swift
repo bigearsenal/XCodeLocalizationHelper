@@ -17,7 +17,7 @@ struct TestProjectRepository: ProjectRepositoryType {
         case let testName where testName.starts(with: "TestWithTuist"):
             // TuistProject
             let path = Path(homeUrl) + testName + "Targets" + testName + "Resources"
-            return .tuist(.init(resourcePath: path, projectName: testName))
+            return .tuist(.init(path: path, resourcePath: path, projectName: testName))
         case let testName where testName.starts(with: "Test"):
             // DefaultProject
             let proj = try! getXcodeProj(fileName: testName)

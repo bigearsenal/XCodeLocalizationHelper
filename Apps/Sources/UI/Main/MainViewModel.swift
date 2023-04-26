@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 class MainViewModel: ObservableObject {
     // MARK: - Dependencies
     @Injected var projectService: XCodeProjectServiceType

@@ -16,7 +16,6 @@ struct ProjectView: View {
     @AppStorage("isAutomationEnabled") var isAutomationEnabled = false
     @AppStorage("isAutomationLoggingEnabled") var isAutomationLoggingEnabled = true
     @AppStorage("isCopyingToClipboardEnabled") var isCopyingToClipboardEnabled = true
-    @AppStorage("automationCommand") var automationCommand: String = ProjectViewModel.defaultAutomationCommand
     @AppStorage("copyPattern") var copyPattern = ProjectViewModel.defaultCopyPattern
     
     // MARK: - State
@@ -109,7 +108,7 @@ struct ProjectView: View {
             Button("Add this key") {
                 viewModel.addNewPhrase(key: query)
                 if isAutomationEnabled {
-                    viewModel.runAutomation(command: automationCommand)
+                    viewModel.runAutomation()
                 }
                 
                 if isCopyingToClipboardEnabled {
@@ -140,7 +139,9 @@ struct ProjectView: View {
                 Toggle(isOn: $isAutomationEnabled.didSet({_ in viewModel.automationCommandOutPut = nil})) {
                     Text("Run automation: ")
                 }
-                TextField(ProjectViewModel.defaultAutomationCommand, text: $automationCommand)
+                Text(viewModel.automationCommand)
+                Spacer()
+                Text("(.xcode-localization-helper-config.json)")
             }
             if isAutomationEnabled {
                 HStack {
